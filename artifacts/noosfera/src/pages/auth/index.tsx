@@ -1,19 +1,25 @@
 
 import type React from "react"
-import { useState, Suspense } from "react"
+import { useState, Suspense, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Heart, Eye, EyeOff, ArrowRight, UserPlus, ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useLocation } from "wouter"
+import { useLocation, useSearch } from "wouter"
 import { useAuth } from "@/contexts/auth-context"
 import { toast } from "react-hot-toast"
 
 function AuthContent() {
   const [, navigate] = useLocation()
+  const search = useSearch()
   const { login, register, isLoading } = useAuth()
   const [activeTab, setActiveTab] = useState<"login" | "register">("login")
+
+  useEffect(() => {
+    const params = new URLSearchParams(search)
+    if (params.get("tab") === "register") setActiveTab("register")
+  }, [search])
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 

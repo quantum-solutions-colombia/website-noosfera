@@ -300,7 +300,7 @@ export default function HelpCenter() {
       id: "video-intro",
       title: "Introducción a Noösfera",
       duration: "5:32",
-      thumbnail: "/tutorial/video-intro.jpg",
+      thumbnail: "/tutorial/video-intro.svg",
       description: "Una visión general del sistema Noösfera y sus capacidades principales",
       content: `
         <div class="aspect-video bg-muted rounded-lg flex items-center justify-center mb-4">
@@ -353,7 +353,7 @@ export default function HelpCenter() {
       id: "video-patterns",
       title: "Captura y Análisis de Patrones",
       duration: "8:47",
-      thumbnail: "/tutorial/video-patterns.jpg",
+      thumbnail: "/tutorial/video-patterns.svg",
       description: "Aprende a capturar y analizar patrones neuronales de manera efectiva",
       content: `
         <div class="aspect-video bg-muted rounded-lg flex items-center justify-center mb-4">
@@ -406,7 +406,7 @@ export default function HelpCenter() {
       id: "video-content",
       title: "Generación Avanzada de Contenido",
       duration: "7:15",
-      thumbnail: "/tutorial/video-content.jpg",
+      thumbnail: "/tutorial/video-content.svg",
       description: "Técnicas avanzadas para generar contenido de alta calidad",
       content: `
         <div class="aspect-video bg-muted rounded-lg flex items-center justify-center mb-4">
@@ -459,7 +459,7 @@ export default function HelpCenter() {
       id: "video-brainwaves",
       title: "Interpretación de Ondas Cerebrales",
       duration: "10:23",
-      thumbnail: "/tutorial/video-brainwaves.jpg",
+      thumbnail: "/tutorial/video-brainwaves.svg",
       description: "Comprende los diferentes tipos de ondas cerebrales y su significado",
       content: `
         <div class="aspect-video bg-muted rounded-lg flex items-center justify-center mb-4">

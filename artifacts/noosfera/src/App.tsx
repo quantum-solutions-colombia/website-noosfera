@@ -14,6 +14,7 @@ import DocumentacionPage from "@/pages/docs/documentacion";
 import DashboardPage from "@/pages/dashboard/index";
 import DashboardHelpPage from "@/pages/dashboard/help";
 import AuthPage from "@/pages/auth/index";
+import RegisterPage from "@/pages/auth/register";
 import AdminPage from "@/pages/admin/index";
 import AdminLoginPage from "@/pages/admin/login";
 import PrivacyPage from "@/pages/legal/privacy";
@@ -34,7 +35,7 @@ function Router() {
       <Route path="/dashboard/help" component={DashboardHelpPage} />
       <Route path="/auth" component={AuthPage} />
       <Route path="/auth/login" component={AuthPage} />
-      <Route path="/auth/register" component={AuthPage} />
+      <Route path="/auth/register" component={RegisterPage} />
       <Route path="/admin" component={AdminPage} />
       <Route path="/admin/login" component={AdminLoginPage} />
       <Route path="/privacy" component={PrivacyPage} />

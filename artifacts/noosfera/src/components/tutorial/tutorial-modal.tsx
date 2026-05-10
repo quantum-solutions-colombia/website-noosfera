@@ -73,7 +73,7 @@ export default function TutorialModal({ onClose }: TutorialModalProps) {
       description:
         "Noösfera es un sistema avanzado de interpretación de pensamientos mediante inteligencia artificial. Esta guía te ayudará a comprender cómo utilizar todas sus funcionalidades.",
       icon: <Brain className="h-6 w-6 text-emerald-500" />,
-      image: "/tutorial/welcome.jpg",
+      image: "/tutorial/welcome.svg",
       tips: [
         "Explora la interfaz para familiarizarte con el sistema",
         "Utiliza el menú principal para navegar entre secciones",
@@ -94,7 +94,7 @@ export default function TutorialModal({ onClose }: TutorialModalProps) {
       description:
         "El primer paso es conectar tu dispositivo de Interfaz Cerebro-Computadora (BCI). Este dispositivo captura las señales neuronales que Noösfera interpretará.",
       icon: <Zap className="h-6 w-6 text-blue-500" />,
-      image: "/tutorial/connect.jpg",
+      image: "/tutorial/connect.svg",
       tips: [
         "Asegúrate de que el dispositivo BCI esté correctamente colocado",
         "Verifica que los sensores estén en contacto directo con la piel",
@@ -115,7 +115,7 @@ export default function TutorialModal({ onClose }: TutorialModalProps) {
       description:
         "Una vez conectado el BCI, podrás capturar patrones neuronales para procesarlos en tiempo real. El sistema analizará tus ondas cerebrales y las convertirá en patrones interpretables.",
       icon: <Brain className="h-6 w-6 text-violet-500" />,
-      image: "/tutorial/capture.jpg",
+      image: "/tutorial/capture.svg",
       tips: [
         "Concéntrate en un pensamiento específico durante la captura",
         "Mantén la calma y evita distracciones externas",
@@ -132,7 +132,7 @@ export default function TutorialModal({ onClose }: TutorialModalProps) {
       description:
         "Noösfera ofrece visualizaciones avanzadas en 3D de tus patrones neuronales. Estas representaciones te permiten explorar y comprender mejor tu actividad cerebral.",
       icon: <Activity className="h-6 w-6 text-amber-500" />,
-      image: "/tutorial/visualize.jpg",
+      image: "/tutorial/visualize.svg",
       tips: [
         "Utiliza los controles de zoom y rotación para explorar los patrones en 3D",
         "Observa cómo cambian los patrones según tus pensamientos",
@@ -149,7 +149,7 @@ export default function TutorialModal({ onClose }: TutorialModalProps) {
       description:
         "Transforma tus patrones neuronales en contenido digital como texto e imágenes. El sistema utiliza algoritmos avanzados para interpretar tus pensamientos y convertirlos en creaciones digitales.",
       icon: <FileText className="h-6 w-6 text-emerald-500" />,
-      image: "/tutorial/generate.jpg",
+      image: "/tutorial/generate.svg",
       tips: [
         "Ajusta los parámetros de complejidad y creatividad según tus preferencias",
         "Guarda tus creaciones favoritas en la biblioteca",
@@ -166,7 +166,7 @@ export default function TutorialModal({ onClose }: TutorialModalProps) {
       description:
         "Explora y analiza tus ondas cerebrales en detalle. Noösfera proporciona gráficos y métricas que te ayudan a comprender mejor tu actividad cerebral.",
       icon: <BarChart3 className="h-6 w-6 text-blue-500" />,
-      image: "/tutorial/analyze.jpg",
+      image: "/tutorial/analyze.svg",
       tips: [
         "Observa las diferentes categorías de ondas: Alpha, Beta, Theta y Delta",
         "Identifica patrones recurrentes en tu actividad cerebral",
@@ -184,7 +184,7 @@ export default function TutorialModal({ onClose }: TutorialModalProps) {
       description:
         "Todos los contenidos generados se almacenan automáticamente en tu biblioteca personal. Aquí puedes organizar, filtrar y exportar tus creaciones.",
       icon: <FileText className="h-6 w-6 text-violet-500" />,
-      image: "/tutorial/library.jpg",
+      image: "/tutorial/library.svg",
       tips: [
         "Utiliza los filtros para encontrar contenido específico",
         "Descarga tus creaciones para usarlas en otros contextos",
@@ -201,7 +201,7 @@ export default function TutorialModal({ onClose }: TutorialModalProps) {
       description:
         "Has completado el tutorial de Noösfera. Ahora tienes los conocimientos básicos para comenzar a explorar y utilizar todas las funcionalidades del sistema.",
       icon: <Check className="h-6 w-6 text-emerald-500" />,
-      image: "/tutorial/complete.jpg",
+      image: "/tutorial/complete.svg",
       tips: [
         "Explora cada sección a tu propio ritmo",
         "No dudes en experimentar con diferentes configuraciones",
