@@ -1,355 +1,279 @@
-
-
-import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { Heart, Zap, LogIn, Crown, Check, TrendingUp, Image, Wallet } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Check, Crown, Zap, Heart, ChevronDown } from "lucide-react"
 import { useLocation } from "wouter"
 import { Footer } from "@/components/footer"
-import { Link } from "wouter"
+import { DarkNav } from "@/components/dark-nav"
 
-// Plans data - only the 3 plans that rotate on the right
-interface Plan {
-  id: number
-  name: string
-  price: string
-  period: string
-  features: string[]
-  gradient: string
-  icon: React.ReactNode
-  popular?: boolean
-}
-
-const plans: Plan[] = [
+const plans = [
   {
-    id: 0,
-    name: "Plan Free",
+    id: "free",
+    name: "Free",
     price: "$0",
-    period: "Gratis",
-    features: ["10 capturas/mes", "5 NFTs/mes", "Resolucion estandar"],
-    gradient: "from-gray-600 to-gray-700",
-    icon: <Heart className="h-8 w-8 text-white" />,
-  },
-  {
-    id: 1,
-    name: "Plan Estandar",
-    price: "$39.900",
-    period: "COP/mes",
-    features: ["Capturas ilimitadas", "50 NFTs/mes", "Sin marca de agua"],
-    gradient: "from-blue-500 to-indigo-600",
-    icon: <Zap className="h-8 w-8 text-white" />,
-    popular: true,
-  },
-  {
-    id: 2,
-    name: "Plan Premium",
-    price: "$89.900",
-    period: "COP/mes",
-    features: ["NFTs ilimitados", "Ultra 4K", "API + Soporte 24/7"],
-    gradient: "from-violet-500 to-purple-600",
-    icon: <Crown className="h-8 w-8 text-white" />,
-  },
-]
-
-// FAQ data - only questions
-interface FAQ {
-  id: number
-  question: string
-  answer: string
-}
-
-const faqs: FAQ[] = [
-  {
-    id: 0,
-    question: "Puedo cambiar de plan en cualquier momento?",
-    answer: "Si, puedes cambiar de plan o cancelar tu suscripcion en cualquier momento desde tu panel de control. Los cambios se reflejan en tu proximo ciclo de facturacion.",
-  },
-  {
-    id: 1,
-    question: "Que sucede con mis NFTs si cancelo?",
-    answer: "Tus NFTs generados permanecen en tu cuenta de forma permanente. Solo perderas acceso a funcionalidades premium segun tu nuevo plan.",
-  },
-  {
-    id: 2,
-    question: "Hay descuento por suscripcion anual?",
-    answer: "Si, todos nuestros planes ofrecen un 20% de descuento si te suscribes por un ano completo. El descuento se aplica automaticamente al seleccionar facturacion anual.",
-  },
-  {
-    id: 3,
-    question: "Que metodos de pago aceptan?",
-    answer: "Aceptamos tarjetas de credito/debito, transferencias bancarias y billeteras digitales. Los pagos se procesan de forma segura con encriptacion SSL.",
-  },
-]
-
-// Business model features
-const businessFeatures = [
-  {
+    period: "para siempre",
+    tag: null,
     icon: Heart,
-    title: "Captura tu Ritmo",
-    description: "Conecta tu dispositivo y captura tus patrones cardiacos unicos en tiempo real.",
-    color: "emerald"
+    accentColor: "#8a8898",
+    features: [
+      "10 capturas cardíacas / mes",
+      "5 NFTs generados / mes",
+      "Resolución estándar 720p",
+      "Marca de agua Noosfera",
+    ],
   },
   {
-    icon: Image,
-    title: "Genera Arte NFT",
-    description: "Nuestra IA transforma tus latidos en obras de arte digital unicas e irrepetibles.",
-    color: "blue"
+    id: "standard",
+    name: "Estándar",
+    price: "$39.900",
+    period: "COP / mes",
+    tag: "Más popular",
+    icon: Zap,
+    accentColor: "#8b5cf6",
+    features: [
+      "Capturas ilimitadas",
+      "50 NFTs generados / mes",
+      "Resolución Full HD 1080p",
+      "Sin marca de agua",
+      "Historial completo",
+    ],
   },
   {
-    icon: Wallet,
-    title: "Monetiza",
-    description: "Vende tus NFTs cardiacos en las principales plataformas y genera ingresos.",
-    color: "violet"
+    id: "premium",
+    name: "Premium",
+    price: "$89.900",
+    period: "COP / mes",
+    tag: "Máximo potencial",
+    icon: Crown,
+    accentColor: "#f59e0b",
+    features: [
+      "NFTs ilimitados",
+      "Resolución Ultra 4K",
+      "Acceso a API completa",
+      "Soporte prioritario 24/7",
+      "Análisis avanzado BCI",
+      "Marketplace exclusivo",
+    ],
   },
+]
+
+const faqs = [
+  {
+    q: "¿Puedo cambiar de plan en cualquier momento?",
+    a: "Sí, puedes cambiar o cancelar tu suscripción en cualquier momento desde tu panel de control. Los cambios se reflejan en tu próximo ciclo de facturación.",
+  },
+  {
+    q: "¿Qué sucede con mis NFTs si cancelo?",
+    a: "Tus NFTs generados permanecen en tu cuenta de forma permanente. Solo pierdes acceso a funcionalidades premium según tu nuevo plan.",
+  },
+  {
+    q: "¿Hay descuento por suscripción anual?",
+    a: "Sí, todos nuestros planes ofrecen un 20% de descuento con facturación anual. El descuento se aplica automáticamente al seleccionarlo.",
+  },
+  {
+    q: "¿Qué métodos de pago aceptan?",
+    a: "Aceptamos tarjetas de crédito/débito, PSE, Nequi y Daviplata. Todos los pagos se procesan con encriptación SSL.",
+  },
+]
+
+const steps = [
+  { n: "01", title: "Captura tu Ritmo", desc: "Conecta tu dispositivo y registra tus patrones cardíacos únicos en tiempo real." },
+  { n: "02", title: "La IA Crea Arte", desc: "Nuestro algoritmo transforma tus latidos en obras digitales únicas e irrepetibles." },
+  { n: "03", title: "Monetiza", desc: "Vende tus NFTs cardíacos en las principales plataformas y genera ingresos reales." },
 ]
 
 export default function PricingPage() {
   const [, navigate] = useLocation()
-  const [currentPlan, setCurrentPlan] = useState(0)
-  const [currentFAQ, setCurrentFAQ] = useState(0)
-
-  // Auto-rotate plans carousel (only the 3 plans)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentPlan((prev) => (prev + 1) % plans.length)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [])
-
-  // Auto-rotate FAQ carousel
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentFAQ((prev) => (prev + 1) % faqs.length)
-    }, 6000)
-    return () => clearInterval(interval)
-  }, [])
+  const [openFaq, setOpenFaq] = useState<number | null>(null)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-emerald-50/30 isolate">
-      <header className="w-full px-4 py-6 z-50 bg-white border-b border-gray-100 sticky top-0">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="bg-emerald-500/10 p-2 rounded-full border border-emerald-500/20">
-              <Heart className="h-8 w-8 text-emerald-500" />
-            </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent">
-              Noosfera
-            </h1>
-          </Link>
+    <div className="min-h-screen" style={{ backgroundColor: "#0b0b12", color: "#f0ece0" }}>
+      <DarkNav activeLink="pricing" />
 
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">
-              Inicio
-            </Link>
-            <Link href="/company" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">
-              Quienes Somos
-            </Link>
-            <Link href="/pricing" className="text-emerald-600 font-medium">
-              Planes
-            </Link>
-            <Link href="/docs" className="text-gray-600 hover:text-emerald-600 transition-colors font-medium">
-              Documentacion
-            </Link>
-          </nav>
-
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              onClick={() => navigate("/auth/login")}
-              className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border-emerald-500/20 hover:border-emerald-500/40"
-            >
-              <LogIn className="mr-2 h-4 w-4" />
-              Iniciar Sesion
-            </Button>
-          </div>
+      {/* Hero */}
+      <section className="py-24 text-center relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 80% 50% at 50% 0%, rgba(139,92,246,0.12), transparent)" }} />
+        <div className="container mx-auto px-4 relative">
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+            className="text-[11px] uppercase tracking-[0.22em] text-[#8b5cf6] mb-5">
+            Planes y Precios
+          </motion.p>
+          <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
+            style={{ fontFamily: "'Playfair Display', serif" }}
+            className="text-5xl md:text-6xl lg:text-7xl font-bold text-[#f0ece0] leading-tight mb-6">
+            Elige el Plan
+            <br />
+            <span style={{ color: "#f59e0b" }}>Perfecto para Ti</span>
+          </motion.h1>
+          <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-[#8a8898] text-lg max-w-xl mx-auto leading-relaxed">
+            Comienza gratis y escala cuando estés listo para monetizar tu arte biométrico único.
+          </motion.p>
         </div>
-      </header>
+      </section>
 
-      {/* Plans Section - Static text left, rotating plans right */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-            {/* Static Text Content - Left Side */}
-            <div className="order-2 lg:order-1">
-              <div className="space-y-6">
-                <p className="text-sm font-semibold uppercase tracking-wider bg-gradient-to-r from-emerald-500 to-teal-600 bg-clip-text text-transparent">
-                  Planes de Suscripcion
-                </p>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-                  Elige el Plan Perfecto para Ti
-                </h2>
-                <p className="text-lg text-gray-600 max-w-lg leading-relaxed">
-                  Comienza gratis y actualiza cuando estes listo para monetizar tus patrones cardiacos. Todos los planes incluyen actualizaciones automaticas.
-                </p>
-              </div>
-            </div>
-
-            {/* Rotating Plan Cards - Right Side */}
-            <div className="order-1 lg:order-2 flex justify-center">
-              <div className={`relative w-64 md:w-72 rounded-2xl bg-gradient-to-br ${plans[currentPlan].gradient} p-5 shadow-xl transition-all duration-500`}>
-                {plans[currentPlan].popular && (
-                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 bg-amber-500 text-white text-xs font-bold px-3 py-0.5 rounded-full">
-                    Popular
+      {/* Plan Cards */}
+      <section className="container mx-auto px-4 pb-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {plans.map((plan, i) => {
+            const Icon = plan.icon
+            const isFeatured = plan.id === "standard"
+            return (
+              <motion.div key={plan.id}
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }} viewport={{ once: true }}
+                className="relative rounded-2xl flex flex-col"
+                style={{
+                  background: isFeatured ? "linear-gradient(135deg, rgba(139,92,246,0.15), rgba(109,40,217,0.08))" : "rgba(255,255,255,0.03)",
+                  border: `1px solid ${isFeatured ? "rgba(139,92,246,0.4)" : "rgba(255,255,255,0.07)"}`,
+                  boxShadow: isFeatured ? "0 0 40px rgba(139,92,246,0.12)" : "none",
+                  padding: "32px",
+                }}>
+                {plan.tag && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.18em] font-semibold px-4 py-1 rounded-full"
+                    style={{ backgroundColor: plan.accentColor, color: "#0b0b12" }}>
+                    {plan.tag}
                   </div>
                 )}
-                
-                <div className="flex justify-center mb-3">
-                  <div className="bg-white/20 p-2.5 rounded-xl">
-                    {plans[currentPlan].icon}
-                  </div>
+
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-6"
+                  style={{ backgroundColor: `${plan.accentColor}20` }}>
+                  <Icon className="h-5 w-5" style={{ color: plan.accentColor }} />
                 </div>
-                
-                <h3 className="text-lg font-bold text-white text-center mb-1">
-                  {plans[currentPlan].name}
-                </h3>
-                
-                <div className="text-center mb-4">
-                  <span className="text-2xl font-bold text-white">{plans[currentPlan].price}</span>
-                  <span className="text-white/80 text-sm ml-1">{plans[currentPlan].period}</span>
+
+                <p className="text-[11px] uppercase tracking-[0.18em] mb-2" style={{ color: plan.accentColor }}>
+                  {plan.name}
+                </p>
+                <div className="mb-6">
+                  <span className="text-4xl font-bold text-[#f0ece0]" style={{ fontFamily: "'Playfair Display', serif" }}>
+                    {plan.price}
+                  </span>
+                  <span className="text-[#8a8898] text-sm ml-2">{plan.period}</span>
                 </div>
-                
-                <ul className="space-y-2 mb-4">
-                  {plans[currentPlan].features.map((feature, index) => (
-                    <li key={index} className="flex items-center text-white/90 text-sm">
-                      <Check className="h-4 w-4 mr-2 text-white flex-shrink-0" />
-                      {feature}
+
+                <ul className="space-y-3 mb-8 flex-1">
+                  {plan.features.map((f, fi) => (
+                    <li key={fi} className="flex items-start gap-3 text-sm text-[#c8c4ba]">
+                      <Check className="h-4 w-4 mt-0.5 flex-shrink-0" style={{ color: plan.accentColor }} />
+                      {f}
                     </li>
                   ))}
                 </ul>
-                
-                <Button
-                  size="sm"
-                  className="w-full bg-white text-gray-900 hover:bg-gray-100 font-semibold"
-                  onClick={() => navigate("/auth/login")}
-                >
-                  Comenzar Ahora
-                </Button>
-              </div>
-            </div>
-          </div>
 
-          {/* Carousel Indicators for Plans */}
-          <div className="flex justify-center gap-3 mt-12">
-            {plans.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentPlan(index)}
-                className={`transition-all duration-300 rounded-full ${
-                  index === currentPlan
-                    ? "w-8 h-3 bg-emerald-500"
-                    : "w-3 h-3 bg-gray-300 hover:bg-gray-400"
-                }`}
-                aria-label={`Ver plan ${index + 1}`}
-              />
+                <button
+                  onClick={() => navigate("/auth/login")}
+                  className="w-full py-3 rounded-xl text-sm font-medium tracking-wide transition-all"
+                  style={isFeatured
+                    ? { backgroundColor: "#8b5cf6", color: "#fff" }
+                    : { backgroundColor: "rgba(255,255,255,0.06)", color: "#f0ece0", border: "none" }}>
+                  Comenzar ahora
+                </button>
+              </motion.div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* Divider */}
+      <div className="border-t mx-auto max-w-5xl" style={{ borderColor: "rgba(255,255,255,0.06)" }} />
+
+      {/* How it works */}
+      <section className="py-24 container mx-auto px-4">
+        <div className="max-w-5xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }}
+            className="text-center mb-16">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-[#8b5cf6] mb-4">Proceso</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif" }}
+              className="text-4xl md:text-5xl font-bold text-[#f0ece0]">
+              Cómo Funciona
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px" style={{ backgroundColor: "rgba(255,255,255,0.05)" }}>
+            {steps.map((step, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }} viewport={{ once: true }}
+                className="p-10" style={{ backgroundColor: "#0b0b12" }}>
+                <p className="text-5xl font-bold mb-6 leading-none" style={{ color: "rgba(139,92,246,0.25)", fontFamily: "'Playfair Display', serif" }}>
+                  {step.n}
+                </p>
+                <h3 className="text-lg font-semibold text-[#f0ece0] mb-3" style={{ fontFamily: "'Playfair Display', serif" }}>
+                  {step.title}
+                </h3>
+                <p className="text-sm text-[#8a8898] leading-relaxed">{step.desc}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Business Model Section - Cards without badge */}
-      <section className="container mx-auto px-4 py-20 bg-gradient-to-br from-white to-gray-50">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-            Monetiza tu Ritmo Cardiaco Unico
-          </h2>
-          <p className="text-gray-600 mt-4 max-w-2xl mx-auto">
-            Cada latido capturado es unico e irrepetible. Convierte tus patrones de ritmo cardiaco en activos digitales valiosos.
-          </p>
-        </motion.div>
+      {/* Divider */}
+      <div className="border-t mx-auto max-w-5xl" style={{ borderColor: "rgba(255,255,255,0.06)" }} />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {businessFeatures.map((feature, index) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
-            >
-              <Card className="h-full border-gray-200 hover:border-emerald-200 transition-all hover:shadow-lg bg-white">
-                <CardContent className="p-8 text-center">
-                  <div className={`bg-${feature.color}-100 p-4 rounded-2xl w-fit mb-6 mx-auto`}>
-                    <feature.icon className={`h-8 w-8 text-${feature.color}-600`} />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* FAQ Section - Centered text only, no images */}
-      <section className="py-20 bg-gradient-to-br from-gray-50 to-white overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center space-y-8">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+      {/* FAQ */}
+      <section className="py-24 container mx-auto px-4">
+        <div className="max-w-2xl mx-auto">
+          <motion.div initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} viewport={{ once: true }}
+            className="text-center mb-14">
+            <p className="text-[11px] uppercase tracking-[0.22em] text-[#8b5cf6] mb-4">Preguntas</p>
+            <h2 style={{ fontFamily: "'Playfair Display', serif" }}
+              className="text-4xl font-bold text-[#f0ece0]">
               Preguntas Frecuentes
             </h2>
-            
-            <div className="min-h-[200px] flex flex-col justify-center">
-              <h3 className="text-2xl font-semibold text-gray-800 mb-4 transition-all duration-500">
-                {faqs[currentFAQ].question}
-              </h3>
-              <p className="text-lg text-gray-600 leading-relaxed transition-all duration-500">
-                {faqs[currentFAQ].answer}
-              </p>
-            </div>
+          </motion.div>
 
-            {/* Carousel Indicators for FAQ */}
-            <div className="flex justify-center gap-3 pt-8">
-              {faqs.map((_, index) => (
+          <div className="space-y-px" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+            {faqs.map((faq, i) => (
+              <motion.div key={i} initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.4, delay: i * 0.08 }} viewport={{ once: true }}>
                 <button
-                  key={index}
-                  onClick={() => setCurrentFAQ(index)}
-                  className={`transition-all duration-300 rounded-full ${
-                    index === currentFAQ
-                      ? "w-8 h-3 bg-emerald-500"
-                      : "w-3 h-3 bg-gray-300 hover:bg-gray-400"
-                  }`}
-                  aria-label={`Ver pregunta ${index + 1}`}
-                />
-              ))}
-            </div>
+                  className="w-full flex justify-between items-center py-5 text-left text-[#f0ece0] text-sm font-medium group"
+                  style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                  <span className="group-hover:text-[#8b5cf6] transition-colors pr-4">{faq.q}</span>
+                  <ChevronDown className={`h-4 w-4 flex-shrink-0 text-[#8a8898] transition-transform ${openFaq === i ? "rotate-180" : ""}`} />
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.3 }}
+                      className="text-sm text-[#8a8898] leading-relaxed overflow-hidden pb-5">
+                      {faq.a}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="container mx-auto px-4 py-20 text-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="max-w-2xl mx-auto"
-        >
-          <h2 className="text-3xl font-bold mb-4 text-gray-900">Comienza a Monetizar Hoy</h2>
-          <p className="text-gray-600 mb-8">
-            Unete a miles de creadores que ya estan ganando dinero con sus patrones cardiacos unicos.
+      {/* CTA */}
+      <section className="py-24 text-center relative">
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse 60% 60% at 50% 100%, rgba(245,158,11,0.06), transparent)" }} />
+        <div className="container mx-auto px-4 relative">
+          <p className="text-[11px] uppercase tracking-[0.22em] text-[#f59e0b] mb-5">Comienza Hoy</p>
+          <h2 style={{ fontFamily: "'Playfair Display', serif" }}
+            className="text-4xl md:text-5xl font-bold text-[#f0ece0] mb-6">
+            Tu Arte Único<br />Te Espera
+          </h2>
+          <p className="text-[#8a8898] mb-12 max-w-md mx-auto text-sm leading-relaxed">
+            Únete a la primera comunidad de arte biométrico del mundo. Cada latido es una obra maestra.
           </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button
-              size="lg"
-              className="bg-emerald-600 hover:bg-emerald-700 text-white"
-              onClick={() => navigate("/auth/login")}
-            >
-              Comenzar Ahora
-            </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate("/docs")}>
-              Conocer Mas
-            </Button>
+          <div className="flex items-center justify-center gap-6">
+            <button onClick={() => navigate("/auth/login")}
+              className="px-8 py-3.5 rounded-full text-sm font-semibold tracking-wide transition-all hover:opacity-90"
+              style={{ backgroundColor: "#f59e0b", color: "#0b0b12" }}>
+              Comenzar gratis
+            </button>
+            <span style={{ color: "rgba(255,255,255,0.15)" }}>|</span>
+            <button onClick={() => navigate("/docs")}
+              className="text-[11px] uppercase tracking-[0.18em] text-[#8a8898] hover:text-[#f0ece0] transition-colors">
+              — Ver documentación
+            </button>
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <Footer />
