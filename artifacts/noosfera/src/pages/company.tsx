@@ -119,32 +119,42 @@ export default function CompanyPage() {
               </div>
             </div>
           ) : (
-            /* Team member slides - grid layout with reduced image */
+            /* Team member slides - text left / image right on desktop */
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-5xl mx-auto">
-              {/* Text Content - Left Side */}
-              <div className="order-2 lg:order-1">
+              {/* Text Content - Left on desktop, centered on mobile */}
+              <div className="order-2 lg:order-1 text-center lg:text-left">
                 <div className="space-y-6">
                   <h2 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
                     {teamSlides[currentSlide].role}
                   </h2>
-                  <p className="text-lg text-gray-600 max-w-lg leading-relaxed">
+                  <p className="text-lg text-gray-600 max-w-lg mx-auto lg:mx-0 leading-relaxed">
                     {teamSlides[currentSlide].description}
                   </p>
                 </div>
               </div>
 
-              {/* Image Content - Right Side - Reduced size */}
+              {/* Image Content - Right on desktop (static display) */}
               <div className="order-1 lg:order-2 flex justify-center">
-                <div
-                  className={`relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl bg-gradient-to-br ${teamSlides[currentSlide].gradient} flex items-center justify-center shadow-xl overflow-hidden`}
-                >
-                  {teamSlides[currentSlide].image && (
-                    <img
-                      src={teamSlides[currentSlide].image}
-                      alt={teamSlides[currentSlide].name || "Team member"}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
+                {/* Decorative outer ring */}
+                <div className="relative p-1 rounded-[2rem] bg-gradient-to-br from-emerald-400 via-teal-300 to-blue-400 shadow-2xl">
+                  {/* Inner white gap */}
+                  <div className="p-1 rounded-[1.75rem] bg-white">
+                    <div
+                      className={`relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-[1.5rem] bg-gradient-to-br ${teamSlides[currentSlide].gradient} overflow-hidden`}
+                    >
+                      {teamSlides[currentSlide].image && (
+                        <img
+                          src={teamSlides[currentSlide].image}
+                          alt={teamSlides[currentSlide].name || "Team member"}
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  {/* Accent dot top-right */}
+                  <span className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-emerald-500 ring-2 ring-white shadow-md" />
+                  {/* Accent dot bottom-left */}
+                  <span className="absolute -bottom-2 -left-2 w-3 h-3 rounded-full bg-teal-400 ring-2 ring-white shadow-md" />
                 </div>
               </div>
             </div>

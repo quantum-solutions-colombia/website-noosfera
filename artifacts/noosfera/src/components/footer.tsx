@@ -1,28 +1,41 @@
-
-
+import { useState, useCallback } from "react"
 import { motion } from "framer-motion"
-import { Heart } from "lucide-react"
 import { Link } from "wouter"
+
+const SOCIAL_BRAND_COLORS: Record<string, string> = {
+  facebook: "#1877F2",
+  instagram: "#E1306C",
+  tiktok: "#010101",
+  whatsapp: "#25D366",
+}
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
+  const [activeNetwork, setActiveNetwork] = useState<string | null>(null)
+
+  const handleClick = useCallback((network: string) => {
+    setActiveNetwork(network)
+    setTimeout(() => setActiveNetwork(null), 1800)
+  }, [])
+
+  const socialBg = (network: string) =>
+    activeNetwork === network
+      ? SOCIAL_BRAND_COLORS[network]
+      : "#10b981"
 
   return (
     <footer className="bg-white border-t border-gray-100">
-      {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col items-center">
-          {/* Logo */}
+
+          {/* Logo — without heart icon */}
           <motion.div
-            className="flex items-center gap-2 mb-8"
+            className="mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             viewport={{ once: true }}
           >
-            <div className="bg-emerald-500 p-2 rounded-full">
-              <Heart className="h-6 w-6 text-white" />
-            </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
               Noosfera
             </span>
@@ -41,7 +54,9 @@ export function Footer() {
               href="https://facebook.com/noosfera"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors shadow-lg"
+              onClick={() => handleClick("facebook")}
+              className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-colors duration-300"
+              style={{ backgroundColor: socialBg("facebook") }}
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               title="Facebook"
@@ -56,7 +71,9 @@ export function Footer() {
               href="https://instagram.com/noosfera"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors shadow-lg"
+              onClick={() => handleClick("instagram")}
+              className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-colors duration-300"
+              style={{ backgroundColor: socialBg("instagram") }}
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               title="Instagram"
@@ -72,7 +89,9 @@ export function Footer() {
               href="https://tiktok.com/@noosfera"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors shadow-lg"
+              onClick={() => handleClick("tiktok")}
+              className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-colors duration-300"
+              style={{ backgroundColor: socialBg("tiktok") }}
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               title="TikTok"
@@ -87,7 +106,9 @@ export function Footer() {
               href="https://wa.me/573001234567"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white hover:bg-emerald-600 transition-colors shadow-lg"
+              onClick={() => handleClick("whatsapp")}
+              className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg transition-colors duration-300"
+              style={{ backgroundColor: socialBg("whatsapp") }}
               whileHover={{ scale: 1.1, y: -2 }}
               whileTap={{ scale: 0.95 }}
               title="WhatsApp"
@@ -123,24 +144,15 @@ export function Footer() {
           transition={{ duration: 0.5, delay: 0.3 }}
           viewport={{ once: true }}
         >
-          <Link
-            href="/cookies"
-            className="text-gray-600 hover:text-emerald-600 transition-colors"
-          >
+          <Link href="/cookies" className="text-gray-600 hover:text-emerald-600 transition-colors">
             Politica de Cookies
           </Link>
           <span className="text-gray-400 mx-2">&#8226;</span>
-          <Link
-            href="/terms"
-            className="text-gray-600 hover:text-emerald-600 transition-colors"
-          >
+          <Link href="/terms" className="text-gray-600 hover:text-emerald-600 transition-colors">
             Terminos y Condiciones
           </Link>
           <span className="text-gray-400 mx-2">&#8226;</span>
-          <Link
-            href="/privacy"
-            className="text-gray-600 hover:text-emerald-600 transition-colors"
-          >
+          <Link href="/privacy" className="text-gray-600 hover:text-emerald-600 transition-colors">
             Politica de Privacidad
           </Link>
         </motion.div>
@@ -158,7 +170,7 @@ export function Footer() {
           transition={{ duration: 0.5, delay: 0.4 }}
           viewport={{ once: true }}
         >
-          &copy; {currentYear} Noosfera. Todos los derechos reservados.
+          &copy; {currentYear} Noosfera.
         </motion.p>
       </div>
     </footer>
