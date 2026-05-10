@@ -1,9 +1,5 @@
-
-
 import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Cookie, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
 
 export function CookiesConsent() {
   const [isOpen, setIsOpen] = useState(false)
@@ -14,7 +10,7 @@ export function CookiesConsent() {
     setIsMounted(true)
     const cookieConsent = localStorage.getItem("cookies-consent")
     if (!cookieConsent) {
-      const timer = setTimeout(() => setIsOpen(true), 1000)
+      const timer = setTimeout(() => setIsOpen(true), 1200)
       return () => clearTimeout(timer)
     }
   }, [])
@@ -39,63 +35,36 @@ export function CookiesConsent() {
     <AnimatePresence>
       {isOpen && !hasHandled && (
         <motion.div
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 100 }}
-          transition={{ duration: 0.4, ease: "easeOut" }}
-          className="fixed bottom-0 left-0 right-0 z-50"
+          initial={{ opacity: 0, y: 16, scale: 0.97 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 16, scale: 0.97 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed bottom-6 right-6 z-50 w-72"
         >
-          <div className="bg-white/95 backdrop-blur-xl border-t border-gray-200 shadow-2xl">
-            <div className="container mx-auto px-4 py-6">
-              <div className="flex items-start justify-between gap-6">
-                <div className="flex items-start gap-4 flex-1">
-                  <motion.div
-                    animate={{ rotate: [0, 15, -15, 0] }}
-                    transition={{ duration: 2.5, repeat: Number.POSITIVE_INFINITY }}
-                    className="flex-shrink-0 mt-1"
-                  >
-                    <Cookie className="h-6 w-6 text-amber-500" />
-                  </motion.div>
-
-                  <div>
-                    <h3 className="font-bold text-base text-gray-900 mb-1">
-                      Politica de Cookies
-                    </h3>
-                    <p className="text-sm text-gray-600 leading-relaxed">
-                      Utilizamos cookies esenciales para mejorar tu experiencia en Noosfera. Algunas cookies son 
-                      obligatorias para el funcionamiento del sitio. Al hacer clic en "Aceptar Cookies", aceptas nuestra politica.
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={handleReject}
-                  className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              <div className="flex flex-wrap gap-3 mt-4 ml-10">
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button 
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white" 
-                    onClick={handleAccept}
-                  >
-                    Aceptar Cookies
-                  </Button>
-                </motion.div>
-
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                  <Button 
-                    variant="outline" 
-                    className="border-gray-300 hover:bg-gray-50"
-                    onClick={handleReject}
-                  >
-                    Rechazar
-                  </Button>
-                </motion.div>
-              </div>
+          <div className="bg-white/90 dark:bg-zinc-900/90 backdrop-blur-2xl rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.10)] border border-black/[0.06] dark:border-white/[0.07] px-5 py-4">
+            <p className="text-[11px] font-semibold tracking-widest uppercase text-zinc-400 dark:text-zinc-500 mb-2">
+              Cookies
+            </p>
+            <p className="text-[13px] text-zinc-600 dark:text-zinc-400 leading-relaxed">
+              Usamos cookies esenciales para mejorar tu experiencia.{" "}
+              <a href="/cookies" className="text-emerald-600 hover:text-emerald-700 transition-colors underline-offset-2 hover:underline">
+                Más info
+              </a>
+            </p>
+            <div className="flex items-center gap-4 mt-4">
+              <button
+                onClick={handleAccept}
+                className="text-[12px] font-semibold tracking-wide text-zinc-900 dark:text-zinc-100 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+              >
+                — Aceptar
+              </button>
+              <span className="text-zinc-200 dark:text-zinc-700 select-none">|</span>
+              <button
+                onClick={handleReject}
+                className="text-[12px] font-semibold tracking-wide text-zinc-400 dark:text-zinc-500 hover:text-zinc-700 dark:hover:text-zinc-300 transition-colors"
+              >
+                — Rechazar
+              </button>
             </div>
           </div>
         </motion.div>
