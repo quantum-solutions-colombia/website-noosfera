@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Noösfera"
+version = "1.0.0"
+id = "artifacts/noosfera"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 22391
+
+[services.development]
+run = "pnpm --filter @workspace/noosfera run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/noosfera", "run", "build" ]
+publicDir = "artifacts/noosfera/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "22391"
+BASE_PATH = "/"
