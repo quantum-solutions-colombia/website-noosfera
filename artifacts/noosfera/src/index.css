@@ -113,8 +113,9 @@
   --chart-4: 270 95.2% 75.3%;
   --chart-5: 0 84.2% 60.2%;
 
-  --app-font-sans: 'Inter', sans-serif;
-  --app-font-serif: Georgia, serif;
+  --app-font-sans: 'DM Sans', sans-serif;
+  --app-font-serif: 'Playfair Display', Georgia, serif;
+  --app-font-heading: 'Playfair Display', Georgia, serif;
   --app-font-mono: Menlo, monospace;
   --radius: .5rem; /* 8px */
   --shadow-2xs: 0px 2px 0px 0px hsl(202.8169 89.1213% 53.1373% / 0.00); /*replace with H S L */
@@ -315,6 +316,10 @@
     border-radius: inherit;
     z-index: 999;
     /* sits in front of content */
+  }
+
+  h1, h2, h3 {
+    font-family: 'Playfair Display', Georgia, serif;
   }
 
   .hover-elevate:hover:not(.no-default-hover-elevate)::after,

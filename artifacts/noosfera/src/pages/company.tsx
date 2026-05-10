@@ -133,26 +133,25 @@ export default function CompanyPage() {
                 </div>
               </div>
 
-              {/* Image Content — right on desktop, classic black frame */}
+              {/* Image Content — right on desktop, organic portrait frame */}
               <div className="order-1 lg:order-2 flex justify-center">
-                {/* Outer dark frame */}
-                <div className="relative rounded-2xl shadow-2xl"
-                  style={{ padding: "7px", backgroundColor: "#1a1209" }}>
-                  {/* Inner cream gap (mat) */}
-                  <div className="rounded-xl overflow-hidden"
-                    style={{ padding: "3px", backgroundColor: "#f5f0e8" }}>
-                    <div
-                      className={`relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-xl bg-gradient-to-br ${teamSlides[currentSlide].gradient} overflow-hidden`}
-                    >
-                      {teamSlides[currentSlide].image && (
-                        <img
-                          src={teamSlides[currentSlide].image}
-                          alt={teamSlides[currentSlide].name || "Team member"}
-                          className="w-full h-full object-cover"
-                        />
-                      )}
-                    </div>
-                  </div>
+                <div
+                  className={`relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 bg-gradient-to-br ${teamSlides[currentSlide].gradient} overflow-hidden shadow-xl`}
+                  style={{
+                    borderRadius: "44% 56% 52% 48% / 62% 58% 42% 38%",
+                    border: "2px solid #1a1209",
+                    outline: "4px solid transparent",
+                    outlineOffset: "3px",
+                    boxShadow: "0 0 0 3px #1a1209, 0 12px 40px rgba(0,0,0,0.18)"
+                  }}
+                >
+                  {teamSlides[currentSlide].image && (
+                    <img
+                      src={teamSlides[currentSlide].image}
+                      alt={teamSlides[currentSlide].name || "Team member"}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
               </div>
             </div>
