@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react"
 import { motion } from "framer-motion"
 import { Link } from "wouter"
+import React from "react"
 
 const BRAND_COLORS: Record<string, string> = {
   facebook: "#1877F2",
@@ -8,7 +9,8 @@ const BRAND_COLORS: Record<string, string> = {
   tiktok: "#010101",
   whatsapp: "#25D366",
 }
-const DEFAULT_BG = "#10b981"
+
+const DEFAULT_BG = "#7c3aed"
 
 const SOCIAL_HREFS: Record<string, string> = {
   facebook: "https://facebook.com/noosfera",
@@ -41,8 +43,6 @@ const ICONS: Record<string, React.ReactNode> = {
   ),
 }
 
-import React from "react"
-
 export function Footer() {
   const currentYear = new Date().getFullYear()
   const [activeNetwork, setActiveNetwork] = useState<string | null>(null)
@@ -57,97 +57,71 @@ export function Footer() {
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col items-center">
 
-          {/* Logo — no heart icon */}
-          <motion.div
-            className="mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <span className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-emerald-700 bg-clip-text text-transparent">
+          <motion.div className="mb-8"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }} viewport={{ once: true }}>
+            <span className="text-2xl font-black text-purple-600"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Noosfera
             </span>
           </motion.div>
 
-          {/* Social Media Icons */}
-          <motion.div
-            className="flex items-center gap-4 mb-6"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            viewport={{ once: true }}
-          >
+          <motion.div className="flex items-center gap-4 mb-6"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}>
             {(["facebook", "instagram", "tiktok", "whatsapp"] as const).map((network) => (
-              <motion.a
-                key={network}
+              <motion.a key={network}
                 href={SOCIAL_HREFS[network]}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => handleClick(network)}
-                className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-lg"
+                className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md"
                 style={{
                   backgroundColor: activeNetwork === network ? BRAND_COLORS[network] : DEFAULT_BG,
                   transition: "background-color 0.35s ease",
                 }}
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
-                title={network}
-              >
+                title={network}>
                 {ICONS[network]}
               </motion.a>
             ))}
           </motion.div>
 
-          {/* Tagline */}
-          <motion.p
-            className="text-emerald-600 font-medium mb-8 text-center"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            viewport={{ once: true }}
-          >
+          <motion.p className="text-purple-600 font-semibold mb-8 text-center text-sm tracking-wide"
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true }}>
             Convierte latidos en arte digital
           </motion.p>
         </div>
       </div>
 
-      <div className="border-t border-gray-200" />
+      <div className="border-t border-gray-100" />
 
       <div className="container mx-auto px-4 py-6">
-        <motion.div
-          className="flex flex-wrap justify-center items-center gap-2 text-sm"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          viewport={{ once: true }}
-        >
-          <Link href="/cookies" className="text-gray-600 hover:text-emerald-600 transition-colors">
-            Politica de Cookies
+        <motion.div className="flex flex-wrap justify-center items-center gap-2 text-sm"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }} viewport={{ once: true }}>
+          <Link href="/cookies" className="text-gray-500 hover:text-purple-600 transition-colors">
+            Política de Cookies
           </Link>
-          <span className="text-gray-400 mx-2">&#8226;</span>
-          <Link href="/terms" className="text-gray-600 hover:text-emerald-600 transition-colors">
-            Terminos y Condiciones
+          <span className="text-gray-300 mx-1">&#8226;</span>
+          <Link href="/terms" className="text-gray-500 hover:text-purple-600 transition-colors">
+            Términos y Condiciones
           </Link>
-          <span className="text-gray-400 mx-2">&#8226;</span>
-          <Link href="/privacy" className="text-gray-600 hover:text-emerald-600 transition-colors">
-            Politica de Privacidad
+          <span className="text-gray-300 mx-1">&#8226;</span>
+          <Link href="/privacy" className="text-gray-500 hover:text-purple-600 transition-colors">
+            Política de Privacidad
           </Link>
         </motion.div>
       </div>
 
-      <div className="border-t border-gray-200" />
+      <div className="border-t border-gray-100" />
 
-      <div className="container mx-auto px-4 py-6">
-        <motion.p
-          className="text-center text-gray-500 text-sm"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          viewport={{ once: true }}
-        >
+      <div className="container mx-auto px-4 py-5">
+        <p className="text-center text-gray-400 text-sm">
           &copy; {currentYear} Noosfera.
-        </motion.p>
+        </p>
       </div>
     </footer>
   )

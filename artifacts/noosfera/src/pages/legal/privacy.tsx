@@ -1,157 +1,109 @@
-
-
-import { ArrowLeft, Shield, Heart } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useLocation } from "wouter"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Shield } from "lucide-react"
 import { Footer } from "@/components/footer"
-import { Link } from "wouter"
+import { DarkNav } from "@/components/dark-nav"
 
 export default function PrivacyPage() {
-  const [, navigate] = useLocation()
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-emerald-50/30">
-      {/* Header */}
-      <header className="w-full px-4 py-6 border-b border-gray-100 bg-white sticky top-0 z-50">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="bg-emerald-500/10 p-2 rounded-full border border-emerald-500/20">
-              <Heart className="h-6 w-6 text-emerald-500" />
-            </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent">
-              Noosfera
-            </span>
-          </Link>
-          
-          <nav className="hidden md:flex items-center gap-6">
-            <Link href="/" className="text-gray-600 hover:text-emerald-600 transition-colors">
-              Inicio
-            </Link>
-            <Link href="/company" className="text-gray-600 hover:text-emerald-600 transition-colors">
-              Quienes Somos
-            </Link>
-            <Link href="/pricing" className="text-gray-600 hover:text-emerald-600 transition-colors">
-              Planes
-            </Link>
-            <Link href="/docs" className="text-gray-600 hover:text-emerald-600 transition-colors">
-              Documentacion
-            </Link>
-          </nav>
+    <div className="min-h-screen bg-white">
+      <DarkNav />
 
-          <Button
-            variant="outline"
-            onClick={() => navigate("/auth/login")}
-            className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border-emerald-500/20 hover:border-emerald-500/40"
-          >
-            Iniciar Sesion
-          </Button>
+      <main className="container mx-auto px-6 py-12 max-w-3xl">
+        <button onClick={() => window.history.back()}
+          className="mb-8 text-sm font-medium text-purple-600 hover:text-purple-800 transition-colors">
+          ← Volver
+        </button>
+
+        <div className="text-center mb-10 pb-8 border-b border-gray-100">
+          <div className="mx-auto mb-5 w-14 h-14 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: "#f5f3ff" }}>
+            <Shield className="h-7 w-7 text-purple-600" />
+          </div>
+          <h1 className="text-4xl font-black text-gray-900 mb-2"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Política de Privacidad
+          </h1>
+          <p className="text-sm text-gray-400">
+            Última actualización: {new Date().toLocaleDateString("es-CO")}
+          </p>
         </div>
-      </header>
 
-      <main className="container mx-auto px-4 py-12">
-        <Button variant="ghost" onClick={() => window.history.back()} className="mb-6">
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          Volver
-        </Button>
+        <div className="space-y-8 text-gray-600 leading-relaxed">
+          <p>
+            En Noosfera, nos tomamos muy en serio la privacidad de nuestros usuarios. Esta política describe cómo
+            recopilamos, usamos y protegemos tu información personal y datos de ritmo cardíaco.
+          </p>
 
-        <div className="max-w-4xl mx-auto">
-          <Card className="border-0 shadow-lg">
-            <CardHeader className="text-center pb-8 border-b">
-              <div className="mx-auto mb-4 bg-emerald-100 p-4 rounded-full w-fit">
-                <Shield className="h-8 w-8 text-emerald-600" />
-              </div>
-              <CardTitle className="text-3xl font-bold text-gray-900">Politica de Privacidad</CardTitle>
-              <CardDescription className="text-gray-600">
-                Ultima actualizacion: {new Date().toLocaleDateString("es-CO")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="prose prose-gray max-w-none pt-8">
-              <p className="text-gray-600 leading-relaxed">
-                En Noosfera, nos tomamos muy en serio la privacidad de nuestros usuarios. Esta politica describe como 
-                recopilamos, usamos y protegemos tu informacion personal y datos de ritmo cardiaco.
-              </p>
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-4"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>1. Información que Recopilamos</h2>
+            <h3 className="font-bold text-gray-800 mb-2">1.1 Información Personal</h3>
+            <ul className="space-y-2 pl-4 mb-4">
+              {["Nombre y apellidos", "Dirección de correo electrónico", "Fecha de nacimiento", "Información de perfil"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+            <h3 className="font-bold text-gray-800 mb-2">1.2 Datos Cardíacos</h3>
+            <ul className="space-y-2 pl-4">
+              {["Patrones de ritmo cardíaco", "Datos de variabilidad cardíaca", "Métricas de frecuencia cardíaca", "Registros de sesiones de monitoreo"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+          </div>
 
-              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">1. Informacion que Recopilamos</h2>
-              
-              <h3 className="text-lg font-medium text-gray-800 mt-6 mb-3">1.1 Informacion Personal</h3>
-              <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                <li>Nombre y apellidos</li>
-                <li>Direccion de correo electronico</li>
-                <li>Fecha de nacimiento</li>
-                <li>Informacion de perfil</li>
-              </ul>
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>2. Uso de la Información</h2>
+            <p className="mb-3">Utilizamos la información recopilada para:</p>
+            <ul className="space-y-2 pl-4">
+              {["Proporcionar y mejorar nuestros servicios", "Personalizar tu experiencia", "Procesar y generar contenido digital", "Investigación y desarrollo (datos anonimizados)", "Comunicarnos contigo sobre actualizaciones y cambios"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+          </div>
 
-              <h3 className="text-lg font-medium text-gray-800 mt-6 mb-3">1.2 Datos Cardiacos</h3>
-              <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                <li>Patrones de ritmo cardiaco</li>
-                <li>Datos de variabilidad cardiaca</li>
-                <li>Metricas de frecuencia cardiaca</li>
-                <li>Registros de sesiones de monitoreo</li>
-              </ul>
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>3. Protección de Datos</h2>
+            <p className="mb-3">Implementamos medidas de seguridad robustas:</p>
+            <ul className="space-y-2 pl-4">
+              {["Encriptación de extremo a extremo", "Almacenamiento seguro en servidores protegidos", "Acceso restringido al personal autorizado", "Monitoreo continuo de seguridad", "Copias de seguridad regulares"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+          </div>
 
-              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">2. Uso de la Informacion</h2>
-              <p className="text-gray-600 leading-relaxed">Utilizamos la informacion recopilada para:</p>
-              <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                <li>Proporcionar y mejorar nuestros servicios</li>
-                <li>Personalizar tu experiencia</li>
-                <li>Procesar y generar contenido digital</li>
-                <li>Investigacion y desarrollo (datos anonimizados)</li>
-                <li>Comunicarnos contigo sobre actualizaciones y cambios</li>
-              </ul>
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>4. Tus Derechos</h2>
+            <p className="mb-3">Como usuario, tienes derecho a:</p>
+            <ul className="space-y-2 pl-4">
+              {["Acceder a tu información personal", "Corregir datos inexactos", "Solicitar la eliminación de tus datos", "Exportar tus datos en un formato portable", "Retirar tu consentimiento en cualquier momento"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+          </div>
 
-              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">3. Proteccion de Datos</h2>
-              <p className="text-gray-600 leading-relaxed">Implementamos medidas de seguridad robustas:</p>
-              <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                <li>Encriptacion de extremo a extremo</li>
-                <li>Almacenamiento seguro en servidores protegidos</li>
-                <li>Acceso restringido al personal autorizado</li>
-                <li>Monitoreo continuo de seguridad</li>
-                <li>Copias de seguridad regulares</li>
-              </ul>
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>5. Retención de Datos</h2>
+            <p>Mantenemos tu información mientras tu cuenta esté activa o sea necesario para proporcionar servicios. Puedes solicitar la eliminación de tu cuenta y datos en cualquier momento.</p>
+          </div>
 
-              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">4. Compartir Informacion</h2>
-              <p className="text-gray-600 leading-relaxed">No compartimos tu informacion personal o datos de ritmo cardiaco con terceros, excepto:</p>
-              <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                <li>Con tu consentimiento explicito</li>
-                <li>Para cumplir con obligaciones legales</li>
-                <li>Para proteger nuestros derechos o propiedad</li>
-                <li>En caso de fusion o adquisicion empresarial</li>
-              </ul>
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>6. Menores de Edad</h2>
+            <p>Nuestros servicios no están dirigidos a menores de 18 años. No recopilamos intencionalmente información de menores.</p>
+          </div>
 
-              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">5. Tus Derechos</h2>
-              <p className="text-gray-600 leading-relaxed">Como usuario, tienes derecho a:</p>
-              <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                <li>Acceder a tu informacion personal</li>
-                <li>Corregir datos inexactos</li>
-                <li>Solicitar la eliminacion de tus datos</li>
-                <li>Exportar tus datos en un formato portable</li>
-                <li>Retirar tu consentimiento en cualquier momento</li>
-              </ul>
-
-              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">6. Retencion de Datos</h2>
-              <p className="text-gray-600 leading-relaxed">
-                Mantenemos tu informacion mientras tu cuenta este activa o sea necesario para proporcionar servicios. 
-                Puedes solicitar la eliminacion de tu cuenta y datos en cualquier momento.
-              </p>
-
-              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">7. Menores de Edad</h2>
-              <p className="text-gray-600 leading-relaxed">
-                Nuestros servicios no estan dirigidos a menores de 18 anos. No recopilamos intencionalmente 
-                informacion de menores.
-              </p>
-
-              <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">8. Contacto</h2>
-              <p className="text-gray-600 leading-relaxed">
-                Si tienes preguntas sobre nuestra politica de privacidad, contactanos en:
-              </p>
-              <p className="text-gray-600">
-                Email: <a href="mailto:privacy@noosfera.com" className="text-emerald-600 hover:underline">privacy@noosfera.com</a>
-                <br />
-                Telefono: +57 300 123 4567
-              </p>
-            </CardContent>
-          </Card>
+          <div className="rounded-2xl p-6" style={{ backgroundColor: "#f5f3ff" }}>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>7. Contacto</h2>
+            <p>Si tienes preguntas sobre nuestra política de privacidad, contáctanos en:</p>
+            <p className="mt-2">
+              Email: <a href="mailto:privacy@noosfera.com" className="text-purple-600 hover:underline font-medium">privacy@noosfera.com</a><br />
+              Teléfono: +57 300 123 4567
+            </p>
+          </div>
         </div>
       </main>
 
