@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { useLocation } from "wouter"
 import { Footer } from "@/components/footer"
 import { Link } from "wouter"
-// next/image replaced
 
 interface TeamSlide {
   id: number
@@ -139,12 +138,13 @@ export default function CompanyPage() {
                 <div
                   className={`relative w-48 h-48 md:w-56 md:h-56 lg:w-64 lg:h-64 rounded-2xl bg-gradient-to-br ${teamSlides[currentSlide].gradient} flex items-center justify-center shadow-xl overflow-hidden`}
                 >
-                  <Image
-                    src={teamSlides[currentSlide].image || ""}
-                    alt={teamSlides[currentSlide].name || "Team member"}
-                    fill
-                    className="object-cover"
-                  />
+                  {teamSlides[currentSlide].image && (
+                    <img
+                      src={teamSlides[currentSlide].image}
+                      alt={teamSlides[currentSlide].name || "Team member"}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>
               </div>
             </div>

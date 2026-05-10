@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-// next/image replaced
 
 const galleryImages = [
   {

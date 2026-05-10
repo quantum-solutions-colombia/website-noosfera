@@ -1,1 +1,8 @@
-// Este archivo es una imagen JPG
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="0 0 600 300">
+  <rect width="600" height="300" fill="hsl(200 80% 45%)" opacity="0.15"/>
+  <rect x="0" y="0" width="600" height="300" fill="none" stroke="hsl(200 80% 45%)" stroke-width="2" opacity="0.3"/>
+  <circle cx="300" cy="130" r="50" fill="hsl(200 80% 45%)" opacity="0.2" stroke="hsl(200 80% 45%)" stroke-width="2"/>
+  <path d="M270,130 Q285,105 300,130 Q315,155 330,130" fill="none" stroke="hsl(200 80% 45%)" stroke-width="3"/>
+  <text x="300" y="215" text-anchor="middle" font-family="Inter,sans-serif" font-size="20" font-weight="600" fill="hsl(200 80% 45%)">Patrones</text>
+  <text x="300" y="245" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" fill="hsl(200 80% 45%)" opacity="0.7">Noosfera</text>
+</svg>
