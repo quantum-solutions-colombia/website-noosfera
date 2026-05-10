@@ -1,0 +1,20 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "55VndfcJJYeKRp201lycG"
+uri = "file://artifacts/noosfera/public/images/hero-main.png"
+type = "image"
+title = "cardiac nft art hero main"
+
+[[generated]]
+id = "V49z3RiypO0x3Qpk2icZP"
+uri = "file://artifacts/noosfera/public/images/hero-top.png"
+type = "image"
+title = "heartbeat bird nft art"
+
+[[generated]]
+id = "1u16RkWy1vNGwkCzt4_Bz"
+uri = "file://artifacts/noosfera/public/images/hero-bottom.png"
+type = "image"
+title = "heart digital code nft"

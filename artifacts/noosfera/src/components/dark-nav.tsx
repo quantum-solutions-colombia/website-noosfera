@@ -1,4 +1,4 @@
-import { useLocation, Link } from "wouter"
+import { Link, useLocation } from "wouter"
 
 interface DarkNavProps {
   activeLink?: "home" | "company" | "pricing" | "docs"
@@ -15,21 +15,21 @@ export function DarkNav({ activeLink }: DarkNavProps) {
   ] as const
 
   return (
-    <header className="w-full px-4 py-5 z-50 sticky top-0 backdrop-blur-xl border-b"
-      style={{ backgroundColor: "rgba(11,11,18,0.92)", borderColor: "rgba(255,255,255,0.06)" }}>
+    <header className="w-full px-4 py-4 z-50 sticky top-0 bg-white border-b border-gray-100">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" style={{ fontFamily: "'Playfair Display', serif" }}
-          className="text-xl font-bold text-[#f0ece0] tracking-tight">
+        <Link href="/"
+          className="text-xl font-black text-gray-900 tracking-tight"
+          style={{ fontFamily: "'DM Sans', sans-serif" }}>
           Noosfera
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
           {links.map(({ href, label, key }) => (
             <Link key={key} href={href}
-              className={`text-sm tracking-wide transition-colors ${
+              className={`text-sm font-medium transition-colors ${
                 activeLink === key
-                  ? "text-[#f59e0b] font-medium"
-                  : "text-[#8a8898] hover:text-[#f0ece0]"
+                  ? "text-purple-600"
+                  : "text-gray-500 hover:text-gray-900"
               }`}>
               {label}
             </Link>
@@ -38,8 +38,9 @@ export function DarkNav({ activeLink }: DarkNavProps) {
 
         <button
           onClick={() => navigate("/auth/login")}
-          className="text-[11px] uppercase tracking-[0.18em] font-medium text-[#f59e0b] hover:text-[#fbbf24] transition-colors">
-          — Iniciar Sesión
+          className="px-5 py-2 rounded-full text-sm font-semibold text-white transition-all hover:opacity-90"
+          style={{ backgroundColor: "#7c3aed" }}>
+          Iniciar Sesión
         </button>
       </div>
     </header>

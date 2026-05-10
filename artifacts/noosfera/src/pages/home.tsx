@@ -1,140 +1,95 @@
-
-
-import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import {
-  LogIn,
-  Heart,
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useLocation } from "wouter"
+import { useEffect } from "react"
+import { useLocation, Link } from "wouter"
 import { useAuth } from "@/contexts/auth-context"
 import { CookiesConsent } from "@/components/cookies-consent"
 import { HomepageKPIs } from "@/components/homepage-kpis"
 import { HeroCarousel } from "@/components/hero-carousel"
 import { Footer } from "@/components/footer"
-import { Link } from "wouter"
 
 export default function LandingPage() {
   const [, navigate] = useLocation()
   const { isAuthenticated } = useAuth()
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false)
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/dashboard")
-    }
+    if (isAuthenticated) navigate("/dashboard")
   }, [isAuthenticated, navigate])
 
-  const startDemo = () => {
-    navigate("/dashboard?mode=demo")
-  }
-
-  const showAuth = () => {
-    navigate("/auth/login")
-  }
+  const startDemo = () => navigate("/dashboard?mode=demo")
+  const showAuth = () => navigate("/auth/login")
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-emerald-50/30">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="w-full px-4 py-6 z-50 bg-white border-b border-gray-100 sticky top-0">
+      <header className="w-full px-6 py-4 z-50 bg-white border-b border-gray-100 sticky top-0">
         <div className="container mx-auto flex justify-between items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="bg-emerald-500/10 p-2 rounded-full border border-emerald-500/20">
-              <Heart className="h-8 w-8 text-emerald-500" />
-            </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-500 to-blue-500 bg-clip-text text-transparent">
-              Noosfera
-            </h1>
+          <Link href="/"
+            className="text-xl font-black text-gray-900 tracking-tight"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Noosfera
           </Link>
 
-          <nav>
-            <ul className="flex items-center gap-2 md:gap-6">
-              <li className="hidden md:block">
-                <Link
-                  href="/"
-                  className="text-emerald-600 font-medium"
-                >
-                  Inicio
-                </Link>
-              </li>
-              <li className="hidden md:block">
-                <Link
-                  href="/company"
-                  className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
-                >
-                  Quienes Somos
-                </Link>
-              </li>
-              <li className="hidden md:block">
-                <Link
-                  href="/pricing"
-                  className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
-                >
-                  Planes
-                </Link>
-              </li>
-              <li className="hidden md:block">
-                <Link
-                  href="/docs"
-                  className="text-gray-700 hover:text-emerald-600 transition-colors font-medium"
-                >
-                  Documentacion
-                </Link>
-              </li>
-              <li>
-                <Button
-                  variant="outline"
-                  onClick={() => navigate("/auth/login")}
-                  className="bg-gradient-to-r from-emerald-500/10 to-blue-500/10 border-emerald-500/20 hover:border-emerald-500/40"
-                >
-                  <LogIn className="mr-2 h-4 w-4" />
-                  Iniciar Sesion
-                </Button>
-              </li>
-            </ul>
+          <nav className="hidden md:flex items-center gap-8">
+            {[
+              { href: "/", label: "Inicio", active: true },
+              { href: "/company", label: "Quiénes Somos" },
+              { href: "/pricing", label: "Planes" },
+              { href: "/docs", label: "Documentación" },
+            ].map(({ href, label, active }) => (
+              <Link key={href} href={href}
+                className={`text-sm font-medium transition-colors ${
+                  active ? "text-purple-600" : "text-gray-500 hover:text-gray-900"
+                }`}>
+                {label}
+              </Link>
+            ))}
           </nav>
+
+          <button
+            onClick={showAuth}
+            className="px-5 py-2 rounded-full text-sm font-semibold text-white transition-all hover:opacity-90"
+            style={{ backgroundColor: "#7c3aed" }}>
+            Iniciar Sesión
+          </button>
         </div>
       </header>
 
-      {/* Hero Carousel Section */}
+      {/* Hero */}
       <HeroCarousel onStartDemo={startDemo} onShowAuth={showAuth} />
 
-      {/* KPIs Section - 3 Circular Charts */}
+      {/* KPIs */}
       <HomepageKPIs />
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-emerald-50 to-blue-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Comienza a Crear tu Arte Digital
+      <section className="py-20" style={{ background: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)" }}>
+        <div className="container mx-auto px-6 text-center">
+          <div className="max-w-2xl mx-auto space-y-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-500">Empieza Hoy</p>
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Comienza a Crear<br />
+              tu Arte Digital
             </h2>
-            <p className="text-gray-600 mb-8">
-              Unete a miles de creadores que ya estan monetizando sus patrones cardiacos unicos.
+            <p className="text-gray-500 text-lg leading-relaxed">
+              Únete a miles de creadores que ya están monetizando sus patrones cardíacos únicos.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button
-                size="lg"
-                className="bg-emerald-600 hover:bg-emerald-700 text-white"
-                onClick={() => navigate("/auth/login")}
-              >
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
+              <button
+                onClick={showAuth}
+                className="px-8 py-4 rounded-full font-semibold text-white text-sm tracking-wide transition-all hover:opacity-90"
+                style={{ backgroundColor: "#7c3aed" }}>
                 Comenzar Gratis
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
+              </button>
+              <button
                 onClick={() => navigate("/pricing")}
-              >
+                className="px-8 py-4 rounded-full font-semibold text-gray-700 text-sm tracking-wide border border-gray-300 hover:border-purple-300 hover:text-purple-600 transition-all bg-white">
                 Ver Planes
-              </Button>
+              </button>
             </div>
           </div>
         </div>
       </section>
 
       <Footer />
-
       <CookiesConsent />
     </div>
   )
