@@ -60,28 +60,28 @@ export default function LandingPage() {
       <RecentCreations />
 
       {/* CTA Section */}
-      <section className="py-20" style={{ background: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)" }}>
+      <section className="py-20" style={{ backgroundColor: "#7c3aed" }}>
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-2xl mx-auto space-y-6">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-500">Empieza Hoy</p>
-            <h2 className="text-4xl md:text-5xl font-black text-gray-900 leading-tight"
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">Empieza Hoy</p>
+            <h2 className="text-4xl md:text-5xl font-black text-white leading-tight"
               style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Comienza a Crear<br />
               tu Arte Digital
             </h2>
-            <p className="text-gray-500 text-lg leading-relaxed">
-              Únete a miles de creadores que ya están monetizando sus patrones cardíacos únicos.
+            <p className="text-purple-200 text-lg leading-relaxed">
+              Transforma tus latidos en NFTs únicos y monetiza tu arte digital desde hoy.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
               <button
                 onClick={showAuth}
-                className="px-8 py-4 rounded-full font-semibold text-white text-sm tracking-wide transition-all hover:opacity-90"
-                style={{ backgroundColor: "#7c3aed" }}>
-                Comenzar Gratis
+                className="px-8 py-4 rounded-full font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
+                style={{ backgroundColor: "#ffffff" }}>
+                Comenzar Demo
               </button>
               <button
                 onClick={() => navigate("/pricing")}
-                className="px-8 py-4 rounded-full font-semibold text-gray-700 text-sm tracking-wide border border-gray-300 hover:border-purple-300 hover:text-purple-600 transition-all bg-white">
+                className="px-8 py-4 rounded-full font-semibold text-white text-sm tracking-wide border border-white/40 hover:bg-white/10 transition-all">
                 Ver Planes
               </button>
             </div>

@@ -78,3 +78,9 @@ id = "2TkJY7cE-Uti_ZmoQ16qT"
 uri = "file://artifacts/noosfera/public/images/nft-10.png"
 type = "image"
 title = "phoenix NFT art"
+
+[[generated]]
+id = "qB7MfS81SvSAGZwe_cPPO"
+uri = "file://artifacts/noosfera/public/images/nft-ghost.png"
+type = "image"
+title = "ghost fantasy creature"
