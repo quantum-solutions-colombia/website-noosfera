@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import { useLocation, Link } from "wouter"
 import { useAuth } from "@/contexts/auth-context"
 import { CookiesConsent } from "@/components/cookies-consent"
-import { HomepageKPIs } from "@/components/homepage-kpis"
+import { RecentCreations } from "@/components/recent-creations"
 import { HeroCarousel } from "@/components/hero-carousel"
 import { Footer } from "@/components/footer"
 
@@ -56,8 +56,8 @@ export default function LandingPage() {
       {/* Hero */}
       <HeroCarousel onStartDemo={startDemo} onShowAuth={showAuth} />
 
-      {/* KPIs */}
-      <HomepageKPIs />
+      {/* Recent Creations */}
+      <RecentCreations />
 
       {/* CTA Section */}
       <section className="py-20" style={{ background: "linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%)" }}>

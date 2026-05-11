@@ -106,8 +106,8 @@ export function HeroCarousel({ onStartDemo, onShowAuth }: HeroCarouselProps) {
               </button>
               <button
                 onClick={onShowAuth}
-                className="px-8 py-4 rounded-full font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-90 hover:scale-[1.02]"
-                style={{ backgroundColor: "#ede9fe" }}
+                className="px-8 py-4 rounded-full font-semibold text-white text-sm tracking-wide transition-all hover:opacity-90 hover:scale-[1.02]"
+                style={{ backgroundColor: "#5b21b6" }}
               >
                 Iniciar Sesión
               </button>
