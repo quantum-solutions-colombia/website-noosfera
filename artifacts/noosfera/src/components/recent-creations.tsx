@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { useLocation } from "wouter"
+import { BadgeCheck, Zap, ShieldCheck, Users, ImageIcon, Globe } from "lucide-react"
 
 const ITEMS = [
   { src: "/images/nft-1.png",  title: "Forest Spirit" },
@@ -15,10 +16,24 @@ const ITEMS = [
   { src: "/images/nft-10.png", title: "Phoenix Rise" },
 ]
 
-const CARD_W = 180
-const CARD_W_ACTIVE = 240
-const GAP = 16
-const INTERVAL = 2800
+const CARD_W        = 170
+const CARD_H        = 240
+const CARD_W_ACTIVE = 250
+const CARD_H_ACTIVE = 360
+const GAP           = 16
+const INTERVAL      = 2800
+
+const BENEFITS = [
+  { icon: BadgeCheck, label: "Derechos comerciales" },
+  { icon: Zap,        label: "Regístrate en 30 segundos" },
+  { icon: ShieldCheck,label: "100% seguro y privado" },
+]
+
+const STATS = [
+  { icon: Users,     value: "50,000+", label: "Creadores activos" },
+  { icon: ImageIcon, value: "200,000+",label: "NFTs generados" },
+  { icon: Globe,     value: "120+",    label: "Países en la red" },
+]
 
 export function RecentCreations() {
   const [active, setActive] = useState(2)
@@ -49,7 +64,7 @@ export function RecentCreations() {
 
   return (
     <>
-      {/* ── Carousel section ── */}
+      {/* ── Carousel ── */}
       <section className="py-20 bg-white overflow-hidden">
         <div className="container mx-auto px-6 mb-10 text-center">
           <motion.p
@@ -69,10 +84,10 @@ export function RecentCreations() {
           </motion.h2>
         </div>
 
-        {/* Track */}
+        {/* Track — items-center so active card expands from the middle */}
         <div
           ref={trackRef}
-          className="flex items-end overflow-x-auto pb-4 px-8"
+          className="flex items-center overflow-x-auto pb-4 px-8"
           style={{
             gap: GAP,
             scrollbarWidth: "none",
@@ -88,11 +103,11 @@ export function RecentCreations() {
                 className="relative flex-shrink-0 rounded-2xl overflow-hidden"
                 style={{
                   width:  isActive ? CARD_W_ACTIVE : CARD_W,
-                  height: isActive ? 340 : 240,
+                  height: isActive ? CARD_H_ACTIVE : CARD_H,
                   transition: "width 0.5s cubic-bezier(.4,0,.2,1), height 0.5s cubic-bezier(.4,0,.2,1)",
                   boxShadow: isActive
-                    ? "0 24px 60px rgba(124,58,237,0.30)"
-                    : "0 6px 18px rgba(0,0,0,0.10)",
+                    ? "0 28px 64px rgba(124,58,237,0.32)"
+                    : "0 4px 16px rgba(0,0,0,0.09)",
                   flexShrink: 0,
                 }}
               >
@@ -101,15 +116,15 @@ export function RecentCreations() {
                   alt={item.title}
                   className="w-full h-full object-cover"
                   style={{
-                    filter: isActive ? "none" : "brightness(0.75) saturate(0.85)",
+                    filter: isActive ? "none" : "brightness(0.70) saturate(0.80)",
                     transition: "filter 0.5s ease",
                   }}
                 />
                 {isActive && (
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                 )}
                 {isActive && (
-                  <p className="absolute bottom-4 left-4 text-white text-sm font-bold">
+                  <p className="absolute bottom-4 left-4 text-white text-sm font-bold tracking-wide">
                     {item.title}
                   </p>
                 )}
@@ -123,7 +138,7 @@ export function RecentCreations() {
           {ITEMS.map((_, idx) => (
             <div
               key={idx}
-              className="rounded-full transition-all"
+              className="rounded-full"
               style={{
                 width:  idx === active ? 28 : 8,
                 height: 8,
@@ -144,16 +159,12 @@ export function RecentCreations() {
             initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }} viewport={{ once: true }}
           >
-            <span className="text-purple-600">
-              Únete a millones de personas
-            </span>{" "}
-            <span className="text-gray-900">
-              en la creación de imágenes con IA.
-            </span>
+            <span className="text-purple-600">Únete a millones de personas</span>{" "}
+            <span className="text-gray-900">en la creación de imágenes con IA.</span>
           </motion.h2>
 
           <motion.p
-            className="text-gray-500 mb-8"
+            className="text-gray-500 mb-10"
             initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.08 }} viewport={{ once: true }}
           >
@@ -161,19 +172,49 @@ export function RecentCreations() {
           </motion.p>
 
           <motion.div
-            className="flex flex-wrap justify-center gap-6 text-sm text-gray-600"
+            className="flex flex-wrap justify-center gap-8"
             initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.14 }} viewport={{ once: true }}
           >
-            <span className="flex items-center gap-2">
-              <span className="text-purple-500 font-bold">✓</span>
-              Derechos comerciales
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="text-purple-500 font-bold">⚡</span>
-              Regístrate en 30 segundos
-            </span>
+            {BENEFITS.map(({ icon: Icon, label }) => (
+              <span key={label} className="flex items-center gap-2 text-sm font-medium text-gray-600">
+                <span
+                  className="flex items-center justify-center w-7 h-7 rounded-full"
+                  style={{ backgroundColor: "#f5f3ff" }}
+                >
+                  <Icon className="w-4 h-4 text-purple-600" strokeWidth={2.5} />
+                </span>
+                {label}
+              </span>
+            ))}
           </motion.div>
+        </div>
+      </section>
+
+      {/* ── Stats / Social Proof ── */}
+      <section className="py-16 border-t border-gray-100" style={{ background: "linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%)" }}>
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-4xl mx-auto text-center">
+            {STATS.map(({ icon: Icon, value, label }, i) => (
+              <motion.div
+                key={label}
+                initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.1 }} viewport={{ once: true }}
+                className="flex flex-col items-center gap-3"
+              >
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center"
+                  style={{ backgroundColor: "white", boxShadow: "0 4px 20px rgba(124,58,237,0.14)" }}
+                >
+                  <Icon className="w-6 h-6 text-purple-600" />
+                </div>
+                <p className="text-4xl font-black text-gray-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  {value}
+                </p>
+                <p className="text-sm text-gray-500 font-medium">{label}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
     </>
