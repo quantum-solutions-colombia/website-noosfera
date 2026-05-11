@@ -54,3 +54,27 @@ id = "yuBYLuDEMXAAxp6f1vE6d"
 uri = "file://artifacts/noosfera/public/images/nft-6.png"
 type = "image"
 title = "wolf aurora NFT art"
+
+[[generated]]
+id = "MgBwAZ93bNLDXQuespIxX"
+uri = "file://artifacts/noosfera/public/images/nft-7.png"
+type = "image"
+title = "dragon fire NFT art"
+
+[[generated]]
+id = "yfg6LnWxuP45M7nkDXtUN"
+uri = "file://artifacts/noosfera/public/images/nft-8.png"
+type = "image"
+title = "mermaid ocean NFT art"
+
+[[generated]]
+id = "jtYik1m4p0Kc6XZ5NdrwA"
+uri = "file://artifacts/noosfera/public/images/nft-9.png"
+type = "image"
+title = "samurai NFT art"
+
+[[generated]]
+id = "2TkJY7cE-Uti_ZmoQ16qT"
+uri = "file://artifacts/noosfera/public/images/nft-10.png"
+type = "image"
+title = "phoenix NFT art"
