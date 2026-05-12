@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState, useCallback } from "react"
-import { motion } from "framer-motion"
+import { useEffect, useState } from "react"
+import { motion, AnimatePresence } from "framer-motion"
 import { useLocation } from "wouter"
-import { Star, ChevronRight } from "lucide-react"
+import { Star, ChevronRight, ChevronLeft } from "lucide-react"
 
 const BASE_ITEMS = [
   { src: "/images/nft-1.png",  title: "Forest Spirit" },
@@ -16,15 +16,10 @@ const BASE_ITEMS = [
   { src: "/images/nft-10.png", title: "Phoenix Rise" },
 ]
 
-const ITEMS = [...BASE_ITEMS, ...BASE_ITEMS, ...BASE_ITEMS]
 const N = BASE_ITEMS.length
-
-const CARD_W        = 170
-const CARD_H        = 240
-const CARD_W_ACTIVE = 250
-const CARD_H_ACTIVE = 360
-const GAP           = 16
-const INTERVAL      = 2800
+const INTERVAL = 3000
+const PERSPECTIVE = 1100
+const VISIBLE = 3
 
 const BENEFITS = [
   "Derechos comerciales incluidos",
@@ -32,60 +27,58 @@ const BENEFITS = [
   "Arte único generado por IA",
 ]
 
+function mod(n: number, m: number) { return ((n % m) + m) % m }
+
+function getCardProps(offset: number) {
+  const abs = Math.abs(offset)
+  if (abs > VISIBLE) return null
+
+  const sign = Math.sign(offset)
+  const rotateY   = offset * 38
+  const translateX = offset * 148
+  const translateZ = abs === 0 ? 140 : -abs * 60
+  const scale      = abs === 0 ? 1 : 0.82 ** abs
+  const opacity    = abs === 0 ? 1 : Math.max(0, 0.72 - abs * 0.18)
+  const zIndex     = 20 - abs
+  const width      = abs === 0 ? 240 : 170
+  const height     = abs === 0 ? 350 : 240
+
+  return { rotateY, translateX, translateZ, scale, opacity, zIndex, width, height }
+}
+
 export function RecentCreations() {
-  const [active, setActive] = useState(N + 2)
-  const trackRef  = useRef<HTMLDivElement>(null)
-  const skipAnim  = useRef(false)
+  const [active, setActive] = useState(0)
+  const [dir, setDir] = useState(1)
   const [, navigate] = useLocation()
 
-  const centerActive = useCallback((idx: number, smooth: boolean) => {
-    const track = trackRef.current
-    if (!track) return
-    const card = track.children[idx] as HTMLElement
-    if (!card) return
-    track.scrollTo({
-      left: card.offsetLeft - track.clientWidth / 2 + card.clientWidth / 2,
-      behavior: smooth ? "smooth" : "instant",
-    })
-  }, [])
-
   useEffect(() => {
-    const id = setInterval(() => setActive(prev => prev + 1), INTERVAL)
+    const id = setInterval(() => {
+      setDir(1)
+      setActive(prev => mod(prev + 1, N))
+    }, INTERVAL)
     return () => clearInterval(id)
   }, [])
 
-  useEffect(() => {
-    if (skipAnim.current) {
-      centerActive(active, false)
-      skipAnim.current = false
-      return
-    }
-    centerActive(active, true)
-    if (active >= N * 2) {
-      const target = active - N
-      skipAnim.current = true
-      setTimeout(() => setActive(target), 500)
-    }
-    if (active < N) {
-      const target = active + N
-      skipAnim.current = true
-      setTimeout(() => setActive(target), 500)
-    }
-  }, [active, centerActive])
-
-  const dotIndex = (active % N + N) % N
+  const prev = () => {
+    setDir(-1)
+    setActive(p => mod(p - 1, N))
+  }
+  const next = () => {
+    setDir(1)
+    setActive(p => mod(p + 1, N))
+  }
 
   return (
     <>
-      {/* ── Carousel ── */}
-      <section className="py-20 bg-white overflow-hidden">
-        <div className="container mx-auto px-6 mb-10 text-center">
+      {/* ── 3D Cube Carousel ── */}
+      <section className="py-20 bg-white overflow-hidden select-none">
+        <div className="container mx-auto px-6 mb-12 text-center">
           <motion.p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-500 mb-3"
             initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }} viewport={{ once: true }}>
             Comunidad
           </motion.p>
-          <motion.h2 className="text-4xl md:text-5xl font-black text-gray-900 text-center"
+          <motion.h2 className="text-4xl md:text-5xl font-black text-gray-900"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
             initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.08 }} viewport={{ once: true }}>
@@ -93,39 +86,88 @@ export function RecentCreations() {
           </motion.h2>
         </div>
 
-        <div ref={trackRef}
-          className="flex items-center overflow-x-hidden pb-4 px-8"
-          style={{ gap: GAP, userSelect: "none" }}>
-          {ITEMS.map((item, idx) => {
-            const isActive = idx === active
+        {/* 3-D stage */}
+        <div className="relative flex items-center justify-center"
+          style={{ height: 400, perspective: PERSPECTIVE }}>
+
+          {BASE_ITEMS.map((item, idx) => {
+            const offset = mod(idx - active + Math.floor(N / 2), N) - Math.floor(N / 2)
+            const props = getCardProps(offset)
+            if (!props) return null
+            const { rotateY, translateX, translateZ, scale, opacity, zIndex, width, height } = props
+            const isActive = offset === 0
+
             return (
-              <div key={`${item.src}-${idx}`}
-                className="relative flex-shrink-0 rounded-2xl overflow-hidden"
+              <motion.div
+                key={item.src}
+                onClick={() => { if (!isActive) { setDir(offset > 0 ? 1 : -1); setActive(idx) } }}
+                animate={{
+                  rotateY,
+                  x: translateX,
+                  z: translateZ,
+                  scale,
+                  opacity,
+                  width,
+                  height,
+                }}
+                transition={{ type: "spring", stiffness: 260, damping: 28 }}
                 style={{
-                  width:  isActive ? CARD_W_ACTIVE : CARD_W,
-                  height: isActive ? CARD_H_ACTIVE : CARD_H,
-                  transition: skipAnim.current ? "none" : "width 0.5s cubic-bezier(.4,0,.2,1), height 0.5s cubic-bezier(.4,0,.2,1)",
-                  boxShadow: isActive ? "0 28px 64px rgba(124,58,237,0.32)" : "0 4px 16px rgba(0,0,0,0.09)",
+                  position: "absolute",
+                  zIndex,
+                  borderRadius: 20,
+                  overflow: "hidden",
+                  transformStyle: "preserve-3d",
+                  cursor: isActive ? "default" : "pointer",
+                  willChange: "transform, opacity",
                 }}>
-                <img src={item.src} alt={item.title}
-                  className="w-full h-full object-cover"
-                  style={{ filter: isActive ? "none" : "brightness(0.70) saturate(0.80)", transition: "filter 0.5s ease" }} />
-                {isActive && <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />}
-                {isActive && <p className="absolute bottom-4 left-4 text-white text-sm font-bold tracking-wide">{item.title}</p>}
-              </div>
+                <img
+                  src={item.src}
+                  alt={item.title}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                    filter: isActive ? "none" : "brightness(0.65) saturate(0.75)",
+                    transition: "filter 0.5s ease",
+                    display: "block",
+                  }} />
+                {isActive && (
+                  <div style={{
+                    position: "absolute", inset: 0,
+                    background: "linear-gradient(to top, rgba(0,0,0,0.60) 0%, transparent 55%)",
+                  }} />
+                )}
+                {isActive && (
+                  <p style={{
+                    position: "absolute", bottom: 14, left: 14,
+                    color: "#fff", fontSize: 13, fontWeight: 700, letterSpacing: "0.04em",
+                  }}>{item.title}</p>
+                )}
+              </motion.div>
             )
           })}
         </div>
 
-        <div className="flex justify-center gap-2 mt-8">
-          {BASE_ITEMS.map((_, idx) => (
-            <div key={idx} className="rounded-full"
-              style={{
-                width: idx === dotIndex ? 28 : 8, height: 8,
-                backgroundColor: idx === dotIndex ? "#7c3aed" : "#e5e7eb",
-                transition: "width 0.4s ease, background-color 0.4s ease",
-              }} />
-          ))}
+        {/* Dots + arrow controls */}
+        <div className="flex items-center justify-center gap-4 mt-8">
+          <button onClick={prev}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-purple-600 transition-colors">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div className="flex gap-2">
+            {BASE_ITEMS.map((_, idx) => (
+              <button key={idx} onClick={() => { setDir(idx > active ? 1 : -1); setActive(idx) }}
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: idx === active ? 28 : 8, height: 8,
+                  backgroundColor: idx === active ? "#7c3aed" : "#e5e7eb",
+                }} />
+            ))}
+          </div>
+          <button onClick={next}
+            className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-purple-600 transition-colors">
+            <ChevronRight className="w-5 h-5" />
+          </button>
         </div>
       </section>
 
@@ -159,15 +201,32 @@ export function RecentCreations() {
 
       {/* ── Testimonial / Feature Section ── */}
       <section className="overflow-hidden border-t border-gray-100 bg-white">
-        <div className="flex flex-col lg:flex-row min-h-[520px]">
+        <div className="flex flex-col lg:flex-row min-h-[480px]">
 
-          {/* Left — big ghost image filling full column */}
-          <motion.div className="lg:w-1/2 min-h-[320px] lg:min-h-0"
+          {/* Left — image with custom borders, reduced height, signature cropped */}
+          <motion.div
+            className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
             initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }} viewport={{ once: true }}>
-            <img src="/images/nft-ghost.png" alt="Fantasma digital"
-              className="w-full h-full object-cover"
-              style={{ minHeight: 420 }} />
+            <div style={{
+              width: "100%",
+              maxHeight: 400,
+              borderRadius: "24px 4px 24px 4px",
+              overflow: "hidden",
+              border: "2px solid rgba(124,58,237,0.20)",
+              outline: "4px solid rgba(124,58,237,0.07)",
+            }}>
+              <img
+                src="/images/nft-ghost.png"
+                alt="Fantasma digital"
+                style={{
+                  width: "100%",
+                  height: 400,
+                  objectFit: "cover",
+                  objectPosition: "center top",
+                  display: "block",
+                }} />
+            </div>
           </motion.div>
 
           {/* Right — text content */}
@@ -185,9 +244,8 @@ export function RecentCreations() {
               en obras visuales únicas e irrepetibles.
             </p>
 
-            {/* Reviewer info + Stars in same row */}
+            {/* Reviewer info + Stars */}
             <div className="flex items-center gap-4 justify-center flex-wrap">
-              {/* Avatar + name + label */}
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
                   style={{ backgroundColor: "#7c3aed" }}>
@@ -198,8 +256,6 @@ export function RecentCreations() {
                   <p className="text-xs text-gray-400 uppercase tracking-wide">Usuario verificado</p>
                 </div>
               </div>
-
-              {/* Stars */}
               <div className="flex gap-0.5">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
@@ -207,7 +263,6 @@ export function RecentCreations() {
               </div>
             </div>
 
-            {/* Quote — centered */}
             <blockquote className="text-gray-700 leading-relaxed text-center">
               Noosfera es{" "}
               <span className="text-purple-600 font-semibold">algo verdaderamente increíble</span>
@@ -215,7 +270,6 @@ export function RecentCreations() {
               repite — todo desde tus propios datos cardíacos.
             </blockquote>
 
-            {/* CTA button */}
             <div className="flex justify-center">
               <button
                 onClick={() => navigate("/auth/login")}

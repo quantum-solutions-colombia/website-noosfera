@@ -70,18 +70,27 @@ export default function LandingPage() {
               tu Arte Digital
             </h2>
             <p className="text-purple-200 text-lg leading-relaxed">
-              Transforma tus latidos en NFTs únicos y monetiza tu arte digital desde hoy.
+              Transforma tus latidos en NFTs únicos y monetiza tu arte digital.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
               <button
                 onClick={showAuth}
-                className="px-8 py-4 rounded-full font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
-                style={{ backgroundColor: "#ffffff" }}>
+                className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
+                style={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: "2rem 0.5rem 2rem 0.5rem",
+                  border: "2px solid rgba(255,255,255,0.6)",
+                }}>
                 Comenzar Demo
               </button>
               <button
                 onClick={() => navigate("/pricing")}
-                className="px-8 py-4 rounded-full font-semibold text-white text-sm tracking-wide border border-white/40 hover:bg-white/10 transition-all">
+                className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
+                style={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: "0.5rem 2rem 0.5rem 2rem",
+                  border: "2px solid rgba(255,255,255,0.6)",
+                }}>
                 Ver Planes
               </button>
             </div>
