@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion } from "framer-motion"
 import { useLocation } from "wouter"
-import { Star, ChevronRight, ChevronLeft } from "lucide-react"
+import { Star, ChevronRight } from "lucide-react"
 
 const BASE_ITEMS = [
   { src: "/images/nft-1.png",  title: "Forest Spirit" },
@@ -16,10 +16,14 @@ const BASE_ITEMS = [
   { src: "/images/nft-10.png", title: "Phoenix Rise" },
 ]
 
-const N = BASE_ITEMS.length
-const INTERVAL = 3000
+const N          = BASE_ITEMS.length
+const INTERVAL   = 3000
 const PERSPECTIVE = 1100
-const VISIBLE = 3
+const VISIBLE    = 3
+
+const CARD_W = 200
+const CARD_H = 300
+const RADIUS = 20
 
 const BENEFITS = [
   "Derechos comerciales incluidos",
@@ -33,40 +37,23 @@ function getCardProps(offset: number) {
   const abs = Math.abs(offset)
   if (abs > VISIBLE) return null
 
-  const sign = Math.sign(offset)
-  const rotateY   = offset * 38
-  const translateX = offset * 148
-  const translateZ = abs === 0 ? 140 : -abs * 60
-  const scale      = abs === 0 ? 1 : 0.82 ** abs
-  const opacity    = abs === 0 ? 1 : Math.max(0, 0.72 - abs * 0.18)
+  const rotateY    = offset * 40
+  const translateX = offset * 160
+  const translateZ = abs === 0 ? 130 : -abs * 55
+  const opacity    = abs === 0 ? 1 : Math.max(0, 0.68 - abs * 0.16)
   const zIndex     = 20 - abs
-  const width      = abs === 0 ? 240 : 170
-  const height     = abs === 0 ? 350 : 240
 
-  return { rotateY, translateX, translateZ, scale, opacity, zIndex, width, height }
+  return { rotateY, translateX, translateZ, opacity, zIndex }
 }
 
 export function RecentCreations() {
   const [active, setActive] = useState(0)
-  const [dir, setDir] = useState(1)
   const [, navigate] = useLocation()
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setDir(1)
-      setActive(prev => mod(prev + 1, N))
-    }, INTERVAL)
+    const id = setInterval(() => setActive(prev => mod(prev + 1, N)), INTERVAL)
     return () => clearInterval(id)
   }, [])
-
-  const prev = () => {
-    setDir(-1)
-    setActive(p => mod(p - 1, N))
-  }
-  const next = () => {
-    setDir(1)
-    setActive(p => mod(p + 1, N))
-  }
 
   return (
     <>
@@ -86,36 +73,37 @@ export function RecentCreations() {
           </motion.h2>
         </div>
 
-        {/* 3-D stage */}
+        {/* 3-D stage — fixed card size, circular corners always enforced */}
         <div className="relative flex items-center justify-center"
-          style={{ height: 400, perspective: PERSPECTIVE }}>
+          style={{ height: CARD_H + 60, perspective: PERSPECTIVE }}>
 
           {BASE_ITEMS.map((item, idx) => {
             const offset = mod(idx - active + Math.floor(N / 2), N) - Math.floor(N / 2)
             const props = getCardProps(offset)
             if (!props) return null
-            const { rotateY, translateX, translateZ, scale, opacity, zIndex, width, height } = props
+            const { rotateY, translateX, translateZ, opacity, zIndex } = props
             const isActive = offset === 0
 
             return (
               <motion.div
                 key={item.src}
-                onClick={() => { if (!isActive) { setDir(offset > 0 ? 1 : -1); setActive(idx) } }}
+                onClick={() => { if (!isActive) setActive(idx) }}
                 animate={{
                   rotateY,
                   x: translateX,
                   z: translateZ,
-                  scale,
                   opacity,
-                  width,
-                  height,
+                  borderRadius: RADIUS,
                 }}
-                transition={{ type: "spring", stiffness: 260, damping: 28 }}
+                initial={false}
+                transition={{ type: "spring", stiffness: 240, damping: 26 }}
                 style={{
                   position: "absolute",
-                  zIndex,
-                  borderRadius: 20,
+                  width: CARD_W,
+                  height: CARD_H,
+                  borderRadius: RADIUS,
                   overflow: "hidden",
+                  zIndex,
                   transformStyle: "preserve-3d",
                   cursor: isActive ? "default" : "pointer",
                   willChange: "transform, opacity",
@@ -127,14 +115,16 @@ export function RecentCreations() {
                     width: "100%",
                     height: "100%",
                     objectFit: "cover",
-                    filter: isActive ? "none" : "brightness(0.65) saturate(0.75)",
-                    transition: "filter 0.5s ease",
+                    filter: isActive ? "none" : "brightness(0.60) saturate(0.70)",
+                    transition: "filter 0.45s ease",
                     display: "block",
+                    borderRadius: RADIUS,
                   }} />
                 {isActive && (
                   <div style={{
                     position: "absolute", inset: 0,
-                    background: "linear-gradient(to top, rgba(0,0,0,0.60) 0%, transparent 55%)",
+                    background: "linear-gradient(to top, rgba(0,0,0,0.58) 0%, transparent 52%)",
+                    borderRadius: RADIUS,
                   }} />
                 )}
                 {isActive && (
@@ -148,26 +138,16 @@ export function RecentCreations() {
           })}
         </div>
 
-        {/* Dots + arrow controls */}
-        <div className="flex items-center justify-center gap-4 mt-8">
-          <button onClick={prev}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-purple-600 transition-colors">
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <div className="flex gap-2">
-            {BASE_ITEMS.map((_, idx) => (
-              <button key={idx} onClick={() => { setDir(idx > active ? 1 : -1); setActive(idx) }}
-                className="rounded-full transition-all duration-300"
-                style={{
-                  width: idx === active ? 28 : 8, height: 8,
-                  backgroundColor: idx === active ? "#7c3aed" : "#e5e7eb",
-                }} />
-            ))}
-          </div>
-          <button onClick={next}
-            className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:text-purple-600 transition-colors">
-            <ChevronRight className="w-5 h-5" />
-          </button>
+        {/* Dot navigation only — no arrows */}
+        <div className="flex items-center justify-center gap-2 mt-8">
+          {BASE_ITEMS.map((_, idx) => (
+            <button key={idx} onClick={() => setActive(idx)}
+              className="rounded-full transition-all duration-300"
+              style={{
+                width: idx === active ? 28 : 8, height: 8,
+                backgroundColor: idx === active ? "#7c3aed" : "#e5e7eb",
+              }} />
+          ))}
         </div>
       </section>
 
@@ -203,25 +183,26 @@ export function RecentCreations() {
       <section className="overflow-hidden border-t border-gray-100 bg-white">
         <div className="flex flex-col lg:flex-row min-h-[480px]">
 
-          {/* Left — image with custom borders, reduced height, signature cropped */}
+          {/* Left — image: reduced height, custom borders, only bottom signature cropped */}
           <motion.div
             className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
             initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <div style={{
               width: "100%",
-              maxHeight: 400,
+              height: 480,
               borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
               border: "2px solid rgba(124,58,237,0.20)",
               outline: "4px solid rgba(124,58,237,0.07)",
+              flexShrink: 0,
             }}>
               <img
                 src="/images/nft-ghost.png"
                 alt="Fantasma digital"
                 style={{
                   width: "100%",
-                  height: 400,
+                  height: "108%",
                   objectFit: "cover",
                   objectPosition: "center top",
                   display: "block",
@@ -244,7 +225,6 @@ export function RecentCreations() {
               en obras visuales únicas e irrepetibles.
             </p>
 
-            {/* Reviewer info + Stars */}
             <div className="flex items-center gap-4 justify-center flex-wrap">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"

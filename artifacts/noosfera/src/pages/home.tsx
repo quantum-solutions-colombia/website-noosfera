@@ -59,8 +59,13 @@ export default function LandingPage() {
       {/* Recent Creations */}
       <RecentCreations />
 
-      {/* CTA Section */}
-      <section className="py-20" style={{ backgroundColor: "#7c3aed" }}>
+      {/* CTA Section — custom rounded extremes on the section container */}
+      <section className="py-20"
+        style={{
+          backgroundColor: "#7c3aed",
+          borderRadius: "2.5rem 2.5rem 0 0",
+          marginTop: "0.5rem",
+        }}>
         <div className="container mx-auto px-6 text-center">
           <div className="max-w-2xl mx-auto space-y-6">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">Empieza Hoy</p>
@@ -78,8 +83,7 @@ export default function LandingPage() {
                 className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
                 style={{
                   backgroundColor: "#ffffff",
-                  borderRadius: "2rem 0.5rem 2rem 0.5rem",
-                  border: "2px solid rgba(255,255,255,0.6)",
+                  borderRadius: "14px",
                 }}>
                 Comenzar Demo
               </button>
@@ -88,8 +92,7 @@ export default function LandingPage() {
                 className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
                 style={{
                   backgroundColor: "#ffffff",
-                  borderRadius: "0.5rem 2rem 0.5rem 2rem",
-                  border: "2px solid rgba(255,255,255,0.6)",
+                  borderRadius: "14px",
                 }}>
                 Ver Planes
               </button>
