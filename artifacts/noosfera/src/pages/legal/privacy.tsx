@@ -1,0 +1,113 @@
+import { Shield } from "lucide-react"
+import { Footer } from "@/components/footer"
+import { DarkNav } from "@/components/dark-nav"
+
+export default function PrivacyPage() {
+  return (
+    <div className="min-h-screen bg-white">
+      <DarkNav />
+
+      <main className="container mx-auto px-6 py-12 max-w-3xl">
+        <button onClick={() => window.history.back()}
+          className="mb-8 text-sm font-medium text-purple-600 hover:text-purple-800 transition-colors">
+          ← Volver
+        </button>
+
+        <div className="text-center mb-10 pb-8 border-b border-gray-100">
+          <div className="mx-auto mb-5 w-14 h-14 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: "#f5f3ff" }}>
+            <Shield className="h-7 w-7 text-purple-600" />
+          </div>
+          <h1 className="text-4xl font-black text-gray-900 mb-2"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Política de Privacidad
+          </h1>
+          <p className="text-sm text-gray-400">
+            Última actualización: {new Date().toLocaleDateString("es-CO")}
+          </p>
+        </div>
+
+        <div className="space-y-8 text-gray-600 leading-relaxed">
+          <p>
+            En Noosfera, nos tomamos muy en serio la privacidad de nuestros usuarios. Esta política describe cómo
+            recopilamos, usamos y protegemos tu información personal y datos de ritmo cardíaco.
+          </p>
+
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-4"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>1. Información que Recopilamos</h2>
+            <h3 className="font-bold text-gray-800 mb-2">1.1 Información Personal</h3>
+            <ul className="space-y-2 pl-4 mb-4">
+              {["Nombre y apellidos", "Dirección de correo electrónico", "Fecha de nacimiento", "Información de perfil"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+            <h3 className="font-bold text-gray-800 mb-2">1.2 Datos Cardíacos</h3>
+            <ul className="space-y-2 pl-4">
+              {["Patrones de ritmo cardíaco", "Datos de variabilidad cardíaca", "Métricas de frecuencia cardíaca", "Registros de sesiones de monitoreo"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>2. Uso de la Información</h2>
+            <p className="mb-3">Utilizamos la información recopilada para:</p>
+            <ul className="space-y-2 pl-4">
+              {["Proporcionar y mejorar nuestros servicios", "Personalizar tu experiencia", "Procesar y generar contenido digital", "Investigación y desarrollo (datos anonimizados)", "Comunicarnos contigo sobre actualizaciones y cambios"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>3. Protección de Datos</h2>
+            <p className="mb-3">Implementamos medidas de seguridad robustas:</p>
+            <ul className="space-y-2 pl-4">
+              {["Encriptación de extremo a extremo", "Almacenamiento seguro en servidores protegidos", "Acceso restringido al personal autorizado", "Monitoreo continuo de seguridad", "Copias de seguridad regulares"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>4. Tus Derechos</h2>
+            <p className="mb-3">Como usuario, tienes derecho a:</p>
+            <ul className="space-y-2 pl-4">
+              {["Acceder a tu información personal", "Corregir datos inexactos", "Solicitar la eliminación de tus datos", "Exportar tus datos en un formato portable", "Retirar tu consentimiento en cualquier momento"].map(i => (
+                <li key={i} className="flex items-start gap-2"><span className="text-purple-500 mt-1">•</span>{i}</li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>5. Retención de Datos</h2>
+            <p>Mantenemos tu información mientras tu cuenta esté activa o sea necesario para proporcionar servicios. Puedes solicitar la eliminación de tu cuenta y datos en cualquier momento.</p>
+          </div>
+
+          <div>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>6. Menores de Edad</h2>
+            <p>Nuestros servicios no están dirigidos a menores de 18 años. No recopilamos intencionalmente información de menores.</p>
+          </div>
+
+          <div className="rounded-2xl p-6" style={{ backgroundColor: "#f5f3ff" }}>
+            <h2 className="text-lg font-black text-gray-900 mb-3"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>7. Contacto</h2>
+            <p>Si tienes preguntas sobre nuestra política de privacidad, contáctanos en:</p>
+            <p className="mt-2">
+              Email: <a href="mailto:privacy@noosfera.com" className="text-purple-600 hover:underline font-medium">privacy@noosfera.com</a><br />
+              Teléfono: +57 300 123 4567
+            </p>
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  )
+}
