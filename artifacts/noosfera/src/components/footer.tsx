@@ -3,15 +3,6 @@ import { motion } from "framer-motion"
 import { Link } from "wouter"
 import React from "react"
 
-const BRAND_COLORS: Record<string, string> = {
-  facebook: "#1877F2",
-  instagram: "#E1306C",
-  tiktok: "#010101",
-  whatsapp: "#25D366",
-}
-
-const DEFAULT_BG = "#7c3aed"
-
 const SOCIAL_HREFS: Record<string, string> = {
   facebook: "https://facebook.com/noosfera",
   instagram: "https://instagram.com/noosfera",
@@ -45,22 +36,17 @@ const ICONS: Record<string, React.ReactNode> = {
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
-  const [activeNetwork, setActiveNetwork] = useState<string | null>(null)
-
-  const handleClick = useCallback((network: string) => {
-    setActiveNetwork(network)
-    setTimeout(() => setActiveNetwork(null), 2000)
-  }, [])
+  const [hovered, setHovered] = useState<string | null>(null)
 
   return (
-    <footer className="bg-white border-t border-gray-100">
+    <footer style={{ backgroundColor: "#0a0a0a" }}>
       <div className="container mx-auto px-4 py-16">
         <div className="flex flex-col items-center">
 
           <motion.div className="mb-8"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }} viewport={{ once: true }}>
-            <span className="text-2xl font-black text-purple-600"
+            <span className="text-2xl font-black text-white"
               style={{ fontFamily: "'DM Sans', sans-serif" }}>
               Noosfera
             </span>
@@ -74,11 +60,13 @@ export function Footer() {
                 href={SOCIAL_HREFS[network]}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => handleClick(network)}
-                className="w-12 h-12 rounded-full flex items-center justify-center text-white shadow-md"
+                onHoverStart={() => setHovered(network)}
+                onHoverEnd={() => setHovered(null)}
+                className="w-12 h-12 rounded-full flex items-center justify-center text-white"
                 style={{
-                  backgroundColor: activeNetwork === network ? BRAND_COLORS[network] : DEFAULT_BG,
-                  transition: "background-color 0.35s ease",
+                  backgroundColor: hovered === network ? "#333" : "#1a1a1a",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                  transition: "background-color 0.25s ease",
                 }}
                 whileHover={{ scale: 1.1, y: -2 }}
                 whileTap={{ scale: 0.95 }}
@@ -88,7 +76,7 @@ export function Footer() {
             ))}
           </motion.div>
 
-          <motion.p className="text-purple-600 font-semibold mb-8 text-center text-sm tracking-wide"
+          <motion.p className="text-gray-400 font-medium mb-8 text-center text-sm tracking-wide"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true }}>
             Convierte latidos en arte digital
@@ -96,30 +84,30 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-gray-100" />
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
 
       <div className="container mx-auto px-4 py-6">
         <motion.div className="flex flex-wrap justify-center items-center gap-2 text-sm"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.3 }} viewport={{ once: true }}>
-          <Link href="/cookies" className="text-gray-500 hover:text-purple-600 transition-colors">
+          <Link href="/cookies" className="text-gray-400 hover:text-white transition-colors">
             Política de Cookies
           </Link>
-          <span className="text-gray-300 mx-1">&#8226;</span>
-          <Link href="/terms" className="text-gray-500 hover:text-purple-600 transition-colors">
+          <span className="text-gray-600 mx-1">&#8226;</span>
+          <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
             Términos y Condiciones
           </Link>
-          <span className="text-gray-300 mx-1">&#8226;</span>
-          <Link href="/privacy" className="text-gray-500 hover:text-purple-600 transition-colors">
+          <span className="text-gray-600 mx-1">&#8226;</span>
+          <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
             Política de Privacidad
           </Link>
         </motion.div>
       </div>
 
-      <div className="border-t border-gray-100" />
+      <div style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }} />
 
       <div className="container mx-auto px-4 py-5">
-        <p className="text-center text-gray-400 text-sm">
+        <p className="text-center text-gray-600 text-sm">
           &copy; {currentYear} Noosfera.
         </p>
       </div>
