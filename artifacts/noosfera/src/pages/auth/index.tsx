@@ -84,42 +84,59 @@ function AuthContent() {
       {/* Auth hero area */}
       <div
         className="flex-1 flex flex-col items-center justify-center px-4 py-10"
-        style={{ position: "relative", minHeight: 520 }}>
+        style={{ position: "relative", minHeight: 520, background: "#f8f8fb", overflow: "hidden" }}>
 
-        {/* Collage background grid */}
+        {/* ── LEFT collage panel ── */}
         <div style={{
-          position: "absolute", inset: 0,
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr 1fr 1fr",
-          gridTemplateRows: "1fr 1fr 1fr",
-          overflow: "hidden",
-          gap: 0,
+          position: "absolute", left: 0, top: 0, bottom: 0, width: 300,
+          pointerEvents: "none", zIndex: 0,
+          WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0) 88%)",
+          maskImage:        "linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0) 88%)",
         }}>
           {[
-            { src: "/images/nft-castle-ai.png",  style: { gridRow: "1 / 3" } },
-            { src: "/images/nft-ghost.png",       style: {} },
-            { src: "/images/nft-1.png",           style: {} },
-            { src: "/images/nft-castle-1.png",    style: { gridRow: "1 / 3" } },
-            { src: "/images/nft-3.png",           style: {} },
-            { src: "/images/nft-2.png",           style: {} },
-            { src: "/images/hero-main.png",       style: { gridColumn: "1 / 3" } },
-            { src: "/images/nft-ghost-2.png",     style: {} },
-            { src: "/images/nft-castle-2.png",    style: {} },
-            { src: "/images/nft-4.png",           style: {} },
-            { src: "/images/nft-5.png",           style: {} },
+            { src: "/images/collage-1.png", top: -20,  left: -28, w: 210, h: 270, rot: -16 },
+            { src: "/images/collage-2.png", top: 200,  left:  20, w: 195, h: 255, rot: -13 },
+            { src: "/images/collage-3.png", top: 420,  left: -15, w: 205, h: 265, rot: -17 },
           ].map((img, i) => (
-            <div key={i} style={{ overflow: "hidden", ...img.style }}>
-              <img src={img.src} alt=""
-                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            <div key={i} style={{
+              position: "absolute",
+              top: img.top, left: img.left,
+              width: img.w, height: img.h,
+              transform: `rotate(${img.rot}deg)`,
+              borderRadius: 16,
+              overflow: "hidden",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.14)",
+            }}>
+              <img src={img.src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
             </div>
           ))}
         </div>
 
-        {/* Dark overlay */}
+        {/* ── RIGHT collage panel ── */}
         <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(135deg, rgba(8,3,24,0.83) 0%, rgba(25,8,52,0.80) 100%)",
-        }} />
+          position: "absolute", right: 0, top: 0, bottom: 0, width: 300,
+          pointerEvents: "none", zIndex: 0,
+          WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0) 88%)",
+          maskImage:        "linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0) 88%)",
+        }}>
+          {[
+            { src: "/images/collage-4.png", top: -20,  right: -28, w: 210, h: 270, rot: 16 },
+            { src: "/images/collage-5.png", top: 210,  right:  18, w: 195, h: 255, rot: 13 },
+            { src: "/images/collage-6.png", top: 430,  right: -12, w: 205, h: 265, rot: 17 },
+          ].map((img, i) => (
+            <div key={i} style={{
+              position: "absolute",
+              top: img.top, right: img.right,
+              width: img.w, height: img.h,
+              transform: `rotate(${img.rot}deg)`,
+              borderRadius: 16,
+              overflow: "hidden",
+              boxShadow: "0 8px 32px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.14)",
+            }}>
+              <img src={img.src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            </div>
+          ))}
+        </div>
 
         {/* Card container */}
         <motion.div
@@ -369,12 +386,12 @@ function AuthContent() {
             onClick={() => navigate("/")}
             style={{
               background: "none", border: "none", cursor: "pointer",
-              color: "rgba(255,255,255,0.80)", fontSize: 13, fontWeight: 500,
+              color: "#888", fontSize: 13, fontWeight: 500,
               textDecoration: "underline", textUnderlineOffset: 3,
               transition: "color 0.18s",
             }}
-            onMouseEnter={e => { e.currentTarget.style.color = "#fff" }}
-            onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.80)" }}>
+            onMouseEnter={e => { e.currentTarget.style.color = "#7c3aed" }}
+            onMouseLeave={e => { e.currentTarget.style.color = "#888" }}>
             ← Volver a inicio
           </button>
         </div>
