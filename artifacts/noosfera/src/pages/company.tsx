@@ -88,13 +88,13 @@ export default function CompanyPage() {
           </motion.div>
 
           <motion.div
-            className="lg:w-1/2 flex items-center justify-center p-10 lg:p-14"
+            className="lg:w-1/2 flex items-center justify-center p-4 lg:p-6"
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}
           >
-            <div style={{ filter: "drop-shadow(0 20px 50px rgba(124,58,237,0.28))", width: "90%" }}>
+            <div style={{ filter: "drop-shadow(0 20px 60px rgba(124,58,237,0.30))", width: "100%" }}>
               <div style={{
-                height: "440px",
+                height: "520px",
                 WebkitMaskImage: "url('/images/blob-mask.png')",
                 maskImage: "url('/images/blob-mask.png')",
                 WebkitMaskSize: "100% 100%",
@@ -178,9 +178,9 @@ export default function CompanyPage() {
             initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }} viewport={{ once: true }}
           >
-            <div style={{ filter: "drop-shadow(0 20px 50px rgba(124,58,237,0.25))", width: "92%" }}>
+            <div style={{ filter: "drop-shadow(0 20px 60px rgba(124,58,237,0.26))", width: "100%" }}>
               <div style={{
-                height: "420px",
+                height: "500px",
                 WebkitMaskImage: "url('/images/blob-mask.png')",
                 maskImage: "url('/images/blob-mask.png')",
                 WebkitMaskSize: "100% 100%",
