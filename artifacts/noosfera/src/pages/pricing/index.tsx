@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Check, ChevronDown } from "lucide-react"
+import { Check, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react"
 import { useLocation } from "wouter"
 import { Footer } from "@/components/footer"
 import { DarkNav } from "@/components/dark-nav"
@@ -133,7 +133,40 @@ export default function PricingPage() {
   const [, navigate] = useLocation()
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly")
   const [openFaq, setOpenFaq] = useState<number | null>(null)
+  const [currentIndex, setCurrentIndex] = useState(1)
+  const [direction, setDirection] = useState(0)
+  const isAutoPlaying = useRef(true)
   const plans = planData[billing]
+
+  const goTo = useCallback((index: number, dir: number) => {
+    setDirection(dir)
+    setCurrentIndex(index)
+  }, [])
+
+  const next = useCallback(() => {
+    goTo((currentIndex + 1) % plans.length, 1)
+  }, [currentIndex, plans.length, goTo])
+
+  const prev = useCallback(() => {
+    goTo((currentIndex - 1 + plans.length) % plans.length, -1)
+  }, [currentIndex, plans.length, goTo])
+
+  useEffect(() => {
+    if (!isAutoPlaying.current) return
+    const id = setInterval(() => {
+      setDirection(1)
+      setCurrentIndex(prev => (prev + 1) % plans.length)
+    }, 4000)
+    return () => clearInterval(id)
+  }, [plans.length])
+
+  const plan = plans[currentIndex]
+
+  const variants = {
+    enter: (dir: number) => ({ x: dir > 0 ? 80 : -80, opacity: 0, scale: 0.97 }),
+    center: { x: 0, opacity: 1, scale: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -80 : 80, opacity: 0, scale: 0.97 }),
+  }
 
   return (
     <div className="min-h-screen bg-white text-gray-900">
@@ -152,44 +185,14 @@ export default function PricingPage() {
             Elige el plan perfecto
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-gray-500 text-lg max-w-xl mx-auto leading-relaxed mb-10">
+            className="text-gray-500 text-lg max-w-xl mx-auto leading-relaxed">
             Comienza gratis y escala cuando estés listo para monetizar tu arte biométrico único.
           </motion.p>
-
-          {/* Billing toggle */}
-          <div className="flex items-center justify-center gap-4">
-            <div className="relative flex items-center bg-gray-100 rounded-full p-1 gap-1">
-              {(["monthly", "annual"] as const).map(b => (
-                <button key={b} onClick={() => setBilling(b)}
-                  className="relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300"
-                  style={{
-                    background: billing === b ? "#111827" : "transparent",
-                    color: billing === b ? "#fff" : "#6b7280",
-                  }}>
-                  {b === "monthly" ? "Mensual" : "Anual"}
-                </button>
-              ))}
-            </div>
-            <AnimatePresence>
-              {billing === "annual" && (
-                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -10 }}
-                  className="flex items-center gap-1.5">
-                  <svg viewBox="0 0 40 20" className="w-8 h-4 text-red-500" fill="none">
-                    <path d="M35 5 Q20 15 5 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    <path d="M5 10 L8 6 M5 10 L9 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                  <span className="text-xs font-bold text-red-500 leading-tight text-left">
-                    ¡20% OFF, eso es<br />2 meses GRATIS 🩷
-                  </span>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
         </div>
       </section>
 
-      {/* Plans Section — image LEFT, cards RIGHT */}
-      <section className="container mx-auto px-6 pb-24">
+      {/* Plans Section — dragon LEFT, carousel RIGHT */}
+      <section className="container mx-auto px-6 pb-28">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-10 items-center">
 
           {/* Left — Dragon image */}
@@ -197,101 +200,171 @@ export default function PricingPage() {
             initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="w-full lg:w-[38%] flex-shrink-0"
+            className="w-full lg:w-[40%] flex-shrink-0"
           >
             <div className="rounded-3xl overflow-hidden shadow-2xl"
-              style={{
-                background: "linear-gradient(135deg, #1a0533 0%, #3b0764 50%, #1a0533 100%)",
-              }}>
+              style={{ background: "linear-gradient(135deg, #1a0533 0%, #3b0764 50%, #1a0533 100%)" }}>
               <img
                 src="/images/dragon-pricing.png"
                 alt="Dragon Noosfera"
-                className="w-full h-full object-cover"
-                style={{ minHeight: 480, maxHeight: 580 }}
+                className="w-full object-cover"
+                style={{ minHeight: 500, maxHeight: 620 }}
               />
             </div>
           </motion.div>
 
-          {/* Right — Plan Cards */}
-          <div className="w-full lg:flex-1 flex flex-col gap-5">
-            {plans.map((plan, i) => {
-              const isFeatured = plan.id === "standard"
-              return (
-                <motion.div key={plan.id + billing}
-                  initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.1 }}
-                  className="relative rounded-2xl flex flex-col sm:flex-row sm:items-center gap-4 p-6"
-                  style={{
-                    background: "white",
-                    border: isFeatured ? "2px solid #7c3aed" : "1.5px solid #e5e7eb",
-                    boxShadow: isFeatured ? "0 8px 32px rgba(124,58,237,0.14)" : "0 2px 8px rgba(0,0,0,0.04)",
-                  }}>
+          {/* Right — Carousel */}
+          <div className="w-full lg:flex-1 flex flex-col items-center gap-6"
+            onMouseEnter={() => { isAutoPlaying.current = false }}
+            onMouseLeave={() => { isAutoPlaying.current = true }}>
 
-                  {/* Badge */}
-                  {plan.tag && (
-                    <div className="absolute -top-3.5 left-6 whitespace-nowrap text-[11px] font-bold px-4 py-1.5 rounded-full"
-                      style={{ backgroundColor: plan.tagColor!.bg, color: plan.tagColor!.text }}>
-                      {plan.tag}
-                    </div>
-                  )}
+            {/* Card carousel */}
+            <div className="relative w-full flex items-center gap-4">
+              {/* Prev button */}
+              <button
+                onClick={prev}
+                className="flex-shrink-0 p-3 rounded-full bg-white border border-gray-200 shadow hover:shadow-md hover:border-purple-300 transition-all z-10"
+                aria-label="Plan anterior">
+                <ChevronLeft className="h-5 w-5 text-gray-600" />
+              </button>
 
-                  {/* Plan name + price */}
-                  <div className="flex-shrink-0 min-w-[140px]">
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-1">{plan.label}</p>
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-3xl font-black text-gray-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                        {plan.price}
-                      </span>
-                      <span className="text-xs text-gray-400">{plan.sub}</span>
-                    </div>
-                    <AnimatePresence>
-                      {plan.annualSaving && (
-                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-1.5">
-                          <span className="inline-block text-[9px] font-bold uppercase tracking-wide px-2.5 py-0.5 rounded-md"
-                            style={{ background: "#f3e8ff", color: "#7c3aed" }}>
-                            {plan.annualSaving}
-                          </span>
-                        </motion.div>
+              {/* Card viewport */}
+              <div className="relative flex-1 overflow-hidden" style={{ minHeight: 460 }}>
+                <AnimatePresence mode="wait" custom={direction}>
+                  <motion.div
+                    key={plan.id + billing}
+                    custom={direction}
+                    variants={variants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                    className="w-full"
+                  >
+                    <div
+                      className="relative rounded-2xl p-8 flex flex-col gap-6 w-full"
+                      style={{
+                        background: "white",
+                        border: plan.id === "standard" ? "2px solid #7c3aed" : "1.5px solid #e5e7eb",
+                        boxShadow: plan.id === "standard"
+                          ? "0 12px 48px rgba(124,58,237,0.16)"
+                          : "0 4px 16px rgba(0,0,0,0.06)",
+                      }}>
+
+                      {/* Badge */}
+                      {plan.tag && (
+                        <div className="absolute -top-4 left-8 whitespace-nowrap text-[11px] font-bold px-4 py-1.5 rounded-full"
+                          style={{ backgroundColor: plan.tagColor!.bg, color: plan.tagColor!.text }}>
+                          {plan.tag}
+                        </div>
                       )}
-                    </AnimatePresence>
-                  </div>
 
-                  {/* Divider vertical */}
-                  <div className="hidden sm:block w-px self-stretch bg-gray-100 mx-2" />
+                      {/* Plan name + price */}
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-gray-400 mb-2">{plan.label}</p>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-5xl font-black text-gray-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                            {plan.price}
+                          </span>
+                          <span className="text-sm text-gray-400">{plan.sub}</span>
+                        </div>
 
-                  {/* Features */}
-                  <ul className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-                    {plan.features.map((f, fi) => (
-                      <li key={fi} className="flex items-start gap-2 text-xs text-gray-600">
-                        <Check className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-purple-500" />
-                        {f}
-                      </li>
-                    ))}
-                  </ul>
+                        <AnimatePresence>
+                          {plan.annualSaving && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-2">
+                              <span className="inline-block text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-md"
+                                style={{ background: "#f3e8ff", color: "#7c3aed" }}>
+                                {plan.annualSaving}
+                              </span>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
 
-                  {/* CTA */}
-                  <button onClick={() => navigate("/auth")}
-                    className="flex-shrink-0 px-6 py-3 rounded-full text-sm font-bold tracking-wide transition-all hover:opacity-90 hover:scale-[1.02] whitespace-nowrap"
+                      <div className="border-t border-gray-100" />
+
+                      {/* Features */}
+                      <ul className="space-y-3">
+                        {plan.features.map((f, fi) => (
+                          <li key={fi} className="flex items-start gap-2.5 text-sm text-gray-700">
+                            <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-purple-500" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* CTA */}
+                      <button
+                        onClick={() => navigate("/auth/login")}
+                        className="w-full py-3.5 rounded-full text-sm font-bold tracking-wide transition-all hover:opacity-90 hover:scale-[1.01] active:scale-[0.99]"
+                        style={{ background: "#7c3aed", color: "white" }}>
+                        Comenzar ahora
+                      </button>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              {/* Next button */}
+              <button
+                onClick={next}
+                className="flex-shrink-0 p-3 rounded-full bg-white border border-gray-200 shadow hover:shadow-md hover:border-purple-300 transition-all z-10"
+                aria-label="Siguiente plan">
+                <ChevronRight className="h-5 w-5 text-gray-600" />
+              </button>
+            </div>
+
+            {/* Dots */}
+            <div className="flex items-center gap-2">
+              {plans.map((_, i) => (
+                <button key={i} onClick={() => goTo(i, i > currentIndex ? 1 : -1)}
+                  aria-label={`Plan ${i + 1}`}
+                  className="h-2.5 rounded-full transition-all duration-300"
+                  style={{
+                    width: i === currentIndex ? 28 : 10,
+                    backgroundColor: i === currentIndex ? "#7c3aed" : "#d1d5db",
+                  }} />
+              ))}
+            </div>
+
+            {/* Billing toggle — below the carousel */}
+            <div className="flex flex-col items-center gap-3 mt-2">
+              <div className="relative flex items-center bg-gray-100 rounded-full p-1 gap-1">
+                {(["monthly", "annual"] as const).map(b => (
+                  <button key={b} onClick={() => { setBilling(b); setCurrentIndex(1) }}
+                    className="relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300"
                     style={{
-                      background: "#7c3aed",
-                      color: "white",
+                      background: billing === b ? "#111827" : "transparent",
+                      color: billing === b ? "#fff" : "#6b7280",
                     }}>
-                    Comenzar ahora
+                    {b === "monthly" ? "Mensual" : "Anual"}
                   </button>
-                </motion.div>
-              )
-            })}
+                ))}
+              </div>
+              <AnimatePresence>
+                {billing === "annual" && (
+                  <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
+                    className="flex items-center gap-1.5">
+                    <svg viewBox="0 0 40 20" className="w-8 h-4 text-red-500" fill="none">
+                      <path d="M35 5 Q20 15 5 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <path d="M5 10 L8 6 M5 10 L9 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    <span className="text-xs font-bold text-red-500 leading-tight text-center">
+                      ¡20% OFF — 2 meses GRATIS! 🩷
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </section>
 
       <div className="border-t max-w-5xl mx-auto border-gray-100" />
 
-      {/* FAQ — image-left layout */}
+      {/* FAQ */}
       <section className="py-24 container mx-auto px-6">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-
-          {/* Left — heading */}
           <div className="flex flex-col gap-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">Preguntas</p>
@@ -313,7 +386,6 @@ export default function PricingPage() {
             </div>
           </div>
 
-          {/* Right — accordion */}
           <div className="divide-y divide-gray-100 pt-2">
             {faqs.map((faq, i) => (
               <div key={i}>
@@ -340,7 +412,7 @@ export default function PricingPage() {
 
       <div className="border-t max-w-5xl mx-auto border-gray-100" />
 
-      {/* CTA — purple background with rounded top corners, matching home page style */}
+      {/* CTA — purple background with rounded top corners like home */}
       <section className="py-20"
         style={{
           backgroundColor: "#7c3aed",
@@ -359,21 +431,15 @@ export default function PricingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
               <button
-                onClick={() => navigate("/auth")}
+                onClick={() => navigate("/auth/login")}
                 className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
-                style={{
-                  backgroundColor: "#ffffff",
-                  borderRadius: "14px",
-                }}>
+                style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
                 Comenzar gratis
               </button>
               <button
                 onClick={() => navigate("/docs")}
                 className="px-8 py-4 font-semibold text-white text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02] border border-white/30"
-                style={{
-                  backgroundColor: "rgba(255,255,255,0.12)",
-                  borderRadius: "14px",
-                }}>
+                style={{ backgroundColor: "rgba(255,255,255,0.12)", borderRadius: "14px" }}>
                 Ver documentación
               </button>
             </div>
