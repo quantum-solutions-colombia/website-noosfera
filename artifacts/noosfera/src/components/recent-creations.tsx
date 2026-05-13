@@ -189,7 +189,7 @@ export function RecentCreations() {
             initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <div style={{
-              width: "90%",
+              width: "80%",
               aspectRatio: "3/4",
               borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
