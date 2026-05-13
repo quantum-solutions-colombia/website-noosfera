@@ -1,6 +1,62 @@
 import { useEffect, useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Star, ChevronRight, X, Send, ChevronLeft } from "lucide-react"
+import { Star, ChevronRight, X, Send } from "lucide-react"
+
+const HIGHLIGHT_PHRASES = [
+  "algo verdaderamente increíble",
+  "nunca se repite",
+  "arte digital",
+  "verdaderamente increíble",
+  "increíble",
+  "increíbles",
+  "único",
+  "única",
+  "únicos",
+  "únicas",
+  "fantástico",
+  "fantástica",
+  "excelente",
+  "excelentes",
+  "asombroso",
+  "asombrosa",
+  "impresionante",
+  "impresionantes",
+  "perfecto",
+  "perfecta",
+  "genial",
+  "geniales",
+  "maravilloso",
+  "maravillosa",
+  "revolucionario",
+  "revolucionaria",
+  "innovador",
+  "innovadora",
+  "hermoso",
+  "hermosa",
+  "mejor",
+  "encanta",
+  "encantó",
+  "amor",
+  "magnífico",
+  "magnífica",
+]
+
+function highlightText(text: string): React.ReactNode {
+  const sorted = [...HIGHLIGHT_PHRASES].sort((a, b) => b.length - a.length)
+  const regex = new RegExp(`(${sorted.map(p => p.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|")})`, "gi")
+  const parts = text.split(regex)
+  return (
+    <>
+      {parts.map((part, i) =>
+        regex.test(part) ? (
+          <span key={i} className="text-purple-600 font-semibold">{part}</span>
+        ) : (
+          part
+        )
+      )}
+    </>
+  )
+}
 
 const BASE_ITEMS = [
   { src: "/images/nft-1.png",  title: "Forest Spirit" },
@@ -238,9 +294,6 @@ function TestimonialsCarousel({ reviews }: { reviews: Review[] }) {
     setCurrent(0)
   }, [reviews.length])
 
-  const prev = () => { setCurrent(p => (p - 1 + reviews.length) % reviews.length); resetTimer() }
-  const next = () => { setCurrent(p => (p + 1) % reviews.length); resetTimer() }
-
   const review = reviews[current]
 
   return (
@@ -280,40 +333,22 @@ function TestimonialsCarousel({ reviews }: { reviews: Review[] }) {
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.35 }}
             className="text-gray-700 leading-relaxed text-center">
-            {review.text.includes("algo verdaderamente increíble") ? (
-              <>
-                Noosfera es{" "}
-                <span className="text-purple-600 font-semibold">algo verdaderamente increíble</span>
-                , puedes crear retratos únicos, obras abstractas y arte digital que nunca se
-                repite — todo desde tus propios datos cardíacos.
-              </>
-            ) : (
-              <span>"{review.text}"</span>
-            )}
+            {highlightText(review.text)}
           </motion.blockquote>
         </AnimatePresence>
       </div>
 
       {reviews.length > 1 && (
-        <div className="flex items-center gap-3">
-          <button onClick={prev}
-            className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center transition-all hover:border-purple-400 hover:text-purple-600">
-            <ChevronLeft className="w-4 h-4" />
-          </button>
-          <div className="flex gap-1.5">
-            {reviews.map((_, i) => (
-              <button key={i} onClick={() => { setCurrent(i); resetTimer() }}
-                className="rounded-full transition-all duration-300"
-                style={{
-                  width: i === current ? 20 : 7, height: 7,
-                  backgroundColor: i === current ? "#7c3aed" : "#e5e7eb",
-                }} />
-            ))}
-          </div>
-          <button onClick={next}
-            className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center transition-all hover:border-purple-400 hover:text-purple-600">
-            <ChevronRight className="w-4 h-4" />
-          </button>
+        <div className="flex items-center justify-center gap-1.5">
+          {reviews.map((_, i) => (
+            <div
+              key={i}
+              className="rounded-full transition-all duration-500"
+              style={{
+                width: i === current ? 20 : 7, height: 7,
+                backgroundColor: i === current ? "#7c3aed" : "#e5e7eb",
+              }} />
+          ))}
         </div>
       )}
     </div>

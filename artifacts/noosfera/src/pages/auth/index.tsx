@@ -84,19 +84,41 @@ function AuthContent() {
       {/* Auth hero area */}
       <div
         className="flex-1 flex flex-col items-center justify-center px-4 py-10"
-        style={{
-          backgroundImage: "url('/images/castle-bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          position: "relative",
-          minHeight: 520,
+        style={{ position: "relative", minHeight: 520 }}>
+
+        {/* Collage background grid */}
+        <div style={{
+          position: "absolute", inset: 0,
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr 1fr 1fr",
+          gridTemplateRows: "1fr 1fr 1fr",
+          overflow: "hidden",
+          gap: 0,
         }}>
+          {[
+            { src: "/images/nft-castle-ai.png",  style: { gridRow: "1 / 3" } },
+            { src: "/images/nft-ghost.png",       style: {} },
+            { src: "/images/nft-1.png",           style: {} },
+            { src: "/images/nft-castle-1.png",    style: { gridRow: "1 / 3" } },
+            { src: "/images/nft-3.png",           style: {} },
+            { src: "/images/nft-2.png",           style: {} },
+            { src: "/images/hero-main.png",       style: { gridColumn: "1 / 3" } },
+            { src: "/images/nft-ghost-2.png",     style: {} },
+            { src: "/images/nft-castle-2.png",    style: {} },
+            { src: "/images/nft-4.png",           style: {} },
+            { src: "/images/nft-5.png",           style: {} },
+          ].map((img, i) => (
+            <div key={i} style={{ overflow: "hidden", ...img.style }}>
+              <img src={img.src} alt=""
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            </div>
+          ))}
+        </div>
 
         {/* Dark overlay */}
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(135deg, rgba(10,4,30,0.80) 0%, rgba(30,10,60,0.76) 100%)",
-          backdropFilter: "blur(2px)",
+          background: "linear-gradient(135deg, rgba(8,3,24,0.83) 0%, rgba(25,8,52,0.80) 100%)",
         }} />
 
         {/* Card container */}
