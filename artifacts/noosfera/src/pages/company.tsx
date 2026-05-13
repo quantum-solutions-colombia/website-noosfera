@@ -43,6 +43,26 @@ export default function CompanyPage() {
     <div className="min-h-screen bg-white text-gray-900">
       <DarkNav activeLink="company" />
 
+      {/* Shared SVG blob clip-path — referenced by both images */}
+      <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
+        <defs>
+          <clipPath id="noosferaBlob" clipPathUnits="objectBoundingBox">
+            <path d="
+              M 0.50,0.04
+              C 0.64,-0.02 0.82,0.08 0.92,0.22
+              C 1.02,0.36 1.00,0.54 0.94,0.66
+              C 0.88,0.78 0.80,0.88 0.90,0.96
+              C 1.00,1.04 0.82,1.04 0.64,1.00
+              C 0.46,0.96 0.40,0.88 0.24,0.96
+              C 0.08,1.04 -0.04,0.96 0.02,0.80
+              C 0.08,0.64 0.18,0.58 0.06,0.44
+              C -0.06,0.30 0.08,0.14 0.26,0.08
+              C 0.36,0.04 0.40,0.08 0.50,0.04 Z
+            " />
+          </clipPath>
+        </defs>
+      </svg>
+
       {/* Hero — clean, no background image */}
       <section className="pt-28 pb-20 flex items-center justify-center bg-white border-b border-gray-100">
         <div className="text-center px-6 max-w-4xl mx-auto">
@@ -92,18 +112,18 @@ export default function CompanyPage() {
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}
           >
-            <div style={{
-              width: "90%",
-              height: "440px",
-              overflow: "hidden",
-              borderRadius: "56% 44% 31% 69% / 44% 64% 36% 56%",
-              boxShadow: "0 0 0 6px rgba(124,58,237,0.10), 0 20px 60px rgba(124,58,237,0.18)",
-            }}>
-              <img
-                src="/images/about-mission.png"
-                alt="Noosfera misión"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
-              />
+            <div style={{ filter: "drop-shadow(0 20px 50px rgba(124,58,237,0.28))", width: "90%" }}>
+              <div style={{
+                height: "440px",
+                overflow: "hidden",
+                clipPath: "url(#noosferaBlob)",
+              }}>
+                <img
+                  src="/images/about-mission.png"
+                  alt="Noosfera misión"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
+                />
+              </div>
             </div>
           </motion.div>
         </div>
@@ -174,19 +194,18 @@ export default function CompanyPage() {
             initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }} viewport={{ once: true }}
           >
-            <div style={{
-              width: "92%",
-              height: "420px",
-              borderRadius: "24px 4px 24px 4px",
-              overflow: "hidden",
-              border: "2px solid rgba(124,58,237,0.20)",
-              outline: "4px solid rgba(124,58,237,0.07)",
-            }}>
-              <img
-                src="/images/egypt-pyramids.png"
-                alt="Pirámides de Egipto"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
-              />
+            <div style={{ filter: "drop-shadow(0 20px 50px rgba(124,58,237,0.25))", width: "92%" }}>
+              <div style={{
+                height: "420px",
+                overflow: "hidden",
+                clipPath: "url(#noosferaBlob)",
+              }}>
+                <img
+                  src="/images/egypt-pyramids.png"
+                  alt="Pirámides de Egipto"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
+                />
+              </div>
             </div>
           </motion.div>
 
