@@ -180,35 +180,36 @@ export default function PricingPage() {
             Planes y Precios
           </motion.p>
           <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-5xl md:text-6xl font-black text-gray-900 leading-tight mb-5"
+            className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-5"
             style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Elige el plan perfecto
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}
             className="text-gray-500 text-lg max-w-xl mx-auto leading-relaxed">
-            Comienza gratis y escala cuando estés listo para monetizar tu arte biométrico único.
+            Elige el acceso que necesitas para transformar tu biometría en arte digital único, certificado y listo para el mercado.
           </motion.p>
         </div>
       </section>
 
-      {/* Plans Section — dragon LEFT, carousel RIGHT — mirrors reviews section layout */}
+      {/* Plans Section */}
       <section className="overflow-hidden pb-16">
-        <div className="flex flex-col lg:flex-row min-h-[520px]">
+        <div className="flex flex-col lg:flex-row items-center justify-center px-6 lg:px-16 gap-4 lg:gap-6">
 
-          {/* Left — Dragon image — exact same structure as castle in reviews */}
+          {/* Left — Dragon image */}
           <motion.div
-            className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
+            className="flex items-center justify-end lg:justify-end"
             initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
           >
             <div style={{
-              width: "70%",
+              width: 340,
               aspectRatio: "3/4",
               borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
               border: "2px solid rgba(124,58,237,0.20)",
               outline: "4px solid rgba(124,58,237,0.07)",
+              flexShrink: 0,
             }}>
               <img
                 src="/images/dragon-pricing.png"
@@ -218,13 +219,50 @@ export default function PricingPage() {
             </div>
           </motion.div>
 
-          {/* Right — Carousel — fixed narrow card matching reference */}
-          <div className="lg:w-1/2 flex flex-col items-center justify-center px-6 lg:px-10 py-10 gap-6"
+          {/* Right — Card */}
+          <div
+            className="flex flex-col items-center"
+            style={{ width: 380 }}
             onMouseEnter={() => { isAutoPlaying.current = false }}
-            onMouseLeave={() => { isAutoPlaying.current = true }}>
+            onMouseLeave={() => { isAutoPlaying.current = true }}
+          >
+            {/* Billing toggle — TOP, above the card */}
+            <div className="relative flex items-center mb-4">
+              <AnimatePresence>
+                {billing === "annual" && (
+                  <motion.div
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    className="absolute left-full ml-2 flex items-center gap-1 whitespace-nowrap"
+                    style={{ top: "50%", transform: "translate(0, -50%)" }}
+                  >
+                    <svg viewBox="0 0 48 32" className="w-10 h-8 flex-shrink-0" fill="none">
+                      <path d="M42 6 Q24 28 8 18" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                      <path d="M8 18 L13 15 M8 18 L11 23" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    <span className="text-xs font-bold text-red-500 leading-tight">
+                      ¡20% OFF, eso es<br />2 meses GRATIS ❤️
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <div className="relative flex items-center bg-gray-100 rounded-full p-1 gap-1">
+                {(["monthly", "annual"] as const).map(b => (
+                  <button key={b} onClick={() => { setBilling(b); setCurrentIndex(1) }}
+                    className="relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300"
+                    style={{
+                      background: billing === b ? "#111827" : "transparent",
+                      color: billing === b ? "#fff" : "#6b7280",
+                    }}>
+                    {b === "monthly" ? "Mensual" : "Anual"}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-            {/* Card carousel — no arrows, fixed width 380px */}
-            <div className="relative overflow-hidden" style={{ width: 380, minHeight: 440 }}>
+            {/* Card carousel */}
+            <div className="relative overflow-hidden w-full" style={{ minHeight: 440 }}>
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={plan.id + billing}
@@ -299,7 +337,7 @@ export default function PricingPage() {
             </div>
 
             {/* Dots */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 mt-4">
               {plans.map((_, i) => (
                 <button key={i} onClick={() => goTo(i, i > currentIndex ? 1 : -1)}
                   aria-label={`Plan ${i + 1}`}
@@ -309,46 +347,6 @@ export default function PricingPage() {
                     backgroundColor: i === currentIndex ? "#7c3aed" : "#d1d5db",
                   }} />
               ))}
-            </div>
-
-            {/* Billing toggle + annual arrow — below the carousel */}
-            <div className="flex flex-col items-center gap-2 mt-2">
-              <div className="relative flex items-center">
-                {/* Annual discount callout — appears to the right of toggle, arrow points left */}
-                <AnimatePresence>
-                  {billing === "annual" && (
-                    <motion.div
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 10 }}
-                      className="absolute left-full ml-2 flex items-center gap-1 whitespace-nowrap"
-                      style={{ top: "50%", transform: "translate(0, -50%)" }}
-                    >
-                      {/* Curved arrow pointing left */}
-                      <svg viewBox="0 0 48 32" className="w-10 h-8 flex-shrink-0" fill="none">
-                        <path d="M42 6 Q24 28 8 18" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                        <path d="M8 18 L13 15 M8 18 L11 23" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      <span className="text-xs font-bold text-red-500 leading-tight">
-                        ¡20% OFF, eso es<br />2 meses GRATIS ❤️
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <div className="relative flex items-center bg-gray-100 rounded-full p-1 gap-1">
-                  {(["monthly", "annual"] as const).map(b => (
-                    <button key={b} onClick={() => { setBilling(b); setCurrentIndex(1) }}
-                      className="relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300"
-                      style={{
-                        background: billing === b ? "#111827" : "transparent",
-                        color: billing === b ? "#fff" : "#6b7280",
-                      }}>
-                      {b === "monthly" ? "Mensual" : "Anual"}
-                    </button>
-                  ))}
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -432,8 +430,8 @@ export default function PricingPage() {
               </button>
               <button
                 onClick={() => navigate("/docs")}
-                className="px-8 py-4 font-semibold text-white text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02] border border-white/30"
-                style={{ backgroundColor: "rgba(255,255,255,0.12)", borderRadius: "14px" }}>
+                className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
+                style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
                 Ver documentación
               </button>
             </div>
