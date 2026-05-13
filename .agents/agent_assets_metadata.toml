@@ -198,3 +198,9 @@ id = "fHU6Yewb-4a7EliXP_DbN"
 uri = "file://artifacts/noosfera/public/images/dragon-pricing.png"
 type = "image"
 title = "purple dragon pricing"
+
+[[generated]]
+id = "YM2KZ-yp9yiS8dzEH0Nul"
+uri = "file://artifacts/noosfera/public/images/viking-warrior.png"
+type = "image"
+title = "viking-warrior-purple"

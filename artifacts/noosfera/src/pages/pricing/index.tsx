@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Check, ChevronLeft, ChevronRight } from "lucide-react"
+import { Check } from "lucide-react"
 import { useLocation } from "wouter"
 import { Footer } from "@/components/footer"
 import { DarkNav } from "@/components/dark-nav"
@@ -149,14 +149,6 @@ export default function PricingPage() {
     setFaqIndex(index)
   }, [])
 
-  const nextFaq = useCallback(() => {
-    goToFaq((faqIndex + 1) % faqs.length, 1)
-  }, [faqIndex, goToFaq])
-
-  const prevFaq = useCallback(() => {
-    goToFaq((faqIndex - 1 + faqs.length) % faqs.length, -1)
-  }, [faqIndex, goToFaq])
-
   useEffect(() => {
     if (!isAutoPlaying.current) return
     const id = setInterval(() => {
@@ -165,6 +157,14 @@ export default function PricingPage() {
     }, 4000)
     return () => clearInterval(id)
   }, [plans.length])
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setFaqDir(1)
+      setFaqIndex(prev => (prev + 1) % faqs.length)
+    }, 5000)
+    return () => clearInterval(id)
+  }, [])
 
   const plan = plans[currentIndex]
 
@@ -232,7 +232,8 @@ export default function PricingPage() {
 
           {/* Right — Toggle + Card */}
           <motion.div
-            className="lg:w-1/2 flex flex-col items-center justify-center pl-0 pr-8 lg:pr-12 py-10"
+            className="lg:w-1/2 flex flex-col items-center justify-center pr-8 lg:pr-12 py-10"
+            style={{ marginLeft: "-60px" }}
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
@@ -365,11 +366,11 @@ export default function PricingPage() {
 
           {/* Left — FAQ title + carousel */}
           <motion.div
-            className="lg:w-1/2 flex flex-col justify-center px-10 lg:px-14 py-16 space-y-8"
+            className="lg:w-1/2 flex flex-col items-center justify-center px-10 lg:px-14 py-16 space-y-8"
             initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }} viewport={{ once: true }}
           >
-            <div>
+            <div className="text-center w-full">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">Preguntas</p>
               <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -381,7 +382,7 @@ export default function PricingPage() {
             </div>
 
             {/* FAQ Carousel */}
-            <div className="relative" style={{ minHeight: 160 }}>
+            <div className="relative w-full" style={{ minHeight: 160 }}>
               <AnimatePresence mode="wait" custom={faqDir}>
                 <motion.div
                   key={faqIndex}
@@ -392,7 +393,7 @@ export default function PricingPage() {
                   exit="exit"
                   transition={{ duration: 0.3, ease: "easeInOut" }}
                 >
-                  <div className="rounded-2xl p-6" style={{ background: "#f9f5ff", border: "1.5px solid rgba(124,58,237,0.15)" }}>
+                  <div className="rounded-2xl p-6 text-center" style={{ background: "#f9f5ff", border: "1.5px solid rgba(124,58,237,0.15)" }}>
                     <p className="text-sm font-bold text-gray-900 mb-3 leading-snug">{faqs[faqIndex].q}</p>
                     <p className="text-sm text-gray-500 leading-relaxed">{faqs[faqIndex].a}</p>
                   </div>
@@ -400,34 +401,18 @@ export default function PricingPage() {
               </AnimatePresence>
             </div>
 
-            {/* Navigation */}
-            <div className="flex items-center gap-4">
-              <button onClick={prevFaq}
-                className="p-2.5 rounded-full border border-gray-200 hover:border-purple-400 hover:text-purple-600 transition-all"
-                aria-label="Pregunta anterior">
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-
-              <div className="flex items-center gap-2">
-                {faqs.map((_, i) => (
-                  <button key={i} onClick={() => goToFaq(i, i > faqIndex ? 1 : -1)}
-                    aria-label={`Pregunta ${i + 1}`}
-                    className="h-2 rounded-full transition-all duration-300"
-                    style={{ width: i === faqIndex ? 24 : 8, backgroundColor: i === faqIndex ? "#7c3aed" : "#d1d5db" }} />
-                ))}
-              </div>
-
-              <button onClick={nextFaq}
-                className="p-2.5 rounded-full border border-gray-200 hover:border-purple-400 hover:text-purple-600 transition-all"
-                aria-label="Siguiente pregunta">
-                <ChevronRight className="h-4 w-4" />
-              </button>
-
-              <span className="text-xs text-gray-400 ml-1">{faqIndex + 1} / {faqs.length}</span>
+            {/* Dots only — no arrows, no counter */}
+            <div className="flex items-center justify-center gap-2">
+              {faqs.map((_, i) => (
+                <button key={i} onClick={() => goToFaq(i, i > faqIndex ? 1 : -1)}
+                  aria-label={`Pregunta ${i + 1}`}
+                  className="h-2 rounded-full transition-all duration-300"
+                  style={{ width: i === faqIndex ? 24 : 8, backgroundColor: i === faqIndex ? "#7c3aed" : "#d1d5db" }} />
+              ))}
             </div>
           </motion.div>
 
-          {/* Right — Image: identical sizing to reviews section */}
+          {/* Right — Viking warrior image */}
           <motion.div
             className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
@@ -442,8 +427,8 @@ export default function PricingPage() {
               outline: "4px solid rgba(124,58,237,0.07)",
             }}>
               <img
-                src="/images/nft-castle-ai.png"
-                alt="Noosfera arte"
+                src="/images/viking-warrior.png"
+                alt="Guerrero vikingo Noosfera"
                 style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", display: "block" }}
               />
             </div>
