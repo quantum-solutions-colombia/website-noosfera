@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Check, ChevronDown } from "lucide-react"
+import { Check, ChevronLeft, ChevronRight } from "lucide-react"
 import { useLocation } from "wouter"
 import { Footer } from "@/components/footer"
 import { DarkNav } from "@/components/dark-nav"
@@ -132,9 +132,10 @@ const faqs = [
 export default function PricingPage() {
   const [, navigate] = useLocation()
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly")
-  const [openFaq, setOpenFaq] = useState<number | null>(null)
   const [currentIndex, setCurrentIndex] = useState(1)
   const [direction, setDirection] = useState(0)
+  const [faqIndex, setFaqIndex] = useState(0)
+  const [faqDir, setFaqDir] = useState(0)
   const isAutoPlaying = useRef(true)
   const plans = planData[billing]
 
@@ -143,13 +144,18 @@ export default function PricingPage() {
     setCurrentIndex(index)
   }, [])
 
-  const next = useCallback(() => {
-    goTo((currentIndex + 1) % plans.length, 1)
-  }, [currentIndex, plans.length, goTo])
+  const goToFaq = useCallback((index: number, dir: number) => {
+    setFaqDir(dir)
+    setFaqIndex(index)
+  }, [])
 
-  const prev = useCallback(() => {
-    goTo((currentIndex - 1 + plans.length) % plans.length, -1)
-  }, [currentIndex, plans.length, goTo])
+  const nextFaq = useCallback(() => {
+    goToFaq((faqIndex + 1) % faqs.length, 1)
+  }, [faqIndex, goToFaq])
+
+  const prevFaq = useCallback(() => {
+    goToFaq((faqIndex - 1 + faqs.length) % faqs.length, -1)
+  }, [faqIndex, goToFaq])
 
   useEffect(() => {
     if (!isAutoPlaying.current) return
@@ -166,6 +172,12 @@ export default function PricingPage() {
     enter: (dir: number) => ({ x: dir > 0 ? 80 : -80, opacity: 0, scale: 0.97 }),
     center: { x: 0, opacity: 1, scale: 1 },
     exit: (dir: number) => ({ x: dir > 0 ? -80 : 80, opacity: 0, scale: 0.97 }),
+  }
+
+  const faqVariants = {
+    enter: (dir: number) => ({ x: dir > 0 ? 60 : -60, opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? -60 : 60, opacity: 0 }),
   }
 
   return (
@@ -191,180 +203,175 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Plans Section */}
-      <section className="overflow-hidden pb-16">
-        {/* Outer wrapper: centers the whole block horizontally */}
-        <div className="flex justify-center px-6 lg:px-10">
-          {/* Row: image + card column — align-items: stretch so card matches image height */}
-          <div className="flex flex-col lg:flex-row items-stretch gap-5">
+      {/* Plans Section — same structure as reviews testimonial section */}
+      <section className="overflow-hidden pb-4">
+        <div className="flex flex-col lg:flex-row min-h-[480px]">
 
-            {/* Left — Dragon image: fixed width, fills its height via object-fit */}
-            <motion.div
-              initial={{ opacity: 0, x: -24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.7 }}
-              style={{ flexShrink: 0 }}
-            >
-              <div style={{
-                width: 280,
-                height: "100%",
-                minHeight: 420,
-                borderRadius: "20px 4px 20px 4px",
-                overflow: "hidden",
-                border: "2px solid rgba(124,58,237,0.20)",
-                outline: "4px solid rgba(124,58,237,0.07)",
-              }}>
-                <img
-                  src="/images/dragon-pricing.png"
-                  alt="Dragon Noosfera"
-                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
-                />
-              </div>
-            </motion.div>
+          {/* Left — Dragon image: identical sizing to reviews section */}
+          <motion.div
+            className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
+            initial={{ opacity: 0, x: -24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }}
+          >
+            <div style={{
+              width: "70%",
+              aspectRatio: "3/4",
+              borderRadius: "24px 4px 24px 4px",
+              overflow: "hidden",
+              border: "2px solid rgba(124,58,237,0.20)",
+              outline: "4px solid rgba(124,58,237,0.07)",
+            }}>
+              <img
+                src="/images/dragon-pricing.png"
+                alt="Dragon Noosfera"
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", display: "block" }}
+              />
+            </div>
+          </motion.div>
 
-            {/* Right — Toggle + Card column */}
-            <div
-              className="flex flex-col"
-              style={{ width: 310 }}
-              onMouseEnter={() => { isAutoPlaying.current = false }}
-              onMouseLeave={() => { isAutoPlaying.current = true }}
-            >
-              {/* Billing toggle — TOP, centered relative to card */}
-              <div className="relative flex items-center justify-center mb-3">
-                <AnimatePresence>
-                  {billing === "annual" && (
-                    <motion.div
-                      initial={{ opacity: 0, x: 10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 10 }}
-                      className="absolute left-full ml-2 flex items-center gap-1 whitespace-nowrap"
-                      style={{ top: "50%", transform: "translate(0, -50%)" }}
-                    >
-                      <svg viewBox="0 0 48 32" className="w-10 h-8 flex-shrink-0" fill="none">
-                        <path d="M42 6 Q24 28 8 18" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                        <path d="M8 18 L13 15 M8 18 L11 23" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      <span className="text-xs font-bold text-red-500 leading-tight">
-                        ¡20% OFF, eso es<br />2 meses GRATIS ❤️
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-                <div className="relative flex items-center bg-gray-100 rounded-full p-1 gap-1">
-                  {(["monthly", "annual"] as const).map(b => (
-                    <button key={b} onClick={() => { setBilling(b); setCurrentIndex(1) }}
-                      className="relative px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300"
-                      style={{
-                        background: billing === b ? "#111827" : "transparent",
-                        color: billing === b ? "#fff" : "#6b7280",
-                      }}>
-                      {b === "monthly" ? "Mensual" : "Anual"}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Card — flex: 1 so it stretches to fill remaining height */}
-              <div className="relative flex-1 overflow-hidden">
-                <AnimatePresence mode="wait" custom={direction}>
+          {/* Right — Toggle + Card */}
+          <motion.div
+            className="lg:w-1/2 flex flex-col items-center justify-center px-6 lg:px-14 py-10"
+            initial={{ opacity: 0, x: 24 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }}
+            onMouseEnter={() => { isAutoPlaying.current = false }}
+            onMouseLeave={() => { isAutoPlaying.current = true }}
+          >
+            {/* Billing toggle — TOP, centered above card */}
+            <div className="relative flex items-center justify-center mb-5">
+              <AnimatePresence>
+                {billing === "annual" && (
                   <motion.div
-                    key={plan.id + billing}
-                    custom={direction}
-                    variants={variants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: 0.35, ease: "easeInOut" }}
-                    style={{ position: "absolute", inset: 0 }}
+                    initial={{ opacity: 0, x: 10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 10 }}
+                    className="absolute left-full ml-2 flex items-center gap-1 whitespace-nowrap"
+                    style={{ top: "50%", transform: "translate(0,-50%)" }}
                   >
-                    <div
-                      className="relative flex flex-col w-full h-full p-7"
-                      style={{
-                        background: "white",
-                        border: "2px solid #111827",
-                        borderRadius: "20px",
-                        boxShadow: "0 4px 24px rgba(0,0,0,0.09)",
-                      }}>
-
-                      {/* Badge */}
-                      {plan.tag && (
-                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold px-5 py-1.5 rounded-full"
-                          style={{ backgroundColor: plan.tagColor!.bg, color: plan.tagColor!.text }}>
-                          {plan.tag}
-                        </div>
-                      )}
-
-                      {/* Plan name + price */}
-                      <div className="mb-4">
-                        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-gray-400 mb-2">{plan.label}</p>
-                        <div className="flex items-baseline gap-2">
-                          <span className="text-4xl font-black text-gray-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                            {plan.price}
-                          </span>
-                          <span className="text-sm text-gray-400">{plan.sub}</span>
-                        </div>
-                        <AnimatePresence>
-                          {plan.annualSaving && (
-                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-2">
-                              <span className="inline-block text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-md"
-                                style={{ background: "#f3e8ff", color: "#7c3aed" }}>
-                                {plan.annualSaving}
-                              </span>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-
-                      <div className="border-t border-gray-100 mb-4" />
-
-                      {/* Features — flex-1 so they fill space between price and button */}
-                      <ul className="space-y-2.5 flex-1">
-                        {plan.features.map((f, fi) => (
-                          <li key={fi} className="flex items-start gap-2.5 text-sm text-gray-700">
-                            <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-purple-500" />
-                            {f}
-                          </li>
-                        ))}
-                      </ul>
-
-                      {/* CTA — pinned to bottom via mt-auto */}
-                      <button
-                        onClick={() => navigate("/auth/login")}
-                        className="mt-auto w-full py-3.5 rounded-full text-sm font-bold tracking-wide transition-all hover:opacity-90 hover:scale-[1.01] active:scale-[0.99]"
-                        style={{ background: "#7c3aed", color: "white" }}>
-                        Comenzar ahora
-                      </button>
-                    </div>
+                    <svg viewBox="0 0 48 32" className="w-10 h-8 flex-shrink-0" fill="none">
+                      <path d="M42 6 Q24 28 8 18" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                      <path d="M8 18 L13 15 M8 18 L11 23" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                    <span className="text-xs font-bold text-red-500 leading-tight">¡20% OFF, eso es<br />2 meses GRATIS ❤️</span>
                   </motion.div>
-                </AnimatePresence>
-              </div>
-
-              {/* Dots */}
-              <div className="flex items-center justify-center gap-2 mt-3">
-                {plans.map((_, i) => (
-                  <button key={i} onClick={() => goTo(i, i > currentIndex ? 1 : -1)}
-                    aria-label={`Plan ${i + 1}`}
-                    className="h-2.5 rounded-full transition-all duration-300"
-                    style={{
-                      width: i === currentIndex ? 28 : 10,
-                      backgroundColor: i === currentIndex ? "#7c3aed" : "#d1d5db",
-                    }} />
+                )}
+              </AnimatePresence>
+              <div className="relative flex items-center bg-gray-100 rounded-full p-1 gap-1">
+                {(["monthly", "annual"] as const).map(b => (
+                  <button key={b} onClick={() => { setBilling(b); setCurrentIndex(1) }}
+                    className="relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300"
+                    style={{ background: billing === b ? "#111827" : "transparent", color: billing === b ? "#fff" : "#6b7280" }}>
+                    {b === "monthly" ? "Mensual" : "Anual"}
+                  </button>
                 ))}
               </div>
             </div>
-          </div>
+
+            {/* Card carousel */}
+            <div className="relative w-full max-w-sm" style={{ minHeight: 380 }}>
+              <AnimatePresence mode="wait" custom={direction}>
+                <motion.div
+                  key={plan.id + billing}
+                  custom={direction}
+                  variants={variants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.35, ease: "easeInOut" }}
+                  className="w-full"
+                >
+                  <div
+                    className="relative flex flex-col w-full p-7"
+                    style={{
+                      background: "white",
+                      border: "2px solid #111827",
+                      borderRadius: "20px",
+                      boxShadow: "0 4px 24px rgba(0,0,0,0.09)",
+                      minHeight: 360,
+                    }}>
+
+                    {plan.tag && (
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold px-5 py-1.5 rounded-full"
+                        style={{ backgroundColor: plan.tagColor!.bg, color: plan.tagColor!.text }}>
+                        {plan.tag}
+                      </div>
+                    )}
+
+                    <div className="mb-4">
+                      <p className="text-[10px] font-black uppercase tracking-[0.22em] text-gray-400 mb-2">{plan.label}</p>
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-4xl font-black text-gray-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>{plan.price}</span>
+                        <span className="text-sm text-gray-400">{plan.sub}</span>
+                      </div>
+                      <AnimatePresence>
+                        {plan.annualSaving && (
+                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-2">
+                            <span className="inline-block text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-md"
+                              style={{ background: "#f3e8ff", color: "#7c3aed" }}>
+                              {plan.annualSaving}
+                            </span>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+
+                    <div className="border-t border-gray-100 mb-4" />
+
+                    <ul className="space-y-2.5 flex-1">
+                      {plan.features.map((f, fi) => (
+                        <li key={fi} className="flex items-start gap-2.5 text-sm text-gray-700">
+                          <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-purple-500" />
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+
+                    <button
+                      onClick={() => navigate("/auth/login")}
+                      className="mt-6 w-full py-3.5 rounded-full text-sm font-bold tracking-wide transition-all hover:opacity-90 hover:scale-[1.01] active:scale-[0.99]"
+                      style={{ background: "#7c3aed", color: "white" }}>
+                      Comenzar ahora
+                    </button>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Dots */}
+            <div className="flex items-center gap-2 mt-4">
+              {plans.map((_, i) => (
+                <button key={i} onClick={() => goTo(i, i > currentIndex ? 1 : -1)}
+                  aria-label={`Plan ${i + 1}`}
+                  className="h-2.5 rounded-full transition-all duration-300"
+                  style={{ width: i === currentIndex ? 28 : 10, backgroundColor: i === currentIndex ? "#7c3aed" : "#d1d5db" }} />
+              ))}
+            </div>
+
+            {/* Guarantee text */}
+            <p className="mt-5 text-center text-xs text-gray-400 max-w-xs leading-relaxed">
+              Elige el plan que potencie tu creatividad.<br />Sin cargos ocultos — cancela cuando quieras.
+            </p>
+          </motion.div>
         </div>
       </section>
 
       <div className="border-t max-w-5xl mx-auto border-gray-100" />
 
-      {/* FAQ */}
-      <section className="py-24 container mx-auto px-6">
-        <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
-          <div className="flex flex-col gap-6">
+      {/* FAQ — text/carousel LEFT, image RIGHT — mirrors reviews layout */}
+      <section className="overflow-hidden border-t border-gray-100 bg-white">
+        <div className="flex flex-col lg:flex-row min-h-[480px]">
+
+          {/* Left — FAQ title + carousel */}
+          <motion.div
+            className="lg:w-1/2 flex flex-col justify-center px-10 lg:px-14 py-16 space-y-8"
+            initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7 }} viewport={{ once: true }}
+          >
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">Preguntas</p>
-              <h2 className="text-4xl font-black text-gray-900 leading-tight mb-4"
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Preguntas<br />Frecuentes
               </h2>
@@ -372,37 +379,75 @@ export default function PricingPage() {
                 Todo lo que necesitas saber antes de empezar tu viaje en Noosfera.
               </p>
             </div>
-            <div className="rounded-2xl overflow-hidden shadow-xl" style={{ maxHeight: 420 }}>
+
+            {/* FAQ Carousel */}
+            <div className="relative" style={{ minHeight: 160 }}>
+              <AnimatePresence mode="wait" custom={faqDir}>
+                <motion.div
+                  key={faqIndex}
+                  custom={faqDir}
+                  variants={faqVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                >
+                  <div className="rounded-2xl p-6" style={{ background: "#f9f5ff", border: "1.5px solid rgba(124,58,237,0.15)" }}>
+                    <p className="text-sm font-bold text-gray-900 mb-3 leading-snug">{faqs[faqIndex].q}</p>
+                    <p className="text-sm text-gray-500 leading-relaxed">{faqs[faqIndex].a}</p>
+                  </div>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+            {/* Navigation */}
+            <div className="flex items-center gap-4">
+              <button onClick={prevFaq}
+                className="p-2.5 rounded-full border border-gray-200 hover:border-purple-400 hover:text-purple-600 transition-all"
+                aria-label="Pregunta anterior">
+                <ChevronLeft className="h-4 w-4" />
+              </button>
+
+              <div className="flex items-center gap-2">
+                {faqs.map((_, i) => (
+                  <button key={i} onClick={() => goToFaq(i, i > faqIndex ? 1 : -1)}
+                    aria-label={`Pregunta ${i + 1}`}
+                    className="h-2 rounded-full transition-all duration-300"
+                    style={{ width: i === faqIndex ? 24 : 8, backgroundColor: i === faqIndex ? "#7c3aed" : "#d1d5db" }} />
+                ))}
+              </div>
+
+              <button onClick={nextFaq}
+                className="p-2.5 rounded-full border border-gray-200 hover:border-purple-400 hover:text-purple-600 transition-all"
+                aria-label="Siguiente pregunta">
+                <ChevronRight className="h-4 w-4" />
+              </button>
+
+              <span className="text-xs text-gray-400 ml-1">{faqIndex + 1} / {faqs.length}</span>
+            </div>
+          </motion.div>
+
+          {/* Right — Image: identical sizing to reviews section */}
+          <motion.div
+            className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
+            initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}
+          >
+            <div style={{
+              width: "70%",
+              aspectRatio: "3/4",
+              borderRadius: "24px 4px 24px 4px",
+              overflow: "hidden",
+              border: "2px solid rgba(124,58,237,0.20)",
+              outline: "4px solid rgba(124,58,237,0.07)",
+            }}>
               <img
                 src="/images/nft-castle-ai.png"
                 alt="Noosfera arte"
-                className="w-full h-full object-cover"
-                style={{ minHeight: 320 }}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", display: "block" }}
               />
             </div>
-          </div>
-
-          <div className="divide-y divide-gray-100 pt-2">
-            {faqs.map((faq, i) => (
-              <div key={i}>
-                <button
-                  className="w-full flex justify-between items-center py-5 text-left text-gray-900 text-sm font-semibold group"
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                  <span className="group-hover:text-purple-600 transition-colors pr-4">{faq.q}</span>
-                  <ChevronDown className={`h-4 w-4 flex-shrink-0 text-gray-400 transition-transform duration-200 ${openFaq === i ? "rotate-180 text-purple-600" : ""}`} />
-                </button>
-                <AnimatePresence>
-                  {openFaq === i && (
-                    <motion.p initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.22 }}
-                      className="text-sm text-gray-500 leading-relaxed overflow-hidden pb-5">
-                      {faq.a}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-              </div>
-            ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
