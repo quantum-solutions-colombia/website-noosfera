@@ -86,35 +86,46 @@ function AuthContent() {
         className="flex-1 flex flex-col items-center justify-center px-4 py-6"
         style={{ position: "relative", minHeight: 520, background: "#f8f8fb", overflow: "hidden" }}>
 
-        {/* ── LEFT collage panel — 3 columns ── */}
+        {/* ── LEFT collage panel — 4 unique columns ── */}
         <div style={{
-          position: "absolute", left: 0, top: 0, bottom: 0, width: 560,
+          position: "absolute", left: 0, top: 0, bottom: 0, width: 660,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
-          WebkitMaskImage: "linear-gradient(to right, black 0%, black 90%, rgba(0,0,0,0) 100%)",
-          maskImage:        "linear-gradient(to right, black 0%, black 90%, rgba(0,0,0,0) 100%)",
+          WebkitMaskImage: "linear-gradient(to right, black 0%, black 50%, rgba(0,0,0,0) 78%)",
+          maskImage:        "linear-gradient(to right, black 0%, black 50%, rgba(0,0,0,0) 78%)",
         }}>
           <div style={{
-            position: "absolute", left: -60, top: -420, height: "calc(100% + 840px)", width: 580,
+            position: "absolute", left: -60, top: -420, height: "calc(100% + 840px)", width: 690,
             transform: "rotate(-12deg)", transformOrigin: "top left",
             display: "flex", gap: 7,
           }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 172px" }}>
-              {["/images/collage-1.png","/images/collage-8.png","/images/collage-10.png","/images/collage-2.png","/images/collage-3.png","/images/collage-17.png","/images/collage-20.png"].map((src, i) => (
-                <div key={i} style={{ width: 172, height: 200, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            {/* Col 1 — outermost left */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 162px", paddingTop: 0 }}>
+              {["/images/collage-1.png","/images/collage-2.png","/images/collage-3.png","/images/collage-7.png"].map((src, i) => (
+                <div key={i} style={{ width: 162, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 156px", paddingTop: 80 }}>
-              {["/images/collage-7.png","/images/collage-9.png","/images/collage-11.png","/images/collage-14.png","/images/collage-18.png","/images/collage-13.png"].map((src, i) => (
-                <div key={i} style={{ width: 156, height: 200, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            {/* Col 2 */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 152px", paddingTop: 90 }}>
+              {["/images/collage-8.png","/images/collage-9.png","/images/auth-L3-1.png","/images/auth-L3-2.png"].map((src, i) => (
+                <div key={i} style={{ width: 152, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 148px", paddingTop: 40 }}>
-              {["/images/nft-1.png","/images/nft-2.png","/images/nft-3.png","/images/nft-4.png","/images/nft-5.png","/images/nft-6.png","/images/nft-castle-1.png"].map((src, i) => (
-                <div key={i} style={{ width: 148, height: 200, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            {/* Col 3 */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 142px", paddingTop: 45 }}>
+              {["/images/auth-L3-3.png","/images/auth-L3-4.png","/images/auth-L3-5.png","/images/collage-13.png"].map((src, i) => (
+                <div key={i} style={{ width: 142, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                  <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                </div>
+              ))}
+            </div>
+            {/* Col 4 — new, innermost, bottom-anchored */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 134px", paddingTop: 165 }}>
+              {["/images/auth-L4-1.png","/images/auth-L4-2.png","/images/auth-L4-3.png","/images/auth-L4-4.png"].map((src, i) => (
+                <div key={i} style={{ width: 134, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -122,35 +133,53 @@ function AuthContent() {
           </div>
         </div>
 
-        {/* ── RIGHT collage panel — 3 columns ── */}
+        {/* ── CENTER white guard — images never touch the login card ── */}
         <div style={{
-          position: "absolute", right: 0, top: 0, bottom: 0, width: 560,
+          position: "absolute", left: "50%", transform: "translateX(-50%)",
+          top: 0, bottom: 0, width: 390,
+          background: "#f8f8fb", zIndex: 0, pointerEvents: "none",
+        }} />
+
+        {/* ── RIGHT collage panel — 4 unique columns ── */}
+        <div style={{
+          position: "absolute", right: 0, top: 0, bottom: 0, width: 660,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
-          WebkitMaskImage: "linear-gradient(to left, black 0%, black 90%, rgba(0,0,0,0) 100%)",
-          maskImage:        "linear-gradient(to left, black 0%, black 90%, rgba(0,0,0,0) 100%)",
+          WebkitMaskImage: "linear-gradient(to left, black 0%, black 50%, rgba(0,0,0,0) 78%)",
+          maskImage:        "linear-gradient(to left, black 0%, black 50%, rgba(0,0,0,0) 78%)",
         }}>
           <div style={{
-            position: "absolute", right: -60, top: -420, height: "calc(100% + 840px)", width: 580,
+            position: "absolute", right: -60, top: -420, height: "calc(100% + 840px)", width: 690,
             transform: "rotate(12deg)", transformOrigin: "top right",
             display: "flex", flexDirection: "row-reverse", gap: 7,
           }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 172px" }}>
-              {["/images/collage-4.png","/images/collage-5.png","/images/collage-15.png","/images/collage-6.png","/images/collage-16.png","/images/collage-19.png","/images/collage-12.png"].map((src, i) => (
-                <div key={i} style={{ width: 172, height: 200, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            {/* Col 1 — outermost right */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 162px", paddingTop: 0 }}>
+              {["/images/collage-4.png","/images/collage-5.png","/images/collage-6.png","/images/collage-10.png"].map((src, i) => (
+                <div key={i} style={{ width: 162, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 156px", paddingTop: 80 }}>
-              {["/images/collage-2.png","/images/collage-10.png","/images/collage-8.png","/images/collage-1.png","/images/collage-11.png","/images/collage-17.png"].map((src, i) => (
-                <div key={i} style={{ width: 156, height: 200, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            {/* Col 2 */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 152px", paddingTop: 90 }}>
+              {["/images/collage-11.png","/images/collage-12.png","/images/collage-15.png","/images/auth-R2-1.png"].map((src, i) => (
+                <div key={i} style={{ width: 152, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 148px", paddingTop: 40 }}>
-              {["/images/nft-7.png","/images/nft-8.png","/images/nft-9.png","/images/nft-10.png","/images/nft-castle-2.png","/images/nft-ghost.png","/images/nft-ghost-2.png"].map((src, i) => (
-                <div key={i} style={{ width: 148, height: 200, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            {/* Col 3 */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 142px", paddingTop: 45 }}>
+              {["/images/collage-16.png","/images/collage-18.png","/images/collage-19.png","/images/collage-20.png"].map((src, i) => (
+                <div key={i} style={{ width: 142, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                  <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                </div>
+              ))}
+            </div>
+            {/* Col 4 — new, innermost, bottom-anchored */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 134px", paddingTop: 165 }}>
+              {["/images/nft-castle-1.png","/images/nft-castle-2.png","/images/nft-ghost.png","/images/nft-ghost-2.png"].map((src, i) => (
+                <div key={i} style={{ width: 134, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
