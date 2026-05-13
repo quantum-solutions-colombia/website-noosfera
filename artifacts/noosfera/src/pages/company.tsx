@@ -23,18 +23,15 @@ const founders = [
 
 const pillars = [
   {
-    num: "01",
-    title: "Innovación",
+    num: "1",
     desc: "Empujamos los límites de lo que es posible entre biometría y arte digital, convirtiendo datos cardíacos en obras únicas.",
   },
   {
-    num: "02",
-    title: "Unicidad",
+    num: "2",
     desc: "Cada creación es matemáticamente irrepetible — tan única como el latido que la genera.",
   },
   {
-    num: "03",
-    title: "Accesibilidad",
+    num: "3",
     desc: "Arte premium al alcance de cualquier persona. Sin importar el origen, con un solo latido puedes crear.",
   },
 ]
@@ -84,24 +81,23 @@ export default function CompanyPage() {
             </p>
             <button
               onClick={() => navigate("/pricing")}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 hover:gap-3 transition-all px-5 py-2.5 rounded-full border border-purple-500 hover:bg-purple-50">
+              className="inline-flex items-center gap-2 text-sm font-semibold text-white hover:gap-3 transition-all px-5 py-2.5 rounded-full hover:opacity-90"
+              style={{ backgroundColor: "#7c3aed" }}>
               Comenzar demo <ArrowRight className="h-4 w-4" />
             </button>
           </motion.div>
 
           <motion.div
-            className="lg:w-1/2 flex items-center justify-center pl-4 lg:pl-6 pr-0 py-6"
-            style={{ marginLeft: "-60px" }}
+            className="lg:w-1/2 flex items-center justify-center p-10 lg:p-14"
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}
           >
             <div style={{
-              width: "92%",
-              height: "420px",
-              borderRadius: "24px 4px 24px 4px",
+              width: "90%",
+              height: "440px",
               overflow: "hidden",
-              border: "2px solid rgba(124,58,237,0.20)",
-              outline: "4px solid rgba(124,58,237,0.07)",
+              borderRadius: "56% 44% 31% 69% / 44% 64% 36% 56%",
+              boxShadow: "0 0 0 6px rgba(124,58,237,0.10), 0 20px 60px rgba(124,58,237,0.18)",
             }}>
               <img
                 src="/images/about-mission.png"
@@ -187,8 +183,8 @@ export default function CompanyPage() {
               outline: "4px solid rgba(124,58,237,0.07)",
             }}>
               <img
-                src="/images/about-vision.png"
-                alt="Noosfera visión"
+                src="/images/egypt-pyramids.png"
+                alt="Pirámides de Egipto"
                 style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
               />
             </div>
@@ -214,20 +210,19 @@ export default function CompanyPage() {
                 Lo que nos mueve
               </motion.h2>
             </div>
-            <div className="space-y-7 w-full max-w-sm">
+            <div className="space-y-5 w-full max-w-sm">
               {pillars.map((p, i) => (
                 <motion.div
-                  key={p.title}
+                  key={p.num}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: 0.15 + i * 0.12 }}
                   viewport={{ once: true }}
                   className="text-center"
                 >
-                  <p className="text-sm font-black text-gray-900 mb-1">
-                    <span className="text-purple-600 mr-2">{p.num}</span>{p.title}
+                  <p className="text-sm text-gray-600 leading-relaxed">
+                    <span className="font-black text-purple-600">{p.num}.</span>{" "}{p.desc}
                   </p>
-                  <p className="text-sm text-gray-500 leading-relaxed">{p.desc}</p>
                 </motion.div>
               ))}
             </div>
