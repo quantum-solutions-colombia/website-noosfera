@@ -190,16 +190,12 @@ export function RecentCreations() {
             transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <div style={{
               width: "100%",
-              maxWidth: 420,
-              aspectRatio: "4/3",
+              maxWidth: 320,
+              aspectRatio: "3/4",
               borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
               border: "2px solid rgba(124,58,237,0.20)",
               outline: "4px solid rgba(124,58,237,0.07)",
-              backgroundColor: "#08071a",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
             }}>
               <img
                 src="/images/nft-castle-ai.png"
@@ -207,7 +203,8 @@ export function RecentCreations() {
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "contain",
+                  objectFit: "cover",
+                  objectPosition: "center center",
                   display: "block",
                 }} />
             </div>
