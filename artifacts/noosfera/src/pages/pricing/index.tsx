@@ -188,88 +188,110 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Plan Cards */}
+      {/* Plans Section — image LEFT, cards RIGHT */}
       <section className="container mx-auto px-6 pb-24">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          {plans.map((plan, i) => {
-            const isFeatured = plan.id === "standard"
-            return (
-              <motion.div key={plan.id + billing}
-                initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="relative rounded-2xl flex flex-col p-8"
-                style={{
-                  background: "white",
-                  border: isFeatured ? "2px solid #7c3aed" : "1.5px solid #e5e7eb",
-                  boxShadow: isFeatured ? "0 8px 40px rgba(124,58,237,0.15)" : "none",
-                }}>
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-10 items-center">
 
-                {/* Badge */}
-                {plan.tag && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold px-4 py-1.5 rounded-full"
-                    style={{ backgroundColor: plan.tagColor!.bg, color: plan.tagColor!.text }}>
-                    {plan.tag}
-                  </div>
-                )}
+          {/* Left — Dragon image */}
+          <motion.div
+            initial={{ opacity: 0, x: -32 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="w-full lg:w-[38%] flex-shrink-0"
+          >
+            <div className="rounded-3xl overflow-hidden shadow-2xl"
+              style={{
+                background: "linear-gradient(135deg, #1a0533 0%, #3b0764 50%, #1a0533 100%)",
+              }}>
+              <img
+                src="/images/dragon-pricing.png"
+                alt="Dragon Noosfera"
+                className="w-full h-full object-cover"
+                style={{ minHeight: 480, maxHeight: 580 }}
+              />
+            </div>
+          </motion.div>
 
-                {/* Plan name */}
-                <p className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 mb-3">{plan.label}</p>
-
-                {/* Price */}
-                <div className="mb-2">
-                  <span className="text-5xl font-black text-gray-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                    {plan.price}
-                  </span>
-                  <span className="text-sm text-gray-400 ml-1.5">{plan.sub}</span>
-                </div>
-
-                {/* Annual savings pill */}
-                <AnimatePresence>
-                  {plan.annualSaving && (
-                    <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
-                      className="mb-4">
-                      <span className="inline-block text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-md"
-                        style={{ background: "#f3e8ff", color: "#7c3aed" }}>
-                        {plan.annualSaving}
-                      </span>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-
-                <div className="border-t border-gray-100 my-4" />
-
-                {/* Features */}
-                <ul className="space-y-3 mb-8 flex-1">
-                  {plan.features.map((f, fi) => (
-                    <li key={fi} className="flex items-start gap-2.5 text-sm text-gray-700">
-                      <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-purple-500" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* CTA */}
-                <button onClick={() => navigate("/auth")}
-                  className="w-full py-3.5 rounded-full text-sm font-bold tracking-wide transition-all hover:opacity-90"
+          {/* Right — Plan Cards */}
+          <div className="w-full lg:flex-1 flex flex-col gap-5">
+            {plans.map((plan, i) => {
+              const isFeatured = plan.id === "standard"
+              return (
+                <motion.div key={plan.id + billing}
+                  initial={{ opacity: 0, x: 24 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                  className="relative rounded-2xl flex flex-col sm:flex-row sm:items-center gap-4 p-6"
                   style={{
-                    background: "#7c3aed",
-                    color: "white",
+                    background: "white",
+                    border: isFeatured ? "2px solid #7c3aed" : "1.5px solid #e5e7eb",
+                    boxShadow: isFeatured ? "0 8px 32px rgba(124,58,237,0.14)" : "0 2px 8px rgba(0,0,0,0.04)",
                   }}>
-                  Comenzar ahora
-                </button>
-              </motion.div>
-            )
-          })}
+
+                  {/* Badge */}
+                  {plan.tag && (
+                    <div className="absolute -top-3.5 left-6 whitespace-nowrap text-[11px] font-bold px-4 py-1.5 rounded-full"
+                      style={{ backgroundColor: plan.tagColor!.bg, color: plan.tagColor!.text }}>
+                      {plan.tag}
+                    </div>
+                  )}
+
+                  {/* Plan name + price */}
+                  <div className="flex-shrink-0 min-w-[140px]">
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-gray-400 mb-1">{plan.label}</p>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-black text-gray-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                        {plan.price}
+                      </span>
+                      <span className="text-xs text-gray-400">{plan.sub}</span>
+                    </div>
+                    <AnimatePresence>
+                      {plan.annualSaving && (
+                        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-1.5">
+                          <span className="inline-block text-[9px] font-bold uppercase tracking-wide px-2.5 py-0.5 rounded-md"
+                            style={{ background: "#f3e8ff", color: "#7c3aed" }}>
+                            {plan.annualSaving}
+                          </span>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+
+                  {/* Divider vertical */}
+                  <div className="hidden sm:block w-px self-stretch bg-gray-100 mx-2" />
+
+                  {/* Features */}
+                  <ul className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
+                    {plan.features.map((f, fi) => (
+                      <li key={fi} className="flex items-start gap-2 text-xs text-gray-600">
+                        <Check className="h-3.5 w-3.5 mt-0.5 flex-shrink-0 text-purple-500" />
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* CTA */}
+                  <button onClick={() => navigate("/auth")}
+                    className="flex-shrink-0 px-6 py-3 rounded-full text-sm font-bold tracking-wide transition-all hover:opacity-90 hover:scale-[1.02] whitespace-nowrap"
+                    style={{
+                      background: "#7c3aed",
+                      color: "white",
+                    }}>
+                    Comenzar ahora
+                  </button>
+                </motion.div>
+              )
+            })}
+          </div>
         </div>
       </section>
 
       <div className="border-t max-w-5xl mx-auto border-gray-100" />
 
-      {/* FAQ — image-left layout, matching reviews section style */}
+      {/* FAQ — image-left layout */}
       <section className="py-24 container mx-auto px-6">
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-16 items-start">
 
-          {/* Left — image + heading */}
+          {/* Left — heading */}
           <div className="flex flex-col gap-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">Preguntas</p>
@@ -318,27 +340,43 @@ export default function PricingPage() {
 
       <div className="border-t max-w-5xl mx-auto border-gray-100" />
 
-      {/* CTA — matches reference: light purple gradient, big heading, two buttons */}
-      <section className="py-28 text-center" style={{ background: "linear-gradient(135deg, #ede9fe 0%, #f5f3ff 60%, #ffffff 100%)" }}>
-        <div className="container mx-auto px-6">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-500 mb-5">Comienza Hoy</p>
-          <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-6 leading-tight"
-            style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            Tu Arte Único<br />Te Espera
-          </h2>
-          <p className="text-gray-500 mb-10 max-w-md mx-auto text-base leading-relaxed">
-            Únete a la primera comunidad de arte biométrico del mundo. Cada latido es una obra maestra.
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <button onClick={() => navigate("/auth")}
-              className="px-8 py-4 rounded-full text-sm font-bold text-white transition-all hover:opacity-90"
-              style={{ backgroundColor: "#7c3aed" }}>
-              Comenzar gratis
-            </button>
-            <button onClick={() => navigate("/docs")}
-              className="px-8 py-4 rounded-full text-sm font-semibold text-gray-700 border border-gray-300 hover:border-purple-400 hover:text-purple-600 transition-all bg-white">
-              Ver documentación
-            </button>
+      {/* CTA — purple background with rounded top corners, matching home page style */}
+      <section className="py-20"
+        style={{
+          backgroundColor: "#7c3aed",
+          borderRadius: "2.5rem 2.5rem 0 0",
+          marginTop: "0.5rem",
+        }}>
+        <div className="container mx-auto px-6 text-center">
+          <div className="max-w-2xl mx-auto space-y-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">Comienza Hoy</p>
+            <h2 className="text-4xl md:text-5xl font-black text-white leading-tight"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Tu Arte Único<br />Te Espera
+            </h2>
+            <p className="text-purple-200 text-lg leading-relaxed">
+              Únete a la primera comunidad de arte biométrico del mundo. Cada latido es una obra maestra.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
+              <button
+                onClick={() => navigate("/auth")}
+                className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
+                style={{
+                  backgroundColor: "#ffffff",
+                  borderRadius: "14px",
+                }}>
+                Comenzar gratis
+              </button>
+              <button
+                onClick={() => navigate("/docs")}
+                className="px-8 py-4 font-semibold text-white text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02] border border-white/30"
+                style={{
+                  backgroundColor: "rgba(255,255,255,0.12)",
+                  borderRadius: "14px",
+                }}>
+                Ver documentación
+              </button>
+            </div>
           </div>
         </div>
       </section>
