@@ -358,7 +358,29 @@ export default function PricingPage() {
         </div>
       </section>
 
-      <div className="border-t max-w-5xl mx-auto border-gray-100" />
+      {/* Separator — text bridge between plans and FAQ */}
+      <section className="py-16 px-6 text-center bg-white">
+        <motion.div
+          className="max-w-3xl mx-auto"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }} viewport={{ once: true }}
+        >
+          <h2 className="text-2xl md:text-3xl font-black text-gray-900 leading-snug mb-3"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <span className="text-purple-600">Únete a millones de personas</span>{" "}
+            en la creación de imágenes con IA.
+          </h2>
+          <p className="text-gray-500 text-sm mb-8">Comienza tu propio viaje creativo con Noosfera.</p>
+          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+            {["Derechos comerciales incluidos", "Regístrate en 30 segundos", "Arte único generado por IA"].map(item => (
+              <span key={item} className="flex items-center gap-2">
+                <Check className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                {item}
+              </span>
+            ))}
+          </div>
+        </motion.div>
+      </section>
 
       {/* FAQ — text/carousel LEFT, image RIGHT — mirrors reviews layout */}
       <section className="overflow-hidden border-t border-gray-100 bg-white">
@@ -413,14 +435,14 @@ export default function PricingPage() {
 
           {/* Right — Viking warrior image */}
           <motion.div
-            className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
+            className="lg:w-1/2 flex items-center justify-center pl-4 lg:pl-6 pr-0 py-6"
             style={{ marginLeft: "-60px" }}
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}
           >
             <div style={{
-              width: "70%",
-              aspectRatio: "3/4",
+              width: "92%",
+              height: "420px",
               borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
               border: "2px solid rgba(124,58,237,0.20)",
@@ -429,7 +451,7 @@ export default function PricingPage() {
               <img
                 src="/images/viking-warrior.png"
                 alt="Guerrero vikingo Noosfera"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", display: "block" }}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }}
               />
             </div>
           </motion.div>
