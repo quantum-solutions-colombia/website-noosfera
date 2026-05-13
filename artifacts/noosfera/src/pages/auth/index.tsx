@@ -84,10 +84,10 @@ function AuthContent() {
       {/* Auth hero area */}
       <div
         className="flex-1 flex flex-col items-center justify-center px-4 py-6"
-        style={{ position: "relative", minHeight: 520, background: "#f8f8fb", overflow: "hidden" }}>
+        style={{ position: "relative", minHeight: 520, background: "#ffffff", overflow: "hidden" }}>
 
         {/* ── LEFT collage panel — 3 unique columns ── */}
-        <div style={{
+        <div className="hidden md:block" style={{
           position: "absolute", left: 0, top: 0, bottom: 0, width: 520,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
           opacity: 0.9,
@@ -127,14 +127,14 @@ function AuthContent() {
         </div>
 
         {/* ── CENTER white guard — images never touch the login card ── */}
-        <div style={{
+        <div className="hidden md:block" style={{
           position: "absolute", left: "50%", transform: "translateX(-50%)",
           top: 0, bottom: 0, width: 340,
-          background: "#f8f8fb", zIndex: 0, pointerEvents: "none",
+          background: "#ffffff", zIndex: 0, pointerEvents: "none",
         }} />
 
         {/* ── RIGHT collage panel — 3 unique columns ── */}
-        <div style={{
+        <div className="hidden md:block" style={{
           position: "absolute", right: 0, top: 0, bottom: 0, width: 520,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
           opacity: 0.9,
@@ -431,7 +431,7 @@ function AuthContent() {
       </div>
 
       {/* Footer */}
-      <Footer waveBg="#f8f8fb" />
+      <Footer waveBg="#ffffff" />
     </div>
   )
 }
