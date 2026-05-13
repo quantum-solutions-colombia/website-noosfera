@@ -88,24 +88,28 @@ function AuthContent() {
 
         {/* ── LEFT collage panel ── */}
         <div style={{
-          position: "absolute", left: 0, top: 0, bottom: 0, width: 300,
+          position: "absolute", left: 0, top: 0, bottom: 0, width: 420,
           pointerEvents: "none", zIndex: 0,
-          WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0) 88%)",
-          maskImage:        "linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0) 88%)",
+          WebkitMaskImage: "linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,0) 66%)",
+          maskImage:        "linear-gradient(to right, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,0) 66%)",
         }}>
-          {[
-            { src: "/images/collage-1.png", top: -20,  left: -28, w: 210, h: 270, rot: -16 },
-            { src: "/images/collage-2.png", top: 200,  left:  20, w: 195, h: 255, rot: -13 },
-            { src: "/images/collage-3.png", top: 420,  left: -15, w: 205, h: 265, rot: -17 },
-          ].map((img, i) => (
+          {([
+            { src: "/images/collage-1.png",  top: -40, left: -28, w: 188, h: 245, rot: -15 },
+            { src: "/images/collage-7.png",  top: -10, left: 162, w: 174, h: 220, rot: -14 },
+            { src: "/images/collage-8.png",  top: 188, left: -18, w: 180, h: 235, rot: -16 },
+            { src: "/images/collage-9.png",  top: 196, left: 164, w: 188, h: 250, rot: -15 },
+            { src: "/images/collage-10.png", top: 406, left: -22, w: 192, h: 228, rot: -14 },
+            { src: "/images/collage-11.png", top: 428, left: 157, w: 178, h: 240, rot: -16 },
+            { src: "/images/collage-2.png",  top: 616, left: -12, w: 185, h: 245, rot: -15 },
+            { src: "/images/collage-3.png",  top: 650, left: 170, w: 180, h: 225, rot: -14 },
+          ] as { src: string; top: number; left: number; w: number; h: number; rot: number }[]).map((img, i) => (
             <div key={i} style={{
               position: "absolute",
               top: img.top, left: img.left,
               width: img.w, height: img.h,
               transform: `rotate(${img.rot}deg)`,
-              borderRadius: 16,
+              borderRadius: 14,
               overflow: "hidden",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.14)",
             }}>
               <img src={img.src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
             </div>
@@ -114,24 +118,28 @@ function AuthContent() {
 
         {/* ── RIGHT collage panel ── */}
         <div style={{
-          position: "absolute", right: 0, top: 0, bottom: 0, width: 300,
+          position: "absolute", right: 0, top: 0, bottom: 0, width: 420,
           pointerEvents: "none", zIndex: 0,
-          WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0) 88%)",
-          maskImage:        "linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,0.9) 35%, rgba(0,0,0,0) 88%)",
+          WebkitMaskImage: "linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,0) 66%)",
+          maskImage:        "linear-gradient(to left, rgba(0,0,0,1) 0%, rgba(0,0,0,1) 8%, rgba(0,0,0,0) 66%)",
         }}>
-          {[
-            { src: "/images/collage-4.png", top: -20,  right: -28, w: 210, h: 270, rot: 16 },
-            { src: "/images/collage-5.png", top: 210,  right:  18, w: 195, h: 255, rot: 13 },
-            { src: "/images/collage-6.png", top: 430,  right: -12, w: 205, h: 265, rot: 17 },
-          ].map((img, i) => (
+          {([
+            { src: "/images/collage-12.png", top: -10, right: 162, w: 174, h: 220, rot: 14 },
+            { src: "/images/collage-4.png",  top: -40, right: -28, w: 188, h: 245, rot: 15 },
+            { src: "/images/collage-13.png", top: 196, right: 164, w: 188, h: 250, rot: 15 },
+            { src: "/images/collage-5.png",  top: 188, right: -18, w: 180, h: 235, rot: 16 },
+            { src: "/images/collage-14.png", top: 428, right: 157, w: 178, h: 240, rot: 16 },
+            { src: "/images/collage-15.png", top: 406, right: -22, w: 192, h: 228, rot: 14 },
+            { src: "/images/collage-16.png", top: 650, right: 170, w: 180, h: 225, rot: 14 },
+            { src: "/images/collage-6.png",  top: 616, right: -12, w: 185, h: 245, rot: 15 },
+          ] as { src: string; top: number; right: number; w: number; h: number; rot: number }[]).map((img, i) => (
             <div key={i} style={{
               position: "absolute",
               top: img.top, right: img.right,
               width: img.w, height: img.h,
               transform: `rotate(${img.rot}deg)`,
-              borderRadius: 16,
+              borderRadius: 14,
               overflow: "hidden",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.14)",
             }}>
               <img src={img.src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
             </div>
@@ -145,11 +153,10 @@ function AuthContent() {
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           style={{
             position: "relative", zIndex: 1,
-            width: "100%", maxWidth: 380,
+            width: "100%", maxWidth: 340,
             background: "#fff",
-            borderRadius: 24,
+            borderRadius: 20,
             overflow: "hidden",
-            boxShadow: "0 24px 80px rgba(0,0,0,0.45), 0 4px 20px rgba(124,58,237,0.2)",
           }}>
 
           {/* Hero image inside card */}
