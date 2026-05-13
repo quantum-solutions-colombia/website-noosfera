@@ -48,7 +48,7 @@ export function Footer() {
           preserveAspectRatio="none"
           style={{ display: "block", width: "100%", height: 80 }}>
           <path
-            d="M0,0 C360,80 1080,80 1440,0 L1440,80 L0,80 Z"
+            d="M0,0 C320,90 580,90 860,28 C1020,0 1220,52 1440,18 L1440,80 L0,80 Z"
             fill="#0a0a0a"
           />
         </svg>

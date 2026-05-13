@@ -190,21 +190,22 @@ export function RecentCreations() {
             transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <div style={{
               width: "100%",
-              height: 480,
+              minHeight: 420,
+              maxHeight: 520,
+              aspectRatio: "4/5",
               borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
               border: "2px solid rgba(124,58,237,0.20)",
               outline: "4px solid rgba(124,58,237,0.07)",
-              flexShrink: 0,
             }}>
               <img
                 src="/images/nft-castle-1.png"
                 alt="Arte digital castillo"
                 style={{
                   width: "100%",
-                  height: "108%",
+                  height: "100%",
                   objectFit: "cover",
-                  objectPosition: "center top",
+                  objectPosition: "center 15%",
                   display: "block",
                 }} />
             </div>
