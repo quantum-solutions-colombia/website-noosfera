@@ -193,28 +193,30 @@ export default function PricingPage() {
 
       {/* Plans Section — dragon LEFT, carousel RIGHT */}
       <section className="container mx-auto px-6 pb-28">
-        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-10 items-center">
+        <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-8 items-center justify-center">
 
-          {/* Left — Dragon image */}
+          {/* Left — Dragon image — reduced size */}
           <motion.div
             initial={{ opacity: 0, x: -32 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="w-full lg:w-[40%] flex-shrink-0"
+            className="flex-shrink-0"
+            style={{ width: 320 }}
           >
-            <div className="rounded-3xl overflow-hidden shadow-2xl"
+            <div className="rounded-2xl overflow-hidden shadow-xl"
               style={{ background: "linear-gradient(135deg, #1a0533 0%, #3b0764 50%, #1a0533 100%)" }}>
               <img
                 src="/images/dragon-pricing.png"
                 alt="Dragon Noosfera"
                 className="w-full object-cover"
-                style={{ minHeight: 500, maxHeight: 620 }}
+                style={{ height: 400 }}
               />
             </div>
           </motion.div>
 
-          {/* Right — Carousel */}
-          <div className="w-full lg:flex-1 flex flex-col items-center gap-6"
+          {/* Right — Carousel — fixed width matching login card */}
+          <div className="flex flex-col items-center gap-6 flex-shrink-0"
+            style={{ width: 390 }}
             onMouseEnter={() => { isAutoPlaying.current = false }}
             onMouseLeave={() => { isAutoPlaying.current = true }}>
 
@@ -325,7 +327,7 @@ export default function PricingPage() {
                         <path d="M8 18 L13 15 M8 18 L11 23" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
                       </svg>
                       <span className="text-xs font-bold text-red-500 leading-tight">
-                        ¡20% OFF, eso es<br />2 meses GRATIS 🩷
+                        ¡20% OFF, eso es<br />2 meses GRATIS ❤️
                       </span>
                     </motion.div>
                   )}
