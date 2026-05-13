@@ -190,6 +190,7 @@ export function RecentCreations() {
             transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <div style={{
               width: "100%",
+              maxWidth: 320,
               aspectRatio: "3/4",
               borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
