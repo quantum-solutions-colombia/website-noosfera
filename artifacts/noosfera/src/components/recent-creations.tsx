@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
-import { useLocation } from "wouter"
-import { Star, ChevronRight } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+import { Star, ChevronRight, X, Send } from "lucide-react"
 
 const BASE_ITEMS = [
   { src: "/images/nft-1.png",  title: "Forest Spirit" },
@@ -46,9 +45,166 @@ function getCardProps(offset: number) {
   return { rotateY, translateX, translateZ, opacity, zIndex }
 }
 
+function ReviewModal({ onClose }: { onClose: () => void }) {
+  const [rating, setRating] = useState(0)
+  const [hoverRating, setHoverRating] = useState(0)
+  const [name, setName] = useState("")
+  const [text, setText] = useState("")
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!name.trim() || !text.trim() || rating === 0) return
+    setSubmitted(true)
+    setTimeout(() => onClose(), 2200)
+  }
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.22 }}
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      style={{ background: "rgba(0,0,0,0.55)", backdropFilter: "blur(6px)" }}
+      onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+
+      <motion.div
+        initial={{ scale: 0.92, opacity: 0, y: 24 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.92, opacity: 0, y: 24 }}
+        transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+        {/* Header */}
+        <div className="relative px-7 pt-7 pb-5"
+          style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+          <button onClick={onClose}
+            className="absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center transition-all"
+            style={{ background: "rgba(255,255,255,0.18)" }}
+            onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.28)" }}
+            onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.18)" }}>
+            <X className="w-4 h-4 text-white" />
+          </button>
+          <p className="text-purple-200 text-xs font-bold uppercase tracking-widest mb-1">Comunidad</p>
+          <h3 className="text-white font-black text-xl" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Comparte tu experiencia
+          </h3>
+          <p className="text-purple-200 text-sm mt-1">Tu opinión ayuda a otros artistas a descubrir Noosfera</p>
+        </div>
+
+        <AnimatePresence mode="wait">
+          {submitted ? (
+            <motion.div
+              key="success"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="px-7 py-10 text-center flex flex-col items-center gap-4">
+              <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl"
+                style={{ background: "linear-gradient(135deg, #7c3aed22 0%, #5b21b622 100%)", border: "2px solid #7c3aed33" }}>
+                🎉
+              </div>
+              <div>
+                <p className="font-black text-gray-900 text-lg" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  ¡Gracias, {name}!
+                </p>
+                <p className="text-gray-500 text-sm mt-1">Tu reseña ha sido enviada con éxito.</p>
+              </div>
+            </motion.div>
+          ) : (
+            <motion.form
+              key="form"
+              onSubmit={handleSubmit}
+              className="px-7 py-6 flex flex-col gap-5">
+
+              {/* Star rating */}
+              <div>
+                <label className="text-sm font-semibold text-gray-700 block mb-2">
+                  ¿Cómo calificarías tu experiencia?
+                </label>
+                <div className="flex gap-1.5">
+                  {[1, 2, 3, 4, 5].map(star => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      onMouseEnter={() => setHoverRating(star)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      className="transition-transform hover:scale-110 active:scale-95">
+                      <Star
+                        className="w-8 h-8 transition-colors"
+                        style={{
+                          fill: star <= (hoverRating || rating) ? "#f59e0b" : "none",
+                          color: star <= (hoverRating || rating) ? "#f59e0b" : "#d1d5db",
+                        }} />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Name */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <label className="text-sm font-semibold text-gray-700">Tu nombre</label>
+                <input
+                  type="text"
+                  placeholder="Ej. María García"
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                  required
+                  style={{
+                    padding: "12px 14px", borderRadius: 12, border: "1.5px solid #e5e7eb",
+                    fontSize: 14, outline: "none", background: "#fafafa", color: "#111",
+                    transition: "border-color 0.18s",
+                  }}
+                  onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
+                  onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                />
+              </div>
+
+              {/* Review text */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <label className="text-sm font-semibold text-gray-700">Tu reseña</label>
+                <textarea
+                  placeholder="Cuéntanos sobre tu experiencia creando arte con Noosfera..."
+                  value={text}
+                  onChange={e => setText(e.target.value)}
+                  required
+                  rows={4}
+                  style={{
+                    padding: "12px 14px", borderRadius: 12, border: "1.5px solid #e5e7eb",
+                    fontSize: 14, outline: "none", background: "#fafafa", color: "#111",
+                    resize: "none", fontFamily: "inherit", transition: "border-color 0.18s",
+                  }}
+                  onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
+                  onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                />
+              </div>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                disabled={!name.trim() || !text.trim() || rating === 0}
+                className="w-full py-3.5 rounded-xl font-bold text-white text-[15px] flex items-center justify-center gap-2 transition-all"
+                style={{
+                  background: (!name.trim() || !text.trim() || rating === 0) ? "#c4b5fd" : "#7c3aed",
+                  cursor: (!name.trim() || !text.trim() || rating === 0) ? "not-allowed" : "pointer",
+                }}
+                onMouseEnter={e => { if (name.trim() && text.trim() && rating > 0) e.currentTarget.style.background = "#6d28d9" }}
+                onMouseLeave={e => { if (name.trim() && text.trim() && rating > 0) e.currentTarget.style.background = "#7c3aed" }}>
+                <Send className="w-4 h-4" />
+                Enviar mi reseña
+              </button>
+            </motion.form>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 export function RecentCreations() {
   const [active, setActive] = useState(0)
-  const [, navigate] = useLocation()
+  const [showReviewModal, setShowReviewModal] = useState(false)
 
   useEffect(() => {
     const id = setInterval(() => setActive(prev => mod(prev + 1, N)), INTERVAL)
@@ -251,7 +407,7 @@ export function RecentCreations() {
 
             <div className="flex justify-center">
               <button
-                onClick={() => navigate("/auth")}
+                onClick={() => setShowReviewModal(true)}
                 className="inline-flex items-center gap-2 px-7 py-4 rounded-full font-semibold text-white text-sm transition-all hover:opacity-90 hover:scale-[1.02]"
                 style={{ backgroundColor: "#7c3aed" }}>
                 Agrega tu reseña
@@ -261,6 +417,13 @@ export function RecentCreations() {
           </motion.div>
         </div>
       </section>
+
+      {/* ── Review Modal ── */}
+      <AnimatePresence>
+        {showReviewModal && (
+          <ReviewModal onClose={() => setShowReviewModal(false)} />
+        )}
+      </AnimatePresence>
     </>
   )
 }

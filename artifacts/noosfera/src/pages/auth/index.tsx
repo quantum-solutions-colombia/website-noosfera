@@ -1,3 +1,4 @@
+
 import type React from "react"
 import { useState, Suspense, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
@@ -48,27 +49,42 @@ function AuthContent() {
   }
 
   return (
-    <div className="min-h-screen bg-black flex flex-col" style={{ maxWidth: 480, margin: "0 auto" }}>
+    <div className="min-h-screen bg-black flex flex-col" style={{ maxWidth: 460, margin: "0 auto" }}>
 
-      {/* Hero image */}
-      <div className="relative flex-shrink-0" style={{ height: "42vh", minHeight: 220 }}>
+      {/* Hero image — castle landscape */}
+      <div className="relative flex-shrink-0" style={{ height: "46vh", minHeight: 240 }}>
         <img
           src="/images/auth-hero.png"
-          alt="Arte NFT"
+          alt="Castillo abandonado"
           style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }}
         />
+        {/* gradient overlay */}
         <div style={{
           position: "absolute", inset: 0,
-          background: "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0.55) 100%)"
+          background: "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(20,5,40,0.7) 80%, rgba(20,5,40,1) 100%)"
         }} />
-        <div style={{ position: "absolute", top: 20, left: 0, right: 0, textAlign: "center" }}>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 28, color: "#fff", letterSpacing: "-0.5px", textShadow: "0 2px 12px rgba(0,0,0,0.5)" }}>
+        {/* Logo */}
+        <div style={{ position: "absolute", top: 24, left: 0, right: 0, textAlign: "center" }}>
+          <span style={{
+            fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 30,
+            color: "#fff", letterSpacing: "-0.5px",
+            textShadow: "0 2px 20px rgba(124,58,237,0.7), 0 2px 12px rgba(0,0,0,0.6)"
+          }}>
             Noosfera
           </span>
         </div>
+        {/* Back button */}
         <button
           onClick={() => navigate("/")}
-          style={{ position: "absolute", top: 16, left: 16, background: "rgba(255,255,255,0.18)", border: "none", borderRadius: 999, padding: "6px 8px", cursor: "pointer", color: "#fff", display: "flex", alignItems: "center" }}>
+          style={{
+            position: "absolute", top: 20, left: 16,
+            background: "rgba(255,255,255,0.15)",
+            backdropFilter: "blur(8px)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            borderRadius: 999, padding: "7px 9px",
+            cursor: "pointer", color: "#fff",
+            display: "flex", alignItems: "center"
+          }}>
           <ArrowLeft className="h-4 w-4" />
         </button>
       </div>
@@ -82,16 +98,16 @@ function AuthContent() {
           flex: 1,
           backgroundColor: "#fff",
           borderRadius: "28px 28px 0 0",
-          marginTop: -28,
-          padding: "28px 24px 40px",
+          marginTop: -32,
+          padding: "28px 24px 44px",
           display: "flex",
           flexDirection: "column",
-          gap: 20,
+          gap: 18,
         }}>
 
         {/* Headline */}
         <div style={{ textAlign: "center" }}>
-          <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 18, color: "#111", margin: 0, lineHeight: 1.4 }}>
+          <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 19, color: "#111", margin: 0, lineHeight: 1.4 }}>
             {activeTab === "login"
               ? "Inicia sesión para explorar el arte cardíaco con IA"
               : "Crea tu cuenta y empieza a crear"}
