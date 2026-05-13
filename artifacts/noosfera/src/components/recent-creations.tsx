@@ -190,9 +190,7 @@ export function RecentCreations() {
             transition={{ duration: 0.7 }} viewport={{ once: true }}>
             <div style={{
               width: "100%",
-              minHeight: 420,
-              maxHeight: 520,
-              aspectRatio: "4/5",
+              aspectRatio: "3/4",
               borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
               border: "2px solid rgba(124,58,237,0.20)",
@@ -205,7 +203,7 @@ export function RecentCreations() {
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
-                  objectPosition: "center 15%",
+                  objectPosition: "center center",
                   display: "block",
                 }} />
             </div>
