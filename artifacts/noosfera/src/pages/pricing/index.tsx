@@ -186,167 +186,171 @@ export default function PricingPage() {
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}
             className="text-gray-500 text-lg max-w-xl mx-auto leading-relaxed">
-            Elige el acceso que necesitas para transformar tu biometría en arte digital único, certificado y listo para el mercado.
+            Elige el acceso que necesitas para transformar tus pulsos cardíacos en arte digital único, certificado y listo para el mercado.
           </motion.p>
         </div>
       </section>
 
       {/* Plans Section */}
       <section className="overflow-hidden pb-16">
-        <div className="flex flex-col lg:flex-row items-center justify-center px-6 lg:px-16 gap-4 lg:gap-6">
+        {/* Outer wrapper: centers the whole block horizontally */}
+        <div className="flex justify-center px-6 lg:px-10">
+          {/* Row: image + card column — align-items: stretch so card matches image height */}
+          <div className="flex flex-col lg:flex-row items-stretch gap-5">
 
-          {/* Left — Dragon image */}
-          <motion.div
-            className="flex items-center justify-end lg:justify-end"
-            initial={{ opacity: 0, x: -24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-          >
-            <div style={{
-              width: 340,
-              aspectRatio: "3/4",
-              borderRadius: "24px 4px 24px 4px",
-              overflow: "hidden",
-              border: "2px solid rgba(124,58,237,0.20)",
-              outline: "4px solid rgba(124,58,237,0.07)",
-              flexShrink: 0,
-            }}>
-              <img
-                src="/images/dragon-pricing.png"
-                alt="Dragon Noosfera"
-                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
-              />
-            </div>
-          </motion.div>
+            {/* Left — Dragon image: fixed width, fills its height via object-fit */}
+            <motion.div
+              initial={{ opacity: 0, x: -24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.7 }}
+              style={{ flexShrink: 0 }}
+            >
+              <div style={{
+                width: 280,
+                height: "100%",
+                minHeight: 420,
+                borderRadius: "20px 4px 20px 4px",
+                overflow: "hidden",
+                border: "2px solid rgba(124,58,237,0.20)",
+                outline: "4px solid rgba(124,58,237,0.07)",
+              }}>
+                <img
+                  src="/images/dragon-pricing.png"
+                  alt="Dragon Noosfera"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
+                />
+              </div>
+            </motion.div>
 
-          {/* Right — Card */}
-          <div
-            className="flex flex-col items-center"
-            style={{ width: 380 }}
-            onMouseEnter={() => { isAutoPlaying.current = false }}
-            onMouseLeave={() => { isAutoPlaying.current = true }}
-          >
-            {/* Billing toggle — TOP, above the card */}
-            <div className="relative flex items-center mb-4">
-              <AnimatePresence>
-                {billing === "annual" && (
+            {/* Right — Toggle + Card column */}
+            <div
+              className="flex flex-col"
+              style={{ width: 310 }}
+              onMouseEnter={() => { isAutoPlaying.current = false }}
+              onMouseLeave={() => { isAutoPlaying.current = true }}
+            >
+              {/* Billing toggle — TOP, centered relative to card */}
+              <div className="relative flex items-center justify-center mb-3">
+                <AnimatePresence>
+                  {billing === "annual" && (
+                    <motion.div
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      className="absolute left-full ml-2 flex items-center gap-1 whitespace-nowrap"
+                      style={{ top: "50%", transform: "translate(0, -50%)" }}
+                    >
+                      <svg viewBox="0 0 48 32" className="w-10 h-8 flex-shrink-0" fill="none">
+                        <path d="M42 6 Q24 28 8 18" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
+                        <path d="M8 18 L13 15 M8 18 L11 23" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
+                      </svg>
+                      <span className="text-xs font-bold text-red-500 leading-tight">
+                        ¡20% OFF, eso es<br />2 meses GRATIS ❤️
+                      </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+                <div className="relative flex items-center bg-gray-100 rounded-full p-1 gap-1">
+                  {(["monthly", "annual"] as const).map(b => (
+                    <button key={b} onClick={() => { setBilling(b); setCurrentIndex(1) }}
+                      className="relative px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300"
+                      style={{
+                        background: billing === b ? "#111827" : "transparent",
+                        color: billing === b ? "#fff" : "#6b7280",
+                      }}>
+                      {b === "monthly" ? "Mensual" : "Anual"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Card — flex: 1 so it stretches to fill remaining height */}
+              <div className="relative flex-1 overflow-hidden">
+                <AnimatePresence mode="wait" custom={direction}>
                   <motion.div
-                    initial={{ opacity: 0, x: 10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: 10 }}
-                    className="absolute left-full ml-2 flex items-center gap-1 whitespace-nowrap"
-                    style={{ top: "50%", transform: "translate(0, -50%)" }}
+                    key={plan.id + billing}
+                    custom={direction}
+                    variants={variants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                    style={{ position: "absolute", inset: 0 }}
                   >
-                    <svg viewBox="0 0 48 32" className="w-10 h-8 flex-shrink-0" fill="none">
-                      <path d="M42 6 Q24 28 8 18" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                      <path d="M8 18 L13 15 M8 18 L11 23" stroke="#ef4444" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
-                    <span className="text-xs font-bold text-red-500 leading-tight">
-                      ¡20% OFF, eso es<br />2 meses GRATIS ❤️
-                    </span>
+                    <div
+                      className="relative flex flex-col w-full h-full p-7"
+                      style={{
+                        background: "white",
+                        border: "2px solid #111827",
+                        borderRadius: "20px",
+                        boxShadow: "0 4px 24px rgba(0,0,0,0.09)",
+                      }}>
+
+                      {/* Badge */}
+                      {plan.tag && (
+                        <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold px-5 py-1.5 rounded-full"
+                          style={{ backgroundColor: plan.tagColor!.bg, color: plan.tagColor!.text }}>
+                          {plan.tag}
+                        </div>
+                      )}
+
+                      {/* Plan name + price */}
+                      <div className="mb-4">
+                        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-gray-400 mb-2">{plan.label}</p>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-4xl font-black text-gray-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                            {plan.price}
+                          </span>
+                          <span className="text-sm text-gray-400">{plan.sub}</span>
+                        </div>
+                        <AnimatePresence>
+                          {plan.annualSaving && (
+                            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-2">
+                              <span className="inline-block text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-md"
+                                style={{ background: "#f3e8ff", color: "#7c3aed" }}>
+                                {plan.annualSaving}
+                              </span>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      <div className="border-t border-gray-100 mb-4" />
+
+                      {/* Features — flex-1 so they fill space between price and button */}
+                      <ul className="space-y-2.5 flex-1">
+                        {plan.features.map((f, fi) => (
+                          <li key={fi} className="flex items-start gap-2.5 text-sm text-gray-700">
+                            <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-purple-500" />
+                            {f}
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* CTA — pinned to bottom via mt-auto */}
+                      <button
+                        onClick={() => navigate("/auth/login")}
+                        className="mt-auto w-full py-3.5 rounded-full text-sm font-bold tracking-wide transition-all hover:opacity-90 hover:scale-[1.01] active:scale-[0.99]"
+                        style={{ background: "#7c3aed", color: "white" }}>
+                        Comenzar ahora
+                      </button>
+                    </div>
                   </motion.div>
-                )}
-              </AnimatePresence>
-              <div className="relative flex items-center bg-gray-100 rounded-full p-1 gap-1">
-                {(["monthly", "annual"] as const).map(b => (
-                  <button key={b} onClick={() => { setBilling(b); setCurrentIndex(1) }}
-                    className="relative px-6 py-2 rounded-full text-sm font-semibold transition-all duration-300"
+                </AnimatePresence>
+              </div>
+
+              {/* Dots */}
+              <div className="flex items-center justify-center gap-2 mt-3">
+                {plans.map((_, i) => (
+                  <button key={i} onClick={() => goTo(i, i > currentIndex ? 1 : -1)}
+                    aria-label={`Plan ${i + 1}`}
+                    className="h-2.5 rounded-full transition-all duration-300"
                     style={{
-                      background: billing === b ? "#111827" : "transparent",
-                      color: billing === b ? "#fff" : "#6b7280",
-                    }}>
-                    {b === "monthly" ? "Mensual" : "Anual"}
-                  </button>
+                      width: i === currentIndex ? 28 : 10,
+                      backgroundColor: i === currentIndex ? "#7c3aed" : "#d1d5db",
+                    }} />
                 ))}
               </div>
-            </div>
-
-            {/* Card carousel */}
-            <div className="relative overflow-hidden w-full" style={{ minHeight: 440 }}>
-              <AnimatePresence mode="wait" custom={direction}>
-                <motion.div
-                  key={plan.id + billing}
-                  custom={direction}
-                  variants={variants}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ duration: 0.35, ease: "easeInOut" }}
-                  className="w-full"
-                >
-                  <div
-                    className="relative rounded-2xl p-8 flex flex-col gap-5 w-full"
-                    style={{
-                      background: "white",
-                      border: "2px solid #111827",
-                      boxShadow: "0 4px 20px rgba(0,0,0,0.08)",
-                    }}>
-
-                    {/* Badge */}
-                    {plan.tag && (
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-bold px-5 py-1.5 rounded-full"
-                        style={{ backgroundColor: plan.tagColor!.bg, color: plan.tagColor!.text }}>
-                        {plan.tag}
-                      </div>
-                    )}
-
-                    {/* Plan name + price */}
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.22em] text-gray-400 mb-2">{plan.label}</p>
-                      <div className="flex items-baseline gap-2">
-                        <span className="text-5xl font-black text-gray-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                          {plan.price}
-                        </span>
-                        <span className="text-sm text-gray-400">{plan.sub}</span>
-                      </div>
-
-                      <AnimatePresence>
-                        {plan.annualSaving && (
-                          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="mt-2">
-                            <span className="inline-block text-[10px] font-bold uppercase tracking-wide px-3 py-1 rounded-md"
-                              style={{ background: "#f3e8ff", color: "#7c3aed" }}>
-                              {plan.annualSaving}
-                            </span>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-
-                    <div className="border-t border-gray-100" />
-
-                    {/* Features */}
-                    <ul className="space-y-3">
-                      {plan.features.map((f, fi) => (
-                        <li key={fi} className="flex items-start gap-2.5 text-sm text-gray-700">
-                          <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-purple-500" />
-                          {f}
-                        </li>
-                      ))}
-                    </ul>
-
-                    {/* CTA */}
-                    <button
-                      onClick={() => navigate("/auth/login")}
-                      className="w-full py-3.5 rounded-full text-sm font-bold tracking-wide transition-all hover:opacity-90 hover:scale-[1.01] active:scale-[0.99]"
-                      style={{ background: "#7c3aed", color: "white" }}>
-                      Comenzar ahora
-                    </button>
-                  </div>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* Dots */}
-            <div className="flex items-center gap-2 mt-4">
-              {plans.map((_, i) => (
-                <button key={i} onClick={() => goTo(i, i > currentIndex ? 1 : -1)}
-                  aria-label={`Plan ${i + 1}`}
-                  className="h-2.5 rounded-full transition-all duration-300"
-                  style={{
-                    width: i === currentIndex ? 28 : 10,
-                    backgroundColor: i === currentIndex ? "#7c3aed" : "#d1d5db",
-                  }} />
-              ))}
             </div>
           </div>
         </div>
@@ -416,10 +420,10 @@ export default function PricingPage() {
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">Comienza Hoy</p>
             <h2 className="text-4xl md:text-5xl font-black text-white leading-tight"
               style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Tu Arte Único<br />Te Espera
+              Convierte Tus Pulsos<br />en Arte Digital
             </h2>
             <p className="text-purple-200 text-lg leading-relaxed">
-              Únete a la primera comunidad de arte biométrico del mundo. Cada latido es una obra maestra.
+              Únete a la primera comunidad que transforma pulsos cardíacos en obras únicas. Cada latido, una obra maestra.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
               <button
@@ -429,10 +433,10 @@ export default function PricingPage() {
                 Comenzar gratis
               </button>
               <button
-                onClick={() => navigate("/docs")}
+                onClick={() => navigate("/auth")}
                 className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
                 style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
-                Ver documentación
+                Comenzar demo
               </button>
             </div>
           </div>

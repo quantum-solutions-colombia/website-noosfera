@@ -379,7 +379,7 @@ export function RecentCreations() {
             transition={{ duration: 0.5 }} viewport={{ once: true }}>
             Comunidad
           </motion.p>
-          <motion.h2 className="text-4xl md:text-5xl font-black text-gray-900"
+          <motion.h2 className="text-3xl md:text-4xl font-black text-gray-900"
             style={{ fontFamily: "'DM Sans', sans-serif" }}
             initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.08 }} viewport={{ once: true }}>
