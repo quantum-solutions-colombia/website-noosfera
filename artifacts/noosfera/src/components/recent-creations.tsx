@@ -251,7 +251,7 @@ export function RecentCreations() {
 
             <div className="flex justify-center">
               <button
-                onClick={() => navigate("/auth/login")}
+                onClick={() => navigate("/auth")}
                 className="inline-flex items-center gap-2 px-7 py-4 rounded-full font-semibold text-white text-sm transition-all hover:opacity-90 hover:scale-[1.02]"
                 style={{ backgroundColor: "#7c3aed" }}>
                 Agrega tu reseña
