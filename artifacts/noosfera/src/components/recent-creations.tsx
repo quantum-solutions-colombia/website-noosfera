@@ -198,8 +198,8 @@ export function RecentCreations() {
               flexShrink: 0,
             }}>
               <img
-                src="/images/nft-ghost-2.png"
-                alt="Fantasma digital"
+                src="/images/nft-castle-1.png"
+                alt="Arte digital castillo"
                 style={{
                   width: "100%",
                   height: "108%",
