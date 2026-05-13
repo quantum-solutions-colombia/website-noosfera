@@ -86,16 +86,16 @@ function AuthContent() {
         className="flex-1 flex flex-col items-center justify-center px-4 py-6"
         style={{ position: "relative", minHeight: 520, background: "#f8f8fb", overflow: "hidden" }}>
 
-        {/* ── LEFT collage panel — 4 unique columns ── */}
+        {/* ── LEFT collage panel — 3 unique columns ── */}
         <div style={{
-          position: "absolute", left: 0, top: 0, bottom: 0, width: 660,
+          position: "absolute", left: 0, top: 0, bottom: 0, width: 520,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
           opacity: 0.9,
-          WebkitMaskImage: "linear-gradient(to right, black 70%, transparent 100%)",
-          maskImage:        "linear-gradient(to right, black 70%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to right, black 58%, transparent 100%)",
+          maskImage:        "linear-gradient(to right, black 58%, transparent 100%)",
         }}>
           <div style={{
-            position: "absolute", left: -60, top: -420, height: "calc(100% + 840px)", width: 690,
+            position: "absolute", left: -50, top: -420, height: "calc(100% + 840px)", width: 540,
             transform: "rotate(-12deg)", transformOrigin: "top left",
             display: "flex", gap: 7,
           }}>
@@ -108,25 +108,17 @@ function AuthContent() {
               ))}
             </div>
             {/* Col 2 */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 152px", paddingTop: 90 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 152px", paddingTop: 80 }}>
               {["/images/collage-8.png","/images/collage-9.png","/images/auth-L3-1.png","/images/auth-L3-2.png"].map((src, i) => (
-                <div key={i} style={{ width: 152, height: 250, borderRadius: 6, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 152, height: 250, borderRadius: 7, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
             </div>
-            {/* Col 3 */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 142px", paddingTop: 45 }}>
+            {/* Col 3 — innermost, fades into center */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 142px", paddingTop: 40 }}>
               {["/images/auth-L3-3.png","/images/auth-L3-4.png","/images/auth-L3-5.png","/images/collage-13.png"].map((src, i) => (
-                <div key={i} style={{ width: 142, height: 250, borderRadius: 4, overflow: "hidden", flexShrink: 0 }}>
-                  <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                </div>
-              ))}
-            </div>
-            {/* Col 4 — new, innermost, bottom-anchored */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 134px", paddingTop: 165 }}>
-              {["/images/auth-L4-1.png","/images/auth-L4-2.png","/images/auth-L4-3.png","/images/auth-L4-4.png"].map((src, i) => (
-                <div key={i} style={{ width: 134, height: 250, borderRadius: 0, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 142, height: 250, borderRadius: 3, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -141,16 +133,16 @@ function AuthContent() {
           background: "#f8f8fb", zIndex: 0, pointerEvents: "none",
         }} />
 
-        {/* ── RIGHT collage panel — 4 unique columns ── */}
+        {/* ── RIGHT collage panel — 3 unique columns ── */}
         <div style={{
-          position: "absolute", right: 0, top: 0, bottom: 0, width: 660,
+          position: "absolute", right: 0, top: 0, bottom: 0, width: 520,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
           opacity: 0.9,
-          WebkitMaskImage: "linear-gradient(to left, black 70%, transparent 100%)",
-          maskImage:        "linear-gradient(to left, black 70%, transparent 100%)",
+          WebkitMaskImage: "linear-gradient(to left, black 58%, transparent 100%)",
+          maskImage:        "linear-gradient(to left, black 58%, transparent 100%)",
         }}>
           <div style={{
-            position: "absolute", right: -60, top: -420, height: "calc(100% + 840px)", width: 690,
+            position: "absolute", right: -50, top: -420, height: "calc(100% + 840px)", width: 540,
             transform: "rotate(12deg)", transformOrigin: "top right",
             display: "flex", flexDirection: "row-reverse", gap: 7,
           }}>
@@ -163,25 +155,17 @@ function AuthContent() {
               ))}
             </div>
             {/* Col 2 */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 152px", paddingTop: 90 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 152px", paddingTop: 80 }}>
               {["/images/collage-11.png","/images/collage-12.png","/images/collage-15.png","/images/auth-R2-1.png"].map((src, i) => (
-                <div key={i} style={{ width: 152, height: 250, borderRadius: 6, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 152, height: 250, borderRadius: 7, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
             </div>
-            {/* Col 3 */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 142px", paddingTop: 45 }}>
+            {/* Col 3 — innermost, fades into center */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 142px", paddingTop: 40 }}>
               {["/images/collage-16.png","/images/collage-18.png","/images/collage-19.png","/images/collage-20.png"].map((src, i) => (
-                <div key={i} style={{ width: 142, height: 250, borderRadius: 4, overflow: "hidden", flexShrink: 0 }}>
-                  <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                </div>
-              ))}
-            </div>
-            {/* Col 4 — new, innermost, bottom-anchored */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 134px", paddingTop: 165 }}>
-              {["/images/nft-castle-1.png","/images/nft-castle-2.png","/images/nft-ghost.png","/images/nft-ghost-2.png"].map((src, i) => (
-                <div key={i} style={{ width: 134, height: 250, borderRadius: 0, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 142, height: 250, borderRadius: 3, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -204,7 +188,7 @@ function AuthContent() {
           }}>
 
           {/* Hero image inside card */}
-          <div style={{ position: "relative", height: 90, flexShrink: 0 }}>
+          <div style={{ position: "relative", height: 72, flexShrink: 0 }}>
             <img
               src="/images/castle-bg.png"
               alt="Castillo"
@@ -216,7 +200,7 @@ function AuthContent() {
             }} />
             <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
               <span style={{
-                fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 22,
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 17,
                 color: "#fff", letterSpacing: "-0.3px", textAlign: "center",
                 textShadow: "0 2px 20px rgba(124,58,237,0.8), 0 2px 12px rgba(0,0,0,0.6)"
               }}>
@@ -226,16 +210,16 @@ function AuthContent() {
           </div>
 
           {/* Form section */}
-          <div style={{ padding: "18px 20px 22px", display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ padding: "12px 16px 14px", display: "flex", flexDirection: "column", gap: 9 }}>
 
             {/* Headline */}
             <div style={{ textAlign: "center" }}>
-              <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 15, color: "#111", margin: 0, lineHeight: 1.35 }}>
+              <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 13, color: "#111", margin: 0, lineHeight: 1.3 }}>
                 {activeTab === "login"
                   ? "Inicia sesión para explorar el arte cardíaco con IA"
                   : "Crea tu cuenta y empieza a crear"}
               </h2>
-              <p style={{ color: "#888", fontSize: 11.5, marginTop: 4 }}>
+              <p style={{ color: "#888", fontSize: 10.5, marginTop: 2 }}>
                 {activeTab === "login"
                   ? "Si eres nuevo, ¡registrarte solo te llevará un momento!"
                   : "Únete a miles de artistas digitales en Noosfera"}
@@ -247,10 +231,10 @@ function AuthContent() {
               onClick={() => toast("Inicio con Google próximamente", { icon: "🚀" })}
               style={{
                 display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                width: "100%", padding: "10px 0",
-                border: "1.5px solid #e5e7eb", borderRadius: 10,
+                width: "100%", padding: "7px 0",
+                border: "1.5px solid #e5e7eb", borderRadius: 9,
                 background: "#fff", cursor: "pointer",
-                fontWeight: 600, fontSize: 13, color: "#111",
+                fontWeight: 600, fontSize: 12, color: "#111",
                 transition: "background 0.18s",
               }}
               onMouseEnter={e => (e.currentTarget.style.background = "#f7f7f7")}
@@ -267,14 +251,14 @@ function AuthContent() {
             </div>
 
             {/* Tab switcher */}
-            <div style={{ display: "flex", background: "#f5f5f7", borderRadius: 10, padding: 3 }}>
+            <div style={{ display: "flex", background: "#f5f5f7", borderRadius: 9, padding: 3 }}>
               {(["login", "register"] as const).map(tab => (
                 <button
                   key={tab}
                   onClick={() => setActiveTab(tab)}
                   style={{
-                    flex: 1, padding: "7px 0", borderRadius: 8, border: "none", cursor: "pointer",
-                    fontWeight: 600, fontSize: 12,
+                    flex: 1, padding: "5px 0", borderRadius: 7, border: "none", cursor: "pointer",
+                    fontWeight: 600, fontSize: 11.5,
                     background: activeTab === tab ? "#fff" : "transparent",
                     color: activeTab === tab ? "#111" : "#999",
                     boxShadow: activeTab === tab ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
@@ -293,18 +277,18 @@ function AuthContent() {
                   initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }}
                   transition={{ duration: 0.18 }}
                   onSubmit={handleLoginSubmit}
-                  style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  style={{ display: "flex", flexDirection: "column", gap: 8 }}>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    <label style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>Correo Electrónico</label>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>Correo Electrónico</label>
                     <input
                       type="email" name="email" placeholder="correo@gmail.com"
                       value={loginData.email}
                       onChange={e => setLoginData(p => ({ ...p, email: e.target.value }))}
                       disabled={isLoading}
                       style={{
-                        padding: "9px 11px", borderRadius: 9, border: "1.5px solid #e5e7eb",
-                        fontSize: 13, outline: "none", background: "#fafafa", color: "#111",
+                        padding: "7px 10px", borderRadius: 8, border: "1.5px solid #e5e7eb",
+                        fontSize: 12, outline: "none", background: "#fafafa", color: "#111",
                         transition: "border-color 0.18s",
                       }}
                       onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
@@ -312,8 +296,8 @@ function AuthContent() {
                     />
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    <label style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>Contraseña</label>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>Contraseña</label>
                     <div style={{ position: "relative" }}>
                       <input
                         type={showPassword ? "text" : "password"} name="password" placeholder="Tu contraseña"
@@ -321,8 +305,8 @@ function AuthContent() {
                         onChange={e => setLoginData(p => ({ ...p, password: e.target.value }))}
                         disabled={isLoading}
                         style={{
-                          width: "100%", padding: "9px 38px 9px 11px", borderRadius: 9,
-                          border: "1.5px solid #e5e7eb", fontSize: 13, outline: "none",
+                          width: "100%", padding: "7px 34px 7px 10px", borderRadius: 8,
+                          border: "1.5px solid #e5e7eb", fontSize: 12, outline: "none",
                           background: "#fafafa", color: "#111", boxSizing: "border-box",
                           transition: "border-color 0.18s",
                         }}
@@ -339,11 +323,10 @@ function AuthContent() {
                   <button
                     type="submit" disabled={isLoading}
                     style={{
-                      width: "100%", padding: "11px 0", borderRadius: 10, border: "none",
-                      background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 13,
+                      width: "100%", padding: "8px 0", borderRadius: 9, border: "none",
+                      background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 12,
                       cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-                      marginTop: 1,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                     }}>
                     {isLoading ? "Verificando..." : <><span>Acceder</span><ArrowRight className="h-4 w-4" /></>}
                   </button>
@@ -354,22 +337,22 @@ function AuthContent() {
                   initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}
                   transition={{ duration: 0.18 }}
                   onSubmit={handleRegisterSubmit}
-                  style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                  style={{ display: "flex", flexDirection: "column", gap: 8 }}>
 
                   {[
                     { label: "Tu Nombre", name: "name", type: "text", placeholder: "Juan García", value: registerData.name },
                     { label: "Correo Electrónico", name: "email", type: "email", placeholder: "correo@gmail.com", value: registerData.email },
                   ].map(field => (
-                    <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                      <label style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>{field.label}</label>
+                    <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                      <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>{field.label}</label>
                       <input
                         type={field.type} name={field.name} placeholder={field.placeholder}
                         value={field.value}
                         onChange={e => setRegisterData(p => ({ ...p, [e.target.name]: e.target.value }))}
                         disabled={isLoading}
                         style={{
-                          padding: "9px 11px", borderRadius: 9, border: "1.5px solid #e5e7eb",
-                          fontSize: 13, outline: "none", background: "#fafafa", color: "#111",
+                          padding: "7px 10px", borderRadius: 8, border: "1.5px solid #e5e7eb",
+                          fontSize: 12, outline: "none", background: "#fafafa", color: "#111",
                           transition: "border-color 0.18s",
                         }}
                         onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
@@ -382,8 +365,8 @@ function AuthContent() {
                     { label: "Contraseña", name: "password", placeholder: "Mínimo 6 caracteres", show: showPassword, toggle: () => setShowPassword(p => !p), value: registerData.password },
                     { label: "Confirmar Contraseña", name: "confirmPassword", placeholder: "Repite tu contraseña", show: showConfirmPassword, toggle: () => setShowConfirmPassword(p => !p), value: registerData.confirmPassword },
                   ].map(field => (
-                    <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                      <label style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>{field.label}</label>
+                    <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                      <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>{field.label}</label>
                       <div style={{ position: "relative" }}>
                         <input
                           type={field.show ? "text" : "password"} name={field.name} placeholder={field.placeholder}
@@ -391,8 +374,8 @@ function AuthContent() {
                           onChange={e => setRegisterData(p => ({ ...p, [e.target.name]: e.target.value }))}
                           disabled={isLoading}
                           style={{
-                            width: "100%", padding: "9px 38px 9px 11px", borderRadius: 9,
-                            border: "1.5px solid #e5e7eb", fontSize: 13, outline: "none",
+                            width: "100%", padding: "7px 34px 7px 10px", borderRadius: 8,
+                            border: "1.5px solid #e5e7eb", fontSize: 12, outline: "none",
                             background: "#fafafa", color: "#111", boxSizing: "border-box",
                             transition: "border-color 0.18s",
                           }}
@@ -400,7 +383,7 @@ function AuthContent() {
                           onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
                         />
                         <button type="button" onClick={field.toggle}
-                          style={{ position: "absolute", right: 11, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
+                          style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
                           {field.show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
@@ -410,11 +393,10 @@ function AuthContent() {
                   <button
                     type="submit" disabled={isLoading}
                     style={{
-                      width: "100%", padding: "11px 0", borderRadius: 10, border: "none",
-                      background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 13,
+                      width: "100%", padding: "8px 0", borderRadius: 9, border: "none",
+                      background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 12,
                       cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
-                      display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
-                      marginTop: 1,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
                     }}>
                     {isLoading ? "Creando cuenta..." : <><span>Crear mi cuenta</span><UserPlus className="h-4 w-4" /></>}
                   </button>
