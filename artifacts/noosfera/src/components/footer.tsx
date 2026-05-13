@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"
+import { useState } from "react"
 import { motion } from "framer-motion"
 import { Link } from "wouter"
 import React from "react"
@@ -8,6 +8,13 @@ const SOCIAL_HREFS: Record<string, string> = {
   instagram: "https://instagram.com/noosfera",
   tiktok: "https://tiktok.com/@noosfera",
   whatsapp: "https://wa.me/573001234567",
+}
+
+const BRAND_COLORS: Record<string, { backgroundColor?: string; backgroundImage?: string }> = {
+  facebook:  { backgroundColor: "#1877F2" },
+  instagram: { backgroundImage: "linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)" },
+  tiktok:    { backgroundColor: "#ff0050" },
+  whatsapp:  { backgroundColor: "#25D366" },
 }
 
 const ICONS: Record<string, React.ReactNode> = {
@@ -36,7 +43,11 @@ const ICONS: Record<string, React.ReactNode> = {
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
-  const [hovered, setHovered] = useState<string | null>(null)
+  const [selected, setSelected] = useState<string | null>(null)
+
+  const handleSocialClick = (network: string) => {
+    setSelected(prev => prev === network ? null : network)
+  }
 
   return (
     <footer style={{ backgroundColor: "#0a0a0a" }}>
@@ -68,25 +79,32 @@ export function Footer() {
           <motion.div className="flex items-center gap-4 mb-6"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}>
-            {(["facebook", "instagram", "tiktok", "whatsapp"] as const).map((network) => (
-              <motion.a key={network}
-                href={SOCIAL_HREFS[network]}
-                target="_blank"
-                rel="noopener noreferrer"
-                onHoverStart={() => setHovered(network)}
-                onHoverEnd={() => setHovered(null)}
-                className="w-12 h-12 rounded-full flex items-center justify-center text-white"
-                style={{
-                  backgroundColor: hovered === network ? "#333" : "#1a1a1a",
-                  border: "1px solid rgba(255,255,255,0.12)",
-                  transition: "background-color 0.25s ease",
-                }}
-                whileHover={{ scale: 1.1, y: -2 }}
-                whileTap={{ scale: 0.95 }}
-                title={network}>
-                {ICONS[network]}
-              </motion.a>
-            ))}
+            {(["facebook", "instagram", "tiktok", "whatsapp"] as const).map((network) => {
+              const isSelected = selected === network
+              const brandStyle = isSelected ? BRAND_COLORS[network] : {}
+              return (
+                <motion.a
+                  key={network}
+                  href={SOCIAL_HREFS[network]}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleSocialClick(network)}
+                  className="w-12 h-12 rounded-full flex items-center justify-center text-white"
+                  style={{
+                    backgroundColor: isSelected ? undefined : "#1a1a1a",
+                    border: isSelected
+                      ? "1px solid transparent"
+                      : "1px solid rgba(255,255,255,0.12)",
+                    transition: "background-color 0.2s ease, background-image 0.2s ease",
+                    ...brandStyle,
+                  }}
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  whileTap={{ scale: 0.92 }}
+                  title={network}>
+                  {ICONS[network]}
+                </motion.a>
+              )
+            })}
           </motion.div>
 
           <motion.p className="text-gray-400 font-medium mb-8 text-center text-sm tracking-wide"

@@ -199,7 +199,7 @@ export function RecentCreations() {
               outline: "4px solid rgba(124,58,237,0.07)",
             }}>
               <img
-                src="/images/nft-castle-1.png"
+                src="/images/nft-castle-2.png"
                 alt="Arte digital castillo"
                 style={{
                   width: "100%",
