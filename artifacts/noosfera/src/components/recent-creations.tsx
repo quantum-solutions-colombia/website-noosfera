@@ -210,7 +210,7 @@ export function RecentCreations() {
           </motion.div>
 
           {/* Right — text content */}
-          <motion.div className="lg:w-1/2 flex flex-col justify-center px-10 py-14 space-y-6"
+          <motion.div className="lg:w-1/2 flex flex-col justify-center px-14 py-16 space-y-8"
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}>
 
