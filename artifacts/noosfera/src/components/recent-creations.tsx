@@ -196,6 +196,10 @@ export function RecentCreations() {
               overflow: "hidden",
               border: "2px solid rgba(124,58,237,0.20)",
               outline: "4px solid rgba(124,58,237,0.07)",
+              backgroundColor: "#08071a",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}>
               <img
                 src="/images/nft-castle-ai.png"
@@ -203,8 +207,7 @@ export function RecentCreations() {
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center center",
+                  objectFit: "contain",
                   display: "block",
                 }} />
             </div>
