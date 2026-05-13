@@ -88,26 +88,26 @@ function AuthContent() {
 
         {/* ── LEFT collage panel ── */}
         <div style={{
-          position: "absolute", left: 0, top: 0, bottom: 0, width: 390,
+          position: "absolute", left: 0, top: 0, bottom: 0, width: 420,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
-          WebkitMaskImage: "linear-gradient(to right, black 0%, black 14%, transparent 72%)",
-          maskImage:        "linear-gradient(to right, black 0%, black 14%, transparent 72%)",
+          WebkitMaskImage: "linear-gradient(to right, black 0%, black 52%, rgba(0,0,0,0.6) 78%, rgba(0,0,0,0) 96%)",
+          maskImage:        "linear-gradient(to right, black 0%, black 52%, rgba(0,0,0,0.6) 78%, rgba(0,0,0,0) 96%)",
         }}>
           <div style={{
-            position: "absolute", left: -50, top: -140, height: "calc(100% + 280px)", width: 420,
+            position: "absolute", left: -40, top: -180, height: "calc(100% + 380px)", width: 440,
             transform: "rotate(-15deg)", transformOrigin: "top left",
-            display: "flex", gap: 10,
+            display: "flex", gap: 8,
           }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: "0 0 175px" }}>
-              {["/images/collage-1.png","/images/collage-8.png","/images/collage-10.png","/images/collage-2.png","/images/collage-3.png"].map((src, i) => (
-                <div key={i} style={{ width: 175, height: 210, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: "0 0 178px" }}>
+              {["/images/collage-1.png","/images/collage-8.png","/images/collage-10.png","/images/collage-2.png","/images/collage-3.png","/images/collage-17.png"].map((src, i) => (
+                <div key={i} style={{ width: 178, height: 208, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: "0 0 160px", paddingTop: 95 }}>
-              {["/images/collage-7.png","/images/collage-9.png","/images/collage-11.png","/images/collage-14.png"].map((src, i) => (
-                <div key={i} style={{ width: 160, height: 210, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: "0 0 162px", paddingTop: 88 }}>
+              {["/images/collage-7.png","/images/collage-9.png","/images/collage-11.png","/images/collage-14.png","/images/collage-18.png"].map((src, i) => (
+                <div key={i} style={{ width: 162, height: 208, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -117,26 +117,26 @@ function AuthContent() {
 
         {/* ── RIGHT collage panel ── */}
         <div style={{
-          position: "absolute", right: 0, top: 0, bottom: 0, width: 390,
+          position: "absolute", right: 0, top: 0, bottom: 0, width: 420,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
-          WebkitMaskImage: "linear-gradient(to left, black 0%, black 14%, transparent 72%)",
-          maskImage:        "linear-gradient(to left, black 0%, black 14%, transparent 72%)",
+          WebkitMaskImage: "linear-gradient(to left, black 0%, black 52%, rgba(0,0,0,0.6) 78%, rgba(0,0,0,0) 96%)",
+          maskImage:        "linear-gradient(to left, black 0%, black 52%, rgba(0,0,0,0.6) 78%, rgba(0,0,0,0) 96%)",
         }}>
           <div style={{
-            position: "absolute", right: -50, top: -140, height: "calc(100% + 280px)", width: 420,
+            position: "absolute", right: -40, top: -180, height: "calc(100% + 380px)", width: 440,
             transform: "rotate(15deg)", transformOrigin: "top right",
-            display: "flex", flexDirection: "row-reverse", gap: 10,
+            display: "flex", flexDirection: "row-reverse", gap: 8,
           }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: "0 0 175px" }}>
-              {["/images/collage-4.png","/images/collage-5.png","/images/collage-15.png","/images/collage-6.png","/images/collage-16.png"].map((src, i) => (
-                <div key={i} style={{ width: 175, height: 210, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: "0 0 178px" }}>
+              {["/images/collage-4.png","/images/collage-5.png","/images/collage-15.png","/images/collage-6.png","/images/collage-16.png","/images/collage-19.png"].map((src, i) => (
+                <div key={i} style={{ width: 178, height: 208, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10, flex: "0 0 160px", paddingTop: 95 }}>
-              {["/images/collage-12.png","/images/collage-13.png","/images/collage-14.png","/images/collage-16.png"].map((src, i) => (
-                <div key={i} style={{ width: 160, height: 210, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, flex: "0 0 162px", paddingTop: 88 }}>
+              {["/images/collage-12.png","/images/collage-13.png","/images/collage-20.png","/images/collage-16.png","/images/collage-14.png"].map((src, i) => (
+                <div key={i} style={{ width: 162, height: 208, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -404,7 +404,7 @@ function AuthContent() {
       </div>
 
       {/* Footer */}
-      <Footer />
+      <Footer waveBg="#f8f8fb" />
     </div>
   )
 }

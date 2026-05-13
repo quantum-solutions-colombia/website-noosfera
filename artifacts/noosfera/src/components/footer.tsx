@@ -41,7 +41,7 @@ const ICONS: Record<string, React.ReactNode> = {
   ),
 }
 
-export function Footer() {
+export function Footer({ waveBg = "#7c3aed" }: { waveBg?: string } = {}) {
   const currentYear = new Date().getFullYear()
   const [selected, setSelected] = useState<string | null>(null)
 
@@ -51,8 +51,8 @@ export function Footer() {
 
   return (
     <footer style={{ backgroundColor: "#0a0a0a" }}>
-      {/* Wave SVG transition */}
-      <div style={{ lineHeight: 0, backgroundColor: "transparent", marginBottom: -1 }}>
+      {/* Wave SVG transition: CTA → black footer */}
+      <div style={{ lineHeight: 0, backgroundColor: waveBg, marginBottom: -1 }}>
         <svg
           viewBox="0 0 1440 80"
           xmlns="http://www.w3.org/2000/svg"
