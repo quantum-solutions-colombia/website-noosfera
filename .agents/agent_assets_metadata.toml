@@ -204,3 +204,21 @@ id = "YM2KZ-yp9yiS8dzEH0Nul"
 uri = "file://artifacts/noosfera/public/images/viking-warrior.png"
 type = "image"
 title = "viking-warrior-axe-runes"
+
+[[generated]]
+id = "ZecgvSq_CFr8EuO77b2b8"
+uri = "file://artifacts/noosfera/public/images/about-hero.png"
+type = "image"
+title = "about-hero-fantasy-landscape"
+
+[[generated]]
+id = "OLXAogxiAydtHdiHZ5G4x"
+uri = "file://artifacts/noosfera/public/images/about-mission.png"
+type = "image"
+title = "about-mission-neural"
+
+[[generated]]
+id = "qDBV5Ege03b1kaCLhUkMm"
+uri = "file://artifacts/noosfera/public/images/about-vision.png"
+type = "image"
+title = "about-vision-library"

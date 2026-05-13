@@ -9,7 +9,7 @@ export function DarkNav({ activeLink }: DarkNavProps) {
 
   const links = [
     { href: "/", label: "Inicio", key: "home" },
-    { href: "/company", label: "Quiénes Somos", key: "company" },
+    { href: "/company", label: "Acerca de", key: "company" },
     { href: "/pricing", label: "Planes", key: "pricing" },
     { href: "/docs", label: "Documentación", key: "docs" },
   ] as const
