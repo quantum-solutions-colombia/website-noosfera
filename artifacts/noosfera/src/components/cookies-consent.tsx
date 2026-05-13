@@ -46,7 +46,6 @@ export function CookiesConsent() {
             style={{
               background: "#ffffff",
               border: "1.5px solid #7c3aed",
-              boxShadow: "0 4px 32px rgba(124,58,237,0.13), 0 1px 8px rgba(0,0,0,0.07)",
               borderRadius: 16,
             }}
             className="w-full max-w-5xl mx-auto px-5 py-3.5"

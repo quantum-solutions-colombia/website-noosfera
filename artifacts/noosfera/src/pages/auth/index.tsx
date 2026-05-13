@@ -1,6 +1,6 @@
 
 import type React from "react"
-import { useState, Suspense, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Eye, EyeOff, ArrowRight, UserPlus, ArrowLeft } from "lucide-react"
 import { useLocation, useSearch } from "wouter"
@@ -49,244 +49,278 @@ function AuthContent() {
   }
 
   return (
-    <div className="min-h-screen bg-black flex flex-col" style={{ maxWidth: 460, margin: "0 auto" }}>
+    /* Full-screen background with hero image */
+    <div
+      className="min-h-screen flex items-center justify-center px-4 py-8"
+      style={{
+        backgroundImage: "url('/images/auth-hero.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        position: "relative",
+      }}>
 
-      {/* Hero image — castle landscape */}
-      <div className="relative flex-shrink-0" style={{ height: "46vh", minHeight: 240 }}>
-        <img
-          src="/images/auth-hero.png"
-          alt="Castillo abandonado"
-          style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }}
-        />
-        {/* gradient overlay */}
-        <div style={{
-          position: "absolute", inset: 0,
-          background: "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(20,5,40,0.7) 80%, rgba(20,5,40,1) 100%)"
-        }} />
-        {/* Logo */}
-        <div style={{ position: "absolute", top: 24, left: 0, right: 0, textAlign: "center" }}>
-          <span style={{
-            fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 30,
-            color: "#fff", letterSpacing: "-0.5px",
-            textShadow: "0 2px 20px rgba(124,58,237,0.7), 0 2px 12px rgba(0,0,0,0.6)"
-          }}>
-            Noosfera
-          </span>
-        </div>
-        {/* Back button */}
-        <button
-          onClick={() => navigate("/")}
-          style={{
-            position: "absolute", top: 20, left: 16,
-            background: "rgba(255,255,255,0.15)",
-            backdropFilter: "blur(8px)",
-            border: "1px solid rgba(255,255,255,0.2)",
-            borderRadius: 999, padding: "7px 9px",
-            cursor: "pointer", color: "#fff",
-            display: "flex", alignItems: "center"
-          }}>
-          <ArrowLeft className="h-4 w-4" />
-        </button>
-      </div>
+      {/* Dark overlay on background */}
+      <div style={{
+        position: "absolute", inset: 0,
+        background: "linear-gradient(135deg, rgba(10,4,30,0.82) 0%, rgba(30,10,60,0.78) 100%)",
+        backdropFilter: "blur(2px)",
+      }} />
 
-      {/* Card panel */}
-      <motion.div
-        initial={{ y: 40, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.45, ease: "easeOut" }}
+      {/* Back button */}
+      <button
+        onClick={() => navigate("/")}
         style={{
-          flex: 1,
-          backgroundColor: "#fff",
-          borderRadius: "28px 28px 0 0",
-          marginTop: -32,
-          padding: "28px 24px 44px",
-          display: "flex",
-          flexDirection: "column",
-          gap: 18,
+          position: "fixed", top: 20, left: 20, zIndex: 10,
+          background: "rgba(255,255,255,0.15)",
+          backdropFilter: "blur(8px)",
+          border: "1px solid rgba(255,255,255,0.2)",
+          borderRadius: 999, padding: "7px 9px",
+          cursor: "pointer", color: "#fff",
+          display: "flex", alignItems: "center",
+        }}>
+        <ArrowLeft className="h-4 w-4" />
+      </button>
+
+      {/* Card container */}
+      <motion.div
+        initial={{ scale: 0.94, opacity: 0, y: 24 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+        style={{
+          position: "relative", zIndex: 1,
+          width: "100%", maxWidth: 420,
+          background: "#fff",
+          borderRadius: 28,
+          overflow: "hidden",
+          boxShadow: "0 24px 80px rgba(0,0,0,0.45), 0 4px 20px rgba(124,58,237,0.2)",
         }}>
 
-        {/* Headline */}
-        <div style={{ textAlign: "center" }}>
-          <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 19, color: "#111", margin: 0, lineHeight: 1.4 }}>
-            {activeTab === "login"
-              ? "Inicia sesión para explorar el arte cardíaco con IA"
-              : "Crea tu cuenta y empieza a crear"}
-          </h2>
-          <p style={{ color: "#888", fontSize: 13, marginTop: 6 }}>
-            {activeTab === "login"
-              ? "Si eres nuevo, ¡registrarte solo te llevará un momento!"
-              : "Únete a miles de artistas digitales en Noosfera"}
-          </p>
+        {/* Hero image inside card */}
+        <div style={{ position: "relative", height: 200, flexShrink: 0 }}>
+          <img
+            src="/images/auth-hero.png"
+            alt="Castillo abandonado"
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }}
+          />
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(20,5,40,0.72) 100%)"
+          }} />
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <span style={{
+              fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 32,
+              color: "#fff", letterSpacing: "-0.5px",
+              textShadow: "0 2px 20px rgba(124,58,237,0.8), 0 2px 12px rgba(0,0,0,0.6)"
+            }}>
+              Noosfera
+            </span>
+          </div>
         </div>
 
-        {/* Google button */}
-        <button
-          onClick={() => toast("Inicio con Google próximamente", { icon: "🚀" })}
-          style={{
-            display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-            width: "100%", padding: "13px 0",
-            border: "1.5px solid #e5e7eb", borderRadius: 12,
-            background: "#fff", cursor: "pointer",
-            fontWeight: 600, fontSize: 15, color: "#111",
-            transition: "background 0.18s",
-          }}
-          onMouseEnter={e => (e.currentTarget.style.background = "#f7f7f7")}
-          onMouseLeave={e => (e.currentTarget.style.background = "#fff")}>
-          <GoogleIcon />
-          Continuar con Google
-        </button>
+        {/* Form section */}
+        <div style={{ padding: "24px 24px 32px", display: "flex", flexDirection: "column", gap: 16 }}>
 
-        {/* Divider */}
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
-          <span style={{ color: "#bbb", fontSize: 12, fontWeight: 500 }}>o</span>
-          <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
-        </div>
+          {/* Headline */}
+          <div style={{ textAlign: "center" }}>
+            <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 17, color: "#111", margin: 0, lineHeight: 1.4 }}>
+              {activeTab === "login"
+                ? "Inicia sesión para explorar el arte cardíaco con IA"
+                : "Crea tu cuenta y empieza a crear"}
+            </h2>
+            <p style={{ color: "#888", fontSize: 12.5, marginTop: 5 }}>
+              {activeTab === "login"
+                ? "Si eres nuevo, ¡registrarte solo te llevará un momento!"
+                : "Únete a miles de artistas digitales en Noosfera"}
+            </p>
+          </div>
 
-        {/* Tab switcher */}
-        <div style={{ display: "flex", background: "#f5f5f7", borderRadius: 12, padding: 4 }}>
-          {(["login", "register"] as const).map(tab => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              style={{
-                flex: 1, padding: "10px 0", borderRadius: 9, border: "none", cursor: "pointer",
-                fontWeight: 600, fontSize: 14,
-                background: activeTab === tab ? "#fff" : "transparent",
-                color: activeTab === tab ? "#111" : "#999",
-                boxShadow: activeTab === tab ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
-                transition: "all 0.2s",
-              }}>
-              {tab === "login" ? "Iniciar Sesión" : "Registrarse"}
-            </button>
-          ))}
-        </div>
+          {/* Google button */}
+          <button
+            onClick={() => toast("Inicio con Google próximamente", { icon: "🚀" })}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
+              width: "100%", padding: "12px 0",
+              border: "1.5px solid #e5e7eb", borderRadius: 12,
+              background: "#fff", cursor: "pointer",
+              fontWeight: 600, fontSize: 14, color: "#111",
+              transition: "background 0.18s",
+            }}
+            onMouseEnter={e => (e.currentTarget.style.background = "#f7f7f7")}
+            onMouseLeave={e => (e.currentTarget.style.background = "#fff")}>
+            <GoogleIcon />
+            Continuar con Google
+          </button>
 
-        {/* Forms */}
-        <AnimatePresence mode="wait">
-          {activeTab === "login" ? (
-            <motion.form
-              key="login"
-              initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }}
-              transition={{ duration: 0.18 }}
-              onSubmit={handleLoginSubmit}
-              style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+          {/* Divider */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
+            <span style={{ color: "#bbb", fontSize: 11, fontWeight: 500 }}>o</span>
+            <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
+          </div>
 
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={{ fontSize: 13, fontWeight: 600, color: "#444" }}>Correo Electrónico</label>
-                <input
-                  type="email" name="email" placeholder="correo@gmail.com"
-                  value={loginData.email}
-                  onChange={e => setLoginData(p => ({ ...p, email: e.target.value }))}
-                  disabled={isLoading}
-                  style={{
-                    padding: "13px 14px", borderRadius: 12, border: "1.5px solid #e5e7eb",
-                    fontSize: 14, outline: "none", background: "#fafafa", color: "#111",
-                  }} />
-              </div>
-
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label style={{ fontSize: 13, fontWeight: 600, color: "#444" }}>Contraseña</label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type={showPassword ? "text" : "password"} name="password" placeholder="Tu contraseña"
-                    value={loginData.password}
-                    onChange={e => setLoginData(p => ({ ...p, password: e.target.value }))}
-                    disabled={isLoading}
-                    style={{
-                      width: "100%", padding: "13px 44px 13px 14px", borderRadius: 12,
-                      border: "1.5px solid #e5e7eb", fontSize: 14, outline: "none",
-                      background: "#fafafa", color: "#111", boxSizing: "border-box",
-                    }} />
-                  <button type="button" onClick={() => setShowPassword(p => !p)}
-                    style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
-                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                  </button>
-                </div>
-              </div>
-
+          {/* Tab switcher */}
+          <div style={{ display: "flex", background: "#f5f5f7", borderRadius: 12, padding: 4 }}>
+            {(["login", "register"] as const).map(tab => (
               <button
-                type="submit" disabled={isLoading}
+                key={tab}
+                onClick={() => setActiveTab(tab)}
                 style={{
-                  width: "100%", padding: "14px 0", borderRadius: 12, border: "none",
-                  background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 15,
-                  cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  flex: 1, padding: "9px 0", borderRadius: 9, border: "none", cursor: "pointer",
+                  fontWeight: 600, fontSize: 13,
+                  background: activeTab === tab ? "#fff" : "transparent",
+                  color: activeTab === tab ? "#111" : "#999",
+                  boxShadow: activeTab === tab ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
+                  transition: "all 0.2s",
                 }}>
-                {isLoading ? "Verificando..." : <><span>Acceder</span><ArrowRight className="h-4 w-4" /></>}
+                {tab === "login" ? "Iniciar Sesión" : "Registrarse"}
               </button>
-            </motion.form>
-          ) : (
-            <motion.form
-              key="register"
-              initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}
-              transition={{ duration: 0.18 }}
-              onSubmit={handleRegisterSubmit}
-              style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+            ))}
+          </div>
 
-              {[
-                { label: "Tu Nombre", name: "name", type: "text", placeholder: "Juan García", value: registerData.name },
-                { label: "Correo Electrónico", name: "email", type: "email", placeholder: "correo@gmail.com", value: registerData.email },
-              ].map(field => (
-                <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  <label style={{ fontSize: 13, fontWeight: 600, color: "#444" }}>{field.label}</label>
+          {/* Forms */}
+          <AnimatePresence mode="wait">
+            {activeTab === "login" ? (
+              <motion.form
+                key="login"
+                initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }}
+                transition={{ duration: 0.18 }}
+                onSubmit={handleLoginSubmit}
+                style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+
+                <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>Correo Electrónico</label>
                   <input
-                    type={field.type} name={field.name} placeholder={field.placeholder}
-                    value={field.value}
-                    onChange={e => setRegisterData(p => ({ ...p, [e.target.name]: e.target.value }))}
+                    type="email" name="email" placeholder="correo@gmail.com"
+                    value={loginData.email}
+                    onChange={e => setLoginData(p => ({ ...p, email: e.target.value }))}
                     disabled={isLoading}
                     style={{
-                      padding: "13px 14px", borderRadius: 12, border: "1.5px solid #e5e7eb",
-                      fontSize: 14, outline: "none", background: "#fafafa", color: "#111",
-                    }} />
+                      padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb",
+                      fontSize: 13, outline: "none", background: "#fafafa", color: "#111",
+                      transition: "border-color 0.18s",
+                    }}
+                    onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
+                    onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                  />
                 </div>
-              ))}
 
-              {[
-                { label: "Contraseña", name: "password", placeholder: "Mínimo 6 caracteres", show: showPassword, toggle: () => setShowPassword(p => !p), value: registerData.password },
-                { label: "Confirmar Contraseña", name: "confirmPassword", placeholder: "Repite tu contraseña", show: showConfirmPassword, toggle: () => setShowConfirmPassword(p => !p), value: registerData.confirmPassword },
-              ].map(field => (
-                <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                  <label style={{ fontSize: 13, fontWeight: 600, color: "#444" }}>{field.label}</label>
+                <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                  <label style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>Contraseña</label>
                   <div style={{ position: "relative" }}>
                     <input
-                      type={field.show ? "text" : "password"} name={field.name} placeholder={field.placeholder}
+                      type={showPassword ? "text" : "password"} name="password" placeholder="Tu contraseña"
+                      value={loginData.password}
+                      onChange={e => setLoginData(p => ({ ...p, password: e.target.value }))}
+                      disabled={isLoading}
+                      style={{
+                        width: "100%", padding: "11px 42px 11px 13px", borderRadius: 11,
+                        border: "1.5px solid #e5e7eb", fontSize: 13, outline: "none",
+                        background: "#fafafa", color: "#111", boxSizing: "border-box",
+                        transition: "border-color 0.18s",
+                      }}
+                      onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
+                      onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                    />
+                    <button type="button" onClick={() => setShowPassword(p => !p)}
+                      style={{ position: "absolute", right: 13, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                <button
+                  type="submit" disabled={isLoading}
+                  style={{
+                    width: "100%", padding: "13px 0", borderRadius: 12, border: "none",
+                    background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 14,
+                    cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    marginTop: 2,
+                  }}>
+                  {isLoading ? "Verificando..." : <><span>Acceder</span><ArrowRight className="h-4 w-4" /></>}
+                </button>
+              </motion.form>
+            ) : (
+              <motion.form
+                key="register"
+                initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}
+                transition={{ duration: 0.18 }}
+                onSubmit={handleRegisterSubmit}
+                style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+
+                {[
+                  { label: "Tu Nombre", name: "name", type: "text", placeholder: "Juan García", value: registerData.name },
+                  { label: "Correo Electrónico", name: "email", type: "email", placeholder: "correo@gmail.com", value: registerData.email },
+                ].map(field => (
+                  <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                    <label style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>{field.label}</label>
+                    <input
+                      type={field.type} name={field.name} placeholder={field.placeholder}
                       value={field.value}
                       onChange={e => setRegisterData(p => ({ ...p, [e.target.name]: e.target.value }))}
                       disabled={isLoading}
                       style={{
-                        width: "100%", padding: "13px 44px 13px 14px", borderRadius: 12,
-                        border: "1.5px solid #e5e7eb", fontSize: 14, outline: "none",
-                        background: "#fafafa", color: "#111", boxSizing: "border-box",
-                      }} />
-                    <button type="button" onClick={field.toggle}
-                      style={{ position: "absolute", right: 14, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
-                      {field.show ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
+                        padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb",
+                        fontSize: 13, outline: "none", background: "#fafafa", color: "#111",
+                        transition: "border-color 0.18s",
+                      }}
+                      onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
+                      onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                    />
                   </div>
-                </div>
-              ))}
+                ))}
 
-              <button
-                type="submit" disabled={isLoading}
-                style={{
-                  width: "100%", padding: "14px 0", borderRadius: 12, border: "none",
-                  background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 15,
-                  cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                }}>
-                {isLoading ? "Creando cuenta..." : <><span>Crear mi cuenta</span><UserPlus className="h-4 w-4" /></>}
-              </button>
-            </motion.form>
-          )}
-        </AnimatePresence>
+                {[
+                  { label: "Contraseña", name: "password", placeholder: "Mínimo 6 caracteres", show: showPassword, toggle: () => setShowPassword(p => !p), value: registerData.password },
+                  { label: "Confirmar Contraseña", name: "confirmPassword", placeholder: "Repite tu contraseña", show: showConfirmPassword, toggle: () => setShowConfirmPassword(p => !p), value: registerData.confirmPassword },
+                ].map(field => (
+                  <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                    <label style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>{field.label}</label>
+                    <div style={{ position: "relative" }}>
+                      <input
+                        type={field.show ? "text" : "password"} name={field.name} placeholder={field.placeholder}
+                        value={field.value}
+                        onChange={e => setRegisterData(p => ({ ...p, [e.target.name]: e.target.value }))}
+                        disabled={isLoading}
+                        style={{
+                          width: "100%", padding: "11px 42px 11px 13px", borderRadius: 11,
+                          border: "1.5px solid #e5e7eb", fontSize: 13, outline: "none",
+                          background: "#fafafa", color: "#111", boxSizing: "border-box",
+                          transition: "border-color 0.18s",
+                        }}
+                        onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
+                        onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                      />
+                      <button type="button" onClick={field.toggle}
+                        style={{ position: "absolute", right: 13, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
+                        {field.show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                  </div>
+                ))}
 
-        {/* Security note */}
-        <p style={{ textAlign: "center", fontSize: 11, color: "#bbb", lineHeight: 1.5, marginTop: 4 }}>
-          Este sitio está protegido por reCAPTCHA y se aplican la{" "}
-          <span style={{ color: "#7c3aed" }}>Política de Privacidad</span> y los{" "}
-          <span style={{ color: "#7c3aed" }}>Términos de Servicio</span>.
-        </p>
+                <button
+                  type="submit" disabled={isLoading}
+                  style={{
+                    width: "100%", padding: "13px 0", borderRadius: 12, border: "none",
+                    background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 14,
+                    cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                    marginTop: 2,
+                  }}>
+                  {isLoading ? "Creando cuenta..." : <><span>Crear mi cuenta</span><UserPlus className="h-4 w-4" /></>}
+                </button>
+              </motion.form>
+            )}
+          </AnimatePresence>
+
+          {/* Security note */}
+          <p style={{ textAlign: "center", fontSize: 10.5, color: "#bbb", lineHeight: 1.5 }}>
+            Este sitio está protegido por reCAPTCHA y se aplican la{" "}
+            <span style={{ color: "#7c3aed" }}>Política de Privacidad</span> y los{" "}
+            <span style={{ color: "#7c3aed" }}>Términos de Servicio</span>.
+          </p>
+        </div>
       </motion.div>
     </div>
   )
