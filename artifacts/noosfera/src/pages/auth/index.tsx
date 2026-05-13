@@ -90,8 +90,9 @@ function AuthContent() {
         <div style={{
           position: "absolute", left: 0, top: 0, bottom: 0, width: 660,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
-          WebkitMaskImage: "linear-gradient(to right, black 0%, black 50%, rgba(0,0,0,0) 78%)",
-          maskImage:        "linear-gradient(to right, black 0%, black 50%, rgba(0,0,0,0) 78%)",
+          opacity: 0.9,
+          WebkitMaskImage: "linear-gradient(to right, black 70%, transparent 100%)",
+          maskImage:        "linear-gradient(to right, black 70%, transparent 100%)",
         }}>
           <div style={{
             position: "absolute", left: -60, top: -420, height: "calc(100% + 840px)", width: 690,
@@ -101,7 +102,7 @@ function AuthContent() {
             {/* Col 1 — outermost left */}
             <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 162px", paddingTop: 0 }}>
               {["/images/collage-1.png","/images/collage-2.png","/images/collage-3.png","/images/collage-7.png"].map((src, i) => (
-                <div key={i} style={{ width: 162, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 162, height: 250, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -109,7 +110,7 @@ function AuthContent() {
             {/* Col 2 */}
             <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 152px", paddingTop: 90 }}>
               {["/images/collage-8.png","/images/collage-9.png","/images/auth-L3-1.png","/images/auth-L3-2.png"].map((src, i) => (
-                <div key={i} style={{ width: 152, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 152, height: 250, borderRadius: 6, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -117,7 +118,7 @@ function AuthContent() {
             {/* Col 3 */}
             <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 142px", paddingTop: 45 }}>
               {["/images/auth-L3-3.png","/images/auth-L3-4.png","/images/auth-L3-5.png","/images/collage-13.png"].map((src, i) => (
-                <div key={i} style={{ width: 142, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 142, height: 250, borderRadius: 4, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -125,7 +126,7 @@ function AuthContent() {
             {/* Col 4 — new, innermost, bottom-anchored */}
             <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 134px", paddingTop: 165 }}>
               {["/images/auth-L4-1.png","/images/auth-L4-2.png","/images/auth-L4-3.png","/images/auth-L4-4.png"].map((src, i) => (
-                <div key={i} style={{ width: 134, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 134, height: 250, borderRadius: 0, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -136,7 +137,7 @@ function AuthContent() {
         {/* ── CENTER white guard — images never touch the login card ── */}
         <div style={{
           position: "absolute", left: "50%", transform: "translateX(-50%)",
-          top: 0, bottom: 0, width: 390,
+          top: 0, bottom: 0, width: 340,
           background: "#f8f8fb", zIndex: 0, pointerEvents: "none",
         }} />
 
@@ -144,8 +145,9 @@ function AuthContent() {
         <div style={{
           position: "absolute", right: 0, top: 0, bottom: 0, width: 660,
           pointerEvents: "none", zIndex: 0, overflow: "hidden",
-          WebkitMaskImage: "linear-gradient(to left, black 0%, black 50%, rgba(0,0,0,0) 78%)",
-          maskImage:        "linear-gradient(to left, black 0%, black 50%, rgba(0,0,0,0) 78%)",
+          opacity: 0.9,
+          WebkitMaskImage: "linear-gradient(to left, black 70%, transparent 100%)",
+          maskImage:        "linear-gradient(to left, black 70%, transparent 100%)",
         }}>
           <div style={{
             position: "absolute", right: -60, top: -420, height: "calc(100% + 840px)", width: 690,
@@ -155,7 +157,7 @@ function AuthContent() {
             {/* Col 1 — outermost right */}
             <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 162px", paddingTop: 0 }}>
               {["/images/collage-4.png","/images/collage-5.png","/images/collage-6.png","/images/collage-10.png"].map((src, i) => (
-                <div key={i} style={{ width: 162, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 162, height: 250, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -163,7 +165,7 @@ function AuthContent() {
             {/* Col 2 */}
             <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 152px", paddingTop: 90 }}>
               {["/images/collage-11.png","/images/collage-12.png","/images/collage-15.png","/images/auth-R2-1.png"].map((src, i) => (
-                <div key={i} style={{ width: 152, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 152, height: 250, borderRadius: 6, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -171,7 +173,7 @@ function AuthContent() {
             {/* Col 3 */}
             <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 142px", paddingTop: 45 }}>
               {["/images/collage-16.png","/images/collage-18.png","/images/collage-19.png","/images/collage-20.png"].map((src, i) => (
-                <div key={i} style={{ width: 142, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 142, height: 250, borderRadius: 4, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -179,7 +181,7 @@ function AuthContent() {
             {/* Col 4 — new, innermost, bottom-anchored */}
             <div style={{ display: "flex", flexDirection: "column", gap: 7, flex: "0 0 134px", paddingTop: 165 }}>
               {["/images/nft-castle-1.png","/images/nft-castle-2.png","/images/nft-ghost.png","/images/nft-ghost-2.png"].map((src, i) => (
-                <div key={i} style={{ width: 134, height: 250, borderRadius: 12, overflow: "hidden", flexShrink: 0 }}>
+                <div key={i} style={{ width: 134, height: 250, borderRadius: 0, overflow: "hidden", flexShrink: 0 }}>
                   <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                 </div>
               ))}
@@ -194,15 +196,15 @@ function AuthContent() {
           transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           style={{
             position: "relative", zIndex: 1,
-            width: "100%", maxWidth: 300,
+            width: "100%", maxWidth: 268,
             background: "#fff",
-            borderRadius: 18,
+            borderRadius: 16,
             overflow: "hidden",
             border: "2px solid #7c3aed",
           }}>
 
           {/* Hero image inside card */}
-          <div style={{ position: "relative", height: 108, flexShrink: 0 }}>
+          <div style={{ position: "relative", height: 90, flexShrink: 0 }}>
             <img
               src="/images/castle-bg.png"
               alt="Castillo"
