@@ -191,37 +191,40 @@ export default function PricingPage() {
         </div>
       </section>
 
-      {/* Plans Section — dragon LEFT, carousel RIGHT */}
-      <section className="container mx-auto px-6 pb-28">
-        <div className="max-w-5xl mx-auto flex flex-col lg:flex-row gap-8 items-center justify-center">
+      {/* Plans Section — dragon LEFT, carousel RIGHT — mirrors reviews section layout */}
+      <section className="overflow-hidden pb-16">
+        <div className="flex flex-col lg:flex-row min-h-[520px]">
 
-          {/* Left — Dragon image — reduced size */}
+          {/* Left — Dragon image — exact same structure as castle in reviews */}
           <motion.div
-            initial={{ opacity: 0, x: -32 }}
+            className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
+            initial={{ opacity: 0, x: -24 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-            className="flex-shrink-0"
-            style={{ width: 320 }}
+            transition={{ duration: 0.7 }}
           >
-            <div className="rounded-2xl overflow-hidden shadow-xl"
-              style={{ background: "linear-gradient(135deg, #1a0533 0%, #3b0764 50%, #1a0533 100%)" }}>
+            <div style={{
+              width: "70%",
+              aspectRatio: "3/4",
+              borderRadius: "24px 4px 24px 4px",
+              overflow: "hidden",
+              border: "2px solid rgba(124,58,237,0.20)",
+              outline: "4px solid rgba(124,58,237,0.07)",
+            }}>
               <img
                 src="/images/dragon-pricing.png"
                 alt="Dragon Noosfera"
-                className="w-full object-cover"
-                style={{ height: 400 }}
+                style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
               />
             </div>
           </motion.div>
 
-          {/* Right — Carousel — fixed width matching login card */}
-          <div className="flex flex-col items-center gap-6 flex-shrink-0"
-            style={{ width: 390 }}
+          {/* Right — Carousel — fixed narrow card matching reference */}
+          <div className="lg:w-1/2 flex flex-col items-center justify-center px-6 lg:px-10 py-10 gap-6"
             onMouseEnter={() => { isAutoPlaying.current = false }}
             onMouseLeave={() => { isAutoPlaying.current = true }}>
 
-            {/* Card carousel — no arrows */}
-            <div className="relative w-full overflow-hidden" style={{ minHeight: 420 }}>
+            {/* Card carousel — no arrows, fixed width 380px */}
+            <div className="relative overflow-hidden" style={{ width: 380, minHeight: 440 }}>
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={plan.id + billing}
