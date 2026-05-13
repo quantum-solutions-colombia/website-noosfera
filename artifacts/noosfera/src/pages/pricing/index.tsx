@@ -359,22 +359,32 @@ export default function PricingPage() {
       </section>
 
       {/* Separator — text bridge between plans and FAQ */}
-      <section className="py-16 px-6 text-center bg-white">
+      <section className="relative py-16 px-6 text-center overflow-hidden">
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: "url('/images/egyptian-text-bg.png')",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            filter: "brightness(0.22) saturate(1.4)",
+          }}
+        />
+        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(255,255,255,0.08) 0%, rgba(124,58,237,0.18) 100%)" }} />
         <motion.div
-          className="max-w-3xl mx-auto"
+          className="relative z-10 max-w-3xl mx-auto"
           initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }} viewport={{ once: true }}
         >
-          <h2 className="text-2xl md:text-3xl font-black text-gray-900 leading-snug mb-3"
-            style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            <span className="text-purple-600">Sin compromisos.</span>{" "}
+          <h2 className="text-2xl md:text-3xl font-black leading-snug mb-3"
+            style={{ fontFamily: "'DM Sans', sans-serif", color: "#ffffff" }}>
+            <span style={{ color: "#c4b5fd" }}>Tu arte, tus reglas.</span>{" "}
             Cancela cuando quieras.
           </h2>
-          <p className="text-gray-500 text-sm mb-8">Cada plan incluye acceso inmediato — sin contratos, sin cargos ocultos.</p>
-          <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+          <p className="text-sm mb-8" style={{ color: "rgba(255,255,255,0.65)" }}>Cada plan incluye acceso inmediato — sin contratos, sin cargos ocultos.</p>
+          <div className="flex flex-wrap justify-center gap-6 text-sm" style={{ color: "rgba(255,255,255,0.8)" }}>
             {["Cambia de plan en cualquier momento", "Primer mes sin riesgo", "Soporte incluido en todos los planes"].map(item => (
               <span key={item} className="flex items-center gap-2">
-                <Check className="h-4 w-4 text-purple-600 flex-shrink-0" />
+                <Check className="h-4 w-4 flex-shrink-0" style={{ color: "#c4b5fd" }} />
                 {item}
               </span>
             ))}

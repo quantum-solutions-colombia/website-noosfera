@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 import { useLocation } from "wouter"
 import { Footer } from "@/components/footer"
 import { DarkNav } from "@/components/dark-nav"
-import { Zap, Heart, Globe, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
 const founders = [
   {
@@ -23,17 +23,17 @@ const founders = [
 
 const pillars = [
   {
-    icon: Zap,
+    num: "01",
     title: "Innovación",
     desc: "Empujamos los límites de lo que es posible entre biometría y arte digital, convirtiendo datos cardíacos en obras únicas.",
   },
   {
-    icon: Heart,
+    num: "02",
     title: "Unicidad",
     desc: "Cada creación es matemáticamente irrepetible — tan única como el latido que la genera.",
   },
   {
-    icon: Globe,
+    num: "03",
     title: "Accesibilidad",
     desc: "Arte premium al alcance de cualquier persona. Sin importar el origen, con un solo latido puedes crear.",
   },
@@ -46,40 +46,28 @@ export default function CompanyPage() {
     <div className="min-h-screen bg-white text-gray-900">
       <DarkNav activeLink="company" />
 
-      {/* Hero — full-width cinematic image with overlay text */}
-      <section className="relative h-[70vh] min-h-[480px] overflow-hidden flex items-center justify-center">
-        <img
-          src="/images/about-hero.png"
-          alt="Noosfera mundo"
-          className="absolute inset-0 w-full h-full object-cover object-center"
-        />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.7) 100%)" }} />
-        <div className="relative z-10 text-center px-6 max-w-3xl mx-auto">
+      {/* Hero — clean, no background image */}
+      <section className="pt-28 pb-20 flex items-center justify-center bg-white border-b border-gray-100">
+        <div className="text-center px-6 max-w-3xl mx-auto">
           <motion.p
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
-            className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-400 mb-4">
+            className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-4">
             Acerca de
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-6xl font-black text-white leading-tight mb-5"
+            className="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-5"
             style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            Donde el latido de tu corazón<br />
-            <span style={{ color: "#a78bfa" }}>se convierte en arte</span>
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.3 }}
-            className="text-white/70 text-base leading-relaxed max-w-xl mx-auto">
             Noosfera es la primera plataforma que transforma tus pulsos cardíacos en obras digitales únicas, certificadas y listas para el mercado.
-          </motion.p>
+          </motion.h1>
         </div>
       </section>
 
-      {/* What is Noosfera — split: text LEFT, mission image RIGHT */}
+      {/* What is Noosfera — centered text, mission image */}
       <section className="overflow-hidden border-b border-gray-100">
         <div className="flex flex-col lg:flex-row min-h-[480px]">
           <motion.div
-            className="lg:w-1/2 flex flex-col justify-center px-10 lg:px-20 py-16"
+            className="lg:w-1/2 flex flex-col items-center justify-center text-center px-10 lg:px-20 py-16"
             initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }} viewport={{ once: true }}
           >
@@ -89,10 +77,10 @@ export default function CompanyPage() {
               ¿Qué es<br />
               <span className="text-purple-600">Noosfera?</span>
             </h2>
-            <p className="text-gray-500 text-sm leading-relaxed mb-4">
+            <p className="text-gray-500 text-sm leading-relaxed mb-4 max-w-sm">
               Noosfera es una plataforma de arte biométrico que captura los pulsos cardíacos de sus usuarios y los convierte — a través de inteligencia artificial — en obras de arte digital únicas, certificadas y listas para el mercado NFT.
             </p>
-            <p className="text-gray-500 text-sm leading-relaxed mb-8">
+            <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-sm">
               Creemos que cada latido cuenta una historia. Nuestra tecnología lee esa historia y la transforma en algo visible, bello e irrepetible. No hay dos obras iguales porque no hay dos personas iguales.
             </p>
             <button
@@ -103,13 +91,14 @@ export default function CompanyPage() {
           </motion.div>
 
           <motion.div
-            className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
+            className="lg:w-1/2 flex items-center justify-center pl-4 lg:pl-6 pr-0 py-6"
+            style={{ marginLeft: "-60px" }}
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}
           >
             <div style={{
-              width: "80%",
-              aspectRatio: "3/4",
+              width: "92%",
+              height: "420px",
               borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
               border: "2px solid rgba(124,58,237,0.20)",
@@ -170,18 +159,18 @@ export default function CompanyPage() {
         </div>
       </section>
 
-      {/* Vision — image LEFT, pillars RIGHT */}
+      {/* Vision — image LEFT, pillars RIGHT (all centered) */}
       <section className="overflow-hidden border-t border-gray-100">
         <div className="flex flex-col lg:flex-row min-h-[480px]">
           <motion.div
-            className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
+            className="lg:w-1/2 flex items-center justify-center pl-4 lg:pl-6 pr-0 py-6"
             initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }} viewport={{ once: true }}
           >
             <div style={{
-              width: "80%",
-              aspectRatio: "3/4",
-              borderRadius: "4px 24px 4px 24px",
+              width: "92%",
+              height: "420px",
+              borderRadius: "24px 4px 24px 4px",
               overflow: "hidden",
               border: "2px solid rgba(124,58,237,0.20)",
               outline: "4px solid rgba(124,58,237,0.07)",
@@ -195,35 +184,41 @@ export default function CompanyPage() {
           </motion.div>
 
           <motion.div
-            className="lg:w-1/2 flex flex-col justify-center px-10 lg:px-16 py-16 space-y-8"
+            className="lg:w-1/2 flex flex-col items-center justify-center text-center px-10 lg:px-16 py-16 space-y-8"
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}
           >
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">Nuestros pilares</p>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight"
+              <motion.p
+                initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }} viewport={{ once: true }}
+                className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">
+                Nuestros pilares
+              </motion.p>
+              <motion.h2
+                initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.1 }} viewport={{ once: true }}
+                className="text-3xl md:text-4xl font-black text-gray-900 leading-tight"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Lo que nos mueve
-              </h2>
+              </motion.h2>
             </div>
-            <div className="space-y-6">
+            <div className="space-y-6 w-full max-w-sm">
               {pillars.map((p, i) => (
                 <motion.div
                   key={p.title}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.4, delay: i * 0.1 }}
+                  transition={{ duration: 0.45, delay: 0.15 + i * 0.12 }}
                   viewport={{ once: true }}
-                  className="flex gap-4 items-start"
+                  className="flex flex-col items-center gap-2"
                 >
                   <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
                     style={{ background: "rgba(124,58,237,0.1)" }}>
-                    <p.icon className="h-5 w-5 text-purple-600" />
+                    <span className="text-sm font-black text-purple-600">{p.num}</span>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900 mb-1">{p.title}</p>
-                    <p className="text-sm text-gray-500 leading-relaxed">{p.desc}</p>
-                  </div>
+                  <p className="text-sm font-bold text-gray-900">{p.title}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed">{p.desc}</p>
                 </motion.div>
               ))}
             </div>
@@ -256,7 +251,7 @@ export default function CompanyPage() {
             initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.2 }} viewport={{ once: true }}
             className="text-purple-200 mb-10 max-w-md mx-auto text-sm leading-relaxed">
-            El arte biométrico es el futuro. Tus latidos tienen valor — empieza a crearlos hoy.
+            Cada latido es único, irrepetible y tuyo. Convierte tu firma biométrica en arte digital que el mundo pueda reconocer.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }}
@@ -264,12 +259,14 @@ export default function CompanyPage() {
             className="flex flex-wrap items-center justify-center gap-4">
             <button
               onClick={() => navigate("/auth/login")}
-              className="px-8 py-4 rounded-full text-sm font-semibold text-purple-700 bg-white transition-all hover:opacity-90 hover:scale-[1.01]">
+              className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
+              style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
               Comenzar Ahora
             </button>
             <button
               onClick={() => navigate("/pricing")}
-              className="px-8 py-4 rounded-full text-sm font-semibold text-white border border-white/30 hover:border-white/60 transition-all">
+              className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 hover:scale-[1.02]"
+              style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
               Comenzar demo
             </button>
           </motion.div>

@@ -222,3 +222,9 @@ id = "qDBV5Ege03b1kaCLhUkMm"
 uri = "file://artifacts/noosfera/public/images/about-vision.png"
 type = "image"
 title = "about-vision-library"
+
+[[generated]]
+id = "whRoExfG0zo398y52Rm3N"
+uri = "file://artifacts/noosfera/public/images/egyptian-text-bg.png"
+type = "image"
+title = "generated_image"
