@@ -74,23 +74,23 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.92, opacity: 0, y: 24 }}
         transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
-        className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden">
+        className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden">
 
         {/* Header */}
-        <div className="relative px-7 pt-7 pb-5"
+        <div className="relative px-6 pt-6 pb-4 text-center"
           style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
           <button onClick={onClose}
-            className="absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center transition-all"
+            className="absolute top-4 right-4 w-7 h-7 rounded-full flex items-center justify-center transition-all"
             style={{ background: "rgba(255,255,255,0.18)" }}
             onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.28)" }}
             onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.18)" }}>
-            <X className="w-4 h-4 text-white" />
+            <X className="w-3.5 h-3.5 text-white" />
           </button>
-          <p className="text-purple-200 text-xs font-bold uppercase tracking-widest mb-1">Comunidad</p>
-          <h3 className="text-white font-black text-xl" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+          <p className="text-purple-200 text-[10px] font-bold uppercase tracking-widest mb-1">Comunidad</p>
+          <h3 className="text-white font-black text-lg" style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Comparte tu experiencia
           </h3>
-          <p className="text-purple-200 text-sm mt-1">Tu opinión ayuda a otros artistas a descubrir Noosfera</p>
+          <p className="text-purple-200 text-xs mt-1">Tu opinión ayuda a otros artistas a descubrir Noosfera</p>
         </div>
 
         <AnimatePresence mode="wait">
@@ -99,13 +99,13 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
               key="success"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="px-7 py-10 text-center flex flex-col items-center gap-4">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl"
+              className="px-6 py-8 text-center flex flex-col items-center gap-3">
+              <div className="w-14 h-14 rounded-full flex items-center justify-center text-2xl"
                 style={{ background: "linear-gradient(135deg, #7c3aed22 0%, #5b21b622 100%)", border: "2px solid #7c3aed33" }}>
                 🎉
               </div>
               <div>
-                <p className="font-black text-gray-900 text-lg" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                <p className="font-black text-gray-900 text-base" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                   ¡Gracias, {name}!
                 </p>
                 <p className="text-gray-500 text-sm mt-1">Tu reseña ha sido enviada con éxito.</p>
@@ -115,14 +115,14 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
             <motion.form
               key="form"
               onSubmit={handleSubmit}
-              className="px-7 py-6 flex flex-col gap-5">
+              className="px-6 py-5 flex flex-col gap-4">
 
               {/* Star rating */}
-              <div>
+              <div className="text-center">
                 <label className="text-sm font-semibold text-gray-700 block mb-2">
                   ¿Cómo calificarías tu experiencia?
                 </label>
-                <div className="flex gap-1.5">
+                <div className="flex gap-1.5 justify-center">
                   {[1, 2, 3, 4, 5].map(star => (
                     <button
                       key={star}
@@ -132,7 +132,7 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
                       onMouseLeave={() => setHoverRating(0)}
                       className="transition-transform hover:scale-110 active:scale-95">
                       <Star
-                        className="w-8 h-8 transition-colors"
+                        className="w-7 h-7 transition-colors"
                         style={{
                           fill: star <= (hoverRating || rating) ? "#f59e0b" : "none",
                           color: star <= (hoverRating || rating) ? "#f59e0b" : "#d1d5db",
@@ -143,8 +143,8 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
               </div>
 
               {/* Name */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label className="text-sm font-semibold text-gray-700">Tu nombre</label>
+              <div className="text-center" style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                <label className="text-sm font-semibold text-gray-700 text-center">Tu nombre</label>
                 <input
                   type="text"
                   placeholder="Ej. María García"
@@ -152,9 +152,9 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
                   onChange={e => setName(e.target.value)}
                   required
                   style={{
-                    padding: "12px 14px", borderRadius: 12, border: "1.5px solid #e5e7eb",
-                    fontSize: 14, outline: "none", background: "#fafafa", color: "#111",
-                    transition: "border-color 0.18s",
+                    padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb",
+                    fontSize: 13, outline: "none", background: "#fafafa", color: "#111",
+                    textAlign: "center", transition: "border-color 0.18s",
                   }}
                   onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
                   onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
@@ -162,18 +162,19 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
               </div>
 
               {/* Review text */}
-              <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                <label className="text-sm font-semibold text-gray-700">Tu reseña</label>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                <label className="text-sm font-semibold text-gray-700 text-center">Tu reseña</label>
                 <textarea
                   placeholder="Cuéntanos sobre tu experiencia creando arte con Noosfera..."
                   value={text}
                   onChange={e => setText(e.target.value)}
                   required
-                  rows={4}
+                  rows={3}
                   style={{
-                    padding: "12px 14px", borderRadius: 12, border: "1.5px solid #e5e7eb",
-                    fontSize: 14, outline: "none", background: "#fafafa", color: "#111",
-                    resize: "none", fontFamily: "inherit", transition: "border-color 0.18s",
+                    padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb",
+                    fontSize: 13, outline: "none", background: "#fafafa", color: "#111",
+                    resize: "none", fontFamily: "inherit", textAlign: "center",
+                    transition: "border-color 0.18s",
                   }}
                   onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
                   onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
@@ -184,14 +185,14 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
               <button
                 type="submit"
                 disabled={!name.trim() || !text.trim() || rating === 0}
-                className="w-full py-3.5 rounded-xl font-bold text-white text-[15px] flex items-center justify-center gap-2 transition-all"
+                className="w-full py-3 rounded-xl font-bold text-white text-sm flex items-center justify-center gap-2 transition-all"
                 style={{
                   background: (!name.trim() || !text.trim() || rating === 0) ? "#c4b5fd" : "#7c3aed",
                   cursor: (!name.trim() || !text.trim() || rating === 0) ? "not-allowed" : "pointer",
                 }}
                 onMouseEnter={e => { if (name.trim() && text.trim() && rating > 0) e.currentTarget.style.background = "#6d28d9" }}
                 onMouseLeave={e => { if (name.trim() && text.trim() && rating > 0) e.currentTarget.style.background = "#7c3aed" }}>
-                <Send className="w-4 h-4" />
+                <Send className="w-3.5 h-3.5" />
                 Enviar mi reseña
               </button>
             </motion.form>

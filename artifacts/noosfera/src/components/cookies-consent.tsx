@@ -36,70 +36,62 @@ export function CookiesConsent() {
     <AnimatePresence>
       {isOpen && !hasHandled && (
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 24 }}
+          exit={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 sm:px-6 sm:pb-6"
+          className="fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 sm:px-6 sm:pb-5"
         >
           <div
             style={{
-              background: "linear-gradient(135deg, rgba(20,10,40,0.97) 0%, rgba(30,14,60,0.97) 100%)",
-              backdropFilter: "blur(20px)",
-              WebkitBackdropFilter: "blur(20px)",
-              border: "1px solid rgba(124,58,237,0.35)",
-              boxShadow: "0 -4px 40px rgba(124,58,237,0.18), 0 8px 40px rgba(0,0,0,0.35)",
+              background: "#ffffff",
+              border: "1.5px solid #7c3aed",
+              boxShadow: "0 4px 32px rgba(124,58,237,0.13), 0 1px 8px rgba(0,0,0,0.07)",
+              borderRadius: 16,
             }}
-            className="w-full max-w-5xl mx-auto rounded-2xl px-6 py-5"
+            className="w-full max-w-5xl mx-auto px-5 py-3.5"
           >
-            <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-5">
 
-              {/* Icon + text */}
-              <div className="flex items-start gap-4 flex-1 min-w-0">
-                <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 mt-0.5"
-                  style={{ background: "rgba(124,58,237,0.25)", border: "1px solid rgba(124,58,237,0.4)" }}>
-                  <span className="text-lg">🍪</span>
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[11px] font-bold tracking-[0.18em] uppercase mb-1"
-                    style={{ color: "#a78bfa" }}>
-                    Política de Cookies
-                  </p>
-                  <p className="text-[13px] leading-relaxed text-white/70">
-                    Usamos cookies esenciales para mejorar tu experiencia en Noosfera.{" "}
-                    <a href="/cookies"
-                      className="transition-colors hover:underline underline-offset-2"
-                      style={{ color: "#c4b5fd" }}>
-                      Más información
-                    </a>
-                  </p>
-                </div>
+              {/* Text */}
+              <div className="flex-1 min-w-0">
+                <p className="text-[10px] font-bold tracking-[0.18em] uppercase mb-0.5"
+                  style={{ color: "#7c3aed" }}>
+                  Política de Cookies
+                </p>
+                <p className="text-[12.5px] leading-snug text-gray-600">
+                  Usamos cookies esenciales para mejorar tu experiencia en Noosfera.{" "}
+                  <a href="/cookies"
+                    className="transition-colors hover:underline underline-offset-2"
+                    style={{ color: "#7c3aed" }}>
+                    Más información
+                  </a>
+                </p>
               </div>
 
               {/* Buttons */}
-              <div className="flex items-center gap-3 flex-shrink-0">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 <button
                   onClick={handleReject}
-                  className="px-5 py-2.5 rounded-xl text-sm font-semibold transition-all"
+                  className="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all"
                   style={{
-                    background: "rgba(255,255,255,0.06)",
-                    border: "1px solid rgba(255,255,255,0.12)",
-                    color: "rgba(255,255,255,0.55)",
+                    background: "transparent",
+                    border: "1.5px solid #e5e7eb",
+                    color: "#6b7280",
                   }}
                   onMouseEnter={e => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.10)"
-                    e.currentTarget.style.color = "rgba(255,255,255,0.80)"
+                    e.currentTarget.style.borderColor = "#7c3aed"
+                    e.currentTarget.style.color = "#7c3aed"
                   }}
                   onMouseLeave={e => {
-                    e.currentTarget.style.background = "rgba(255,255,255,0.06)"
-                    e.currentTarget.style.color = "rgba(255,255,255,0.55)"
+                    e.currentTarget.style.borderColor = "#e5e7eb"
+                    e.currentTarget.style.color = "#6b7280"
                   }}>
                   Rechazar
                 </button>
                 <button
                   onClick={handleAccept}
-                  className="px-6 py-2.5 rounded-xl text-sm font-bold transition-all text-white"
+                  className="px-4 py-1.5 rounded-lg text-xs font-bold transition-all text-white"
                   style={{ background: "#7c3aed" }}
                   onMouseEnter={e => { e.currentTarget.style.background = "#6d28d9" }}
                   onMouseLeave={e => { e.currentTarget.style.background = "#7c3aed" }}>
@@ -107,11 +99,11 @@ export function CookiesConsent() {
                 </button>
                 <button
                   onClick={handleReject}
-                  className="w-8 h-8 rounded-lg flex items-center justify-center transition-all ml-1"
-                  style={{ background: "rgba(255,255,255,0.06)" }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(255,255,255,0.12)" }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "rgba(255,255,255,0.06)" }}>
-                  <X className="w-4 h-4 text-white/40" />
+                  className="w-6 h-6 rounded-md flex items-center justify-center transition-all"
+                  style={{ background: "#f3f4f6" }}
+                  onMouseEnter={e => { e.currentTarget.style.background = "#e5e7eb" }}
+                  onMouseLeave={e => { e.currentTarget.style.background = "#f3f4f6" }}>
+                  <X className="w-3 h-3 text-gray-400" />
                 </button>
               </div>
 
