@@ -48,7 +48,7 @@ export default function CompanyPage() {
 
       {/* Hero — clean, no background image */}
       <section className="pt-28 pb-20 flex items-center justify-center bg-white border-b border-gray-100">
-        <div className="text-center px-6 max-w-3xl mx-auto">
+        <div className="text-center px-6 max-w-4xl mx-auto">
           <motion.p
             initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
             className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-4">
@@ -56,7 +56,7 @@ export default function CompanyPage() {
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl md:text-5xl font-black text-gray-900 leading-tight mb-5"
+            className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-5"
             style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Noosfera es la primera plataforma que transforma tus pulsos cardíacos en obras digitales únicas, certificadas y listas para el mercado.
           </motion.h1>
@@ -72,21 +72,20 @@ export default function CompanyPage() {
             transition={{ duration: 0.7 }} viewport={{ once: true }}
           >
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-4">Nuestra misión</p>
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-6"
+            <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-6 whitespace-nowrap"
               style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              ¿Qué es<br />
-              <span className="text-purple-600">Noosfera?</span>
+              ¿Qué es <span className="text-purple-600">Noosfera?</span>
             </h2>
-            <p className="text-gray-500 text-sm leading-relaxed mb-4 max-w-sm">
+            <p className="text-gray-500 text-sm leading-relaxed mb-4 max-w-md">
               Noosfera es una plataforma de arte biométrico que captura los pulsos cardíacos de sus usuarios y los convierte — a través de inteligencia artificial — en obras de arte digital únicas, certificadas y listas para el mercado NFT.
             </p>
-            <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-sm">
+            <p className="text-gray-500 text-sm leading-relaxed mb-8 max-w-md">
               Creemos que cada latido cuenta una historia. Nuestra tecnología lee esa historia y la transforma en algo visible, bello e irrepetible. No hay dos obras iguales porque no hay dos personas iguales.
             </p>
             <button
               onClick={() => navigate("/pricing")}
-              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 hover:gap-3 transition-all">
-              Ver planes <ArrowRight className="h-4 w-4" />
+              className="inline-flex items-center gap-2 text-sm font-semibold text-purple-600 hover:gap-3 transition-all px-5 py-2.5 rounded-full border border-purple-500 hover:bg-purple-50">
+              Comenzar demo <ArrowRight className="h-4 w-4" />
             </button>
           </motion.div>
 
@@ -133,26 +132,38 @@ export default function CompanyPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.55, delay: i * 0.12 }}
                 viewport={{ once: true }}
-                className="flex flex-col items-center text-center p-10 rounded-3xl border border-gray-100 hover:border-purple-200 hover:shadow-xl transition-all"
-                style={{ background: "linear-gradient(160deg, #faf8ff 0%, #ffffff 100%)" }}
+                className="overflow-hidden rounded-2xl border border-gray-100 hover:border-purple-200 hover:shadow-2xl transition-all duration-300"
+                style={{ background: "#ffffff" }}
               >
+                {/* Top banner */}
                 <div
-                  className="w-28 h-28 mb-6 overflow-hidden flex-shrink-0"
+                  className="relative h-28 flex items-end justify-center pb-0"
                   style={{
-                    borderRadius: "44% 56% 52% 48% / 62% 58% 42% 38%",
-                    border: `2px solid ${f.accent}40`,
-                    boxShadow: `0 0 0 6px ${f.accent}10, 0 16px 48px rgba(124,58,237,0.12)`,
-                    backgroundColor: "#f5f3ff",
+                    background: `linear-gradient(135deg, ${f.accent} 0%, #4c1d95 100%)`,
                   }}
                 >
-                  <img src={f.image} alt={f.name} className="w-full h-full object-cover" />
+                  <div
+                    className="absolute -bottom-10 w-20 h-20 rounded-full overflow-hidden flex-shrink-0"
+                    style={{
+                      border: "3px solid #ffffff",
+                      boxShadow: "0 4px 24px rgba(124,58,237,0.25)",
+                      backgroundColor: "#f5f3ff",
+                    }}
+                  >
+                    <img src={f.image} alt={f.name} className="w-full h-full object-cover" />
+                  </div>
                 </div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-600 mb-2">{f.name}</p>
-                <h3 className="text-xl font-black text-gray-900 mb-4"
-                  style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                  {f.role}
-                </h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{f.description}</p>
+
+                {/* Body */}
+                <div className="pt-14 pb-8 px-8 text-center">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-600 mb-1">{f.name}</p>
+                  <h3 className="text-lg font-black text-gray-900 mb-3"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                    {f.role}
+                  </h3>
+                  <div className="w-8 h-0.5 bg-purple-200 mx-auto mb-4 rounded-full" />
+                  <p className="text-sm text-gray-500 leading-relaxed">{f.description}</p>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -203,7 +214,7 @@ export default function CompanyPage() {
                 Lo que nos mueve
               </motion.h2>
             </div>
-            <div className="space-y-6 w-full max-w-sm">
+            <div className="space-y-7 w-full max-w-sm">
               {pillars.map((p, i) => (
                 <motion.div
                   key={p.title}
@@ -211,13 +222,11 @@ export default function CompanyPage() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: 0.15 + i * 0.12 }}
                   viewport={{ once: true }}
-                  className="flex flex-col items-center gap-2"
+                  className="text-center"
                 >
-                  <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
-                    style={{ background: "rgba(124,58,237,0.1)" }}>
-                    <span className="text-sm font-black text-purple-600">{p.num}</span>
-                  </div>
-                  <p className="text-sm font-bold text-gray-900">{p.title}</p>
+                  <p className="text-sm font-black text-gray-900 mb-1">
+                    <span className="text-purple-600 mr-2">{p.num}</span>{p.title}
+                  </p>
                   <p className="text-sm text-gray-500 leading-relaxed">{p.desc}</p>
                 </motion.div>
               ))}
