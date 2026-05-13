@@ -232,7 +232,7 @@ export default function PricingPage() {
 
           {/* Right — Toggle + Card */}
           <motion.div
-            className="lg:w-1/2 flex flex-col items-center justify-center px-6 lg:px-14 py-10"
+            className="lg:w-1/2 flex flex-col items-center justify-center pl-2 lg:pl-4 pr-6 lg:pr-10 py-10"
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
