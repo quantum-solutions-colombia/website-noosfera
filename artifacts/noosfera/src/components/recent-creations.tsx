@@ -199,8 +199,8 @@ export function RecentCreations() {
               outline: "4px solid rgba(124,58,237,0.07)",
             }}>
               <img
-                src="/images/nft-castle-2.png"
-                alt="Arte digital castillo"
+                src="/images/nft-castle-ai.png"
+                alt="Castillo fantástico generado con IA"
                 style={{
                   width: "100%",
                   height: "100%",
