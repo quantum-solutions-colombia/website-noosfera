@@ -185,7 +185,7 @@ export default function PricingPage() {
       <DarkNav activeLink="pricing" />
 
       {/* Hero */}
-      <section className="pt-20 pb-10 text-center" style={{ background: "linear-gradient(180deg, #f5f3ff 0%, #ffffff 100%)" }}>
+      <section className="pt-20 pb-10 text-center bg-white">
         <div className="container mx-auto px-6">
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
             className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-4">
@@ -367,12 +367,12 @@ export default function PricingPage() {
         >
           <h2 className="text-2xl md:text-3xl font-black text-gray-900 leading-snug mb-3"
             style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            <span className="text-purple-600">Únete a millones de personas</span>{" "}
-            en la creación de imágenes con IA.
+            <span className="text-purple-600">Sin compromisos.</span>{" "}
+            Cancela cuando quieras.
           </h2>
-          <p className="text-gray-500 text-sm mb-8">Comienza tu propio viaje creativo con Noosfera.</p>
+          <p className="text-gray-500 text-sm mb-8">Cada plan incluye acceso inmediato — sin contratos, sin cargos ocultos.</p>
           <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-600">
-            {["Derechos comerciales incluidos", "Regístrate en 30 segundos", "Arte único generado por IA"].map(item => (
+            {["Cambia de plan en cualquier momento", "Primer mes sin riesgo", "Soporte incluido en todos los planes"].map(item => (
               <span key={item} className="flex items-center gap-2">
                 <Check className="h-4 w-4 text-purple-600 flex-shrink-0" />
                 {item}
