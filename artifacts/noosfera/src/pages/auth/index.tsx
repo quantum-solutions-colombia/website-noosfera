@@ -2,10 +2,11 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Eye, EyeOff, ArrowRight, UserPlus, ArrowLeft } from "lucide-react"
-import { useLocation, useSearch } from "wouter"
+import { Eye, EyeOff, ArrowRight, UserPlus } from "lucide-react"
+import { useLocation, useSearch, Link } from "wouter"
 import { useAuth } from "@/contexts/auth-context"
 import { toast } from "react-hot-toast"
+import { Footer } from "@/components/footer"
 
 const GoogleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -49,218 +50,170 @@ function AuthContent() {
   }
 
   return (
-    /* Full-screen background with hero image */
-    <div
-      className="min-h-screen flex items-center justify-center px-4 py-8"
-      style={{
-        backgroundImage: "url('/images/auth-hero.png')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        position: "relative",
-      }}>
-
-      {/* Dark overlay on background */}
-      <div style={{
-        position: "absolute", inset: 0,
-        background: "linear-gradient(135deg, rgba(10,4,30,0.82) 0%, rgba(30,10,60,0.78) 100%)",
-        backdropFilter: "blur(2px)",
-      }} />
-
-      {/* Back button */}
-      <button
-        onClick={() => navigate("/")}
-        style={{
-          position: "fixed", top: 20, left: 20, zIndex: 10,
-          background: "rgba(255,255,255,0.15)",
-          backdropFilter: "blur(8px)",
-          border: "1px solid rgba(255,255,255,0.2)",
-          borderRadius: 999, padding: "7px 9px",
-          cursor: "pointer", color: "#fff",
-          display: "flex", alignItems: "center",
-        }}>
-        <ArrowLeft className="h-4 w-4" />
-      </button>
-
-      {/* Card container */}
-      <motion.div
-        initial={{ scale: 0.94, opacity: 0, y: 24 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-        style={{
-          position: "relative", zIndex: 1,
-          width: "100%", maxWidth: 420,
-          background: "#fff",
-          borderRadius: 28,
-          overflow: "hidden",
-          boxShadow: "0 24px 80px rgba(0,0,0,0.45), 0 4px 20px rgba(124,58,237,0.2)",
-        }}>
-
-        {/* Hero image inside card */}
-        <div style={{ position: "relative", height: 200, flexShrink: 0 }}>
-          <img
-            src="/images/auth-hero.png"
-            alt="Castillo abandonado"
-            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center top", display: "block" }}
-          />
-          <div style={{
-            position: "absolute", inset: 0,
-            background: "linear-gradient(to bottom, rgba(0,0,0,0.18) 0%, rgba(20,5,40,0.72) 100%)"
-          }} />
-          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 32,
-              color: "#fff", letterSpacing: "-0.5px",
-              textShadow: "0 2px 20px rgba(124,58,237,0.8), 0 2px 12px rgba(0,0,0,0.6)"
-            }}>
-              Noosfera
-            </span>
-          </div>
-        </div>
-
-        {/* Form section */}
-        <div style={{ padding: "24px 24px 32px", display: "flex", flexDirection: "column", gap: 16 }}>
-
-          {/* Headline */}
-          <div style={{ textAlign: "center" }}>
-            <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 17, color: "#111", margin: 0, lineHeight: 1.4 }}>
-              {activeTab === "login"
-                ? "Inicia sesión para explorar el arte cardíaco con IA"
-                : "Crea tu cuenta y empieza a crear"}
-            </h2>
-            <p style={{ color: "#888", fontSize: 12.5, marginTop: 5 }}>
-              {activeTab === "login"
-                ? "Si eres nuevo, ¡registrarte solo te llevará un momento!"
-                : "Únete a miles de artistas digitales en Noosfera"}
-            </p>
-          </div>
-
-          {/* Google button */}
-          <button
-            onClick={() => toast("Inicio con Google próximamente", { icon: "🚀" })}
-            style={{
-              display: "flex", alignItems: "center", justifyContent: "center", gap: 10,
-              width: "100%", padding: "12px 0",
-              border: "1.5px solid #e5e7eb", borderRadius: 12,
-              background: "#fff", cursor: "pointer",
-              fontWeight: 600, fontSize: 14, color: "#111",
-              transition: "background 0.18s",
-            }}
-            onMouseEnter={e => (e.currentTarget.style.background = "#f7f7f7")}
-            onMouseLeave={e => (e.currentTarget.style.background = "#fff")}>
-            <GoogleIcon />
-            Continuar con Google
-          </button>
-
-          {/* Divider */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
-            <span style={{ color: "#bbb", fontSize: 11, fontWeight: 500 }}>o</span>
-            <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
-          </div>
-
-          {/* Tab switcher */}
-          <div style={{ display: "flex", background: "#f5f5f7", borderRadius: 12, padding: 4 }}>
-            {(["login", "register"] as const).map(tab => (
-              <button
-                key={tab}
-                onClick={() => setActiveTab(tab)}
-                style={{
-                  flex: 1, padding: "9px 0", borderRadius: 9, border: "none", cursor: "pointer",
-                  fontWeight: 600, fontSize: 13,
-                  background: activeTab === tab ? "#fff" : "transparent",
-                  color: activeTab === tab ? "#111" : "#999",
-                  boxShadow: activeTab === tab ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
-                  transition: "all 0.2s",
-                }}>
-                {tab === "login" ? "Iniciar Sesión" : "Registrarse"}
-              </button>
+    <div className="min-h-screen flex flex-col">
+      {/* Navigation header */}
+      <header className="w-full px-6 py-4 z-50 bg-white border-b border-gray-100 sticky top-0">
+        <div className="container mx-auto flex justify-between items-center">
+          <Link href="/"
+            className="text-xl font-black text-gray-900 tracking-tight"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Noosfera
+          </Link>
+          <nav className="hidden md:flex items-center gap-8">
+            {[
+              { href: "/", label: "Inicio" },
+              { href: "/company", label: "Quiénes Somos" },
+              { href: "/pricing", label: "Planes" },
+              { href: "/docs", label: "Documentación" },
+            ].map(({ href, label }) => (
+              <Link key={href} href={href}
+                className="text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors">
+                {label}
+              </Link>
             ))}
+          </nav>
+          <button
+            onClick={() => navigate("/auth")}
+            className="px-5 py-2 rounded-full text-sm font-semibold text-white transition-all hover:opacity-90"
+            style={{ backgroundColor: "#7c3aed" }}>
+            Iniciar Sesión
+          </button>
+        </div>
+      </header>
+
+      {/* Auth hero area */}
+      <div
+        className="flex-1 flex flex-col items-center justify-center px-4 py-10"
+        style={{
+          backgroundImage: "url('/images/castle-bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          position: "relative",
+          minHeight: 520,
+        }}>
+
+        {/* Dark overlay */}
+        <div style={{
+          position: "absolute", inset: 0,
+          background: "linear-gradient(135deg, rgba(10,4,30,0.80) 0%, rgba(30,10,60,0.76) 100%)",
+          backdropFilter: "blur(2px)",
+        }} />
+
+        {/* Card container */}
+        <motion.div
+          initial={{ scale: 0.94, opacity: 0, y: 24 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          style={{
+            position: "relative", zIndex: 1,
+            width: "100%", maxWidth: 380,
+            background: "#fff",
+            borderRadius: 24,
+            overflow: "hidden",
+            boxShadow: "0 24px 80px rgba(0,0,0,0.45), 0 4px 20px rgba(124,58,237,0.2)",
+          }}>
+
+          {/* Hero image inside card */}
+          <div style={{ position: "relative", height: 130, flexShrink: 0 }}>
+            <img
+              src="/images/castle-bg.png"
+              alt="Castillo"
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", display: "block" }}
+            />
+            <div style={{
+              position: "absolute", inset: 0,
+              background: "linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(20,5,40,0.75) 100%)"
+            }} />
+            <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 22,
+                color: "#fff", letterSpacing: "-0.3px", textAlign: "center",
+                textShadow: "0 2px 20px rgba(124,58,237,0.8), 0 2px 12px rgba(0,0,0,0.6)"
+              }}>
+                Bienvenido a Noosfera
+              </span>
+            </div>
           </div>
 
-          {/* Forms */}
-          <AnimatePresence mode="wait">
-            {activeTab === "login" ? (
-              <motion.form
-                key="login"
-                initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }}
-                transition={{ duration: 0.18 }}
-                onSubmit={handleLoginSubmit}
-                style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {/* Form section */}
+          <div style={{ padding: "18px 20px 22px", display: "flex", flexDirection: "column", gap: 12 }}>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>Correo Electrónico</label>
-                  <input
-                    type="email" name="email" placeholder="correo@gmail.com"
-                    value={loginData.email}
-                    onChange={e => setLoginData(p => ({ ...p, email: e.target.value }))}
-                    disabled={isLoading}
-                    style={{
-                      padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb",
-                      fontSize: 13, outline: "none", background: "#fafafa", color: "#111",
-                      transition: "border-color 0.18s",
-                    }}
-                    onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
-                    onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
-                  />
-                </div>
+            {/* Headline */}
+            <div style={{ textAlign: "center" }}>
+              <h2 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 800, fontSize: 15, color: "#111", margin: 0, lineHeight: 1.35 }}>
+                {activeTab === "login"
+                  ? "Inicia sesión para explorar el arte cardíaco con IA"
+                  : "Crea tu cuenta y empieza a crear"}
+              </h2>
+              <p style={{ color: "#888", fontSize: 11.5, marginTop: 4 }}>
+                {activeTab === "login"
+                  ? "Si eres nuevo, ¡registrarte solo te llevará un momento!"
+                  : "Únete a miles de artistas digitales en Noosfera"}
+              </p>
+            </div>
 
-                <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                  <label style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>Contraseña</label>
-                  <div style={{ position: "relative" }}>
-                    <input
-                      type={showPassword ? "text" : "password"} name="password" placeholder="Tu contraseña"
-                      value={loginData.password}
-                      onChange={e => setLoginData(p => ({ ...p, password: e.target.value }))}
-                      disabled={isLoading}
-                      style={{
-                        width: "100%", padding: "11px 42px 11px 13px", borderRadius: 11,
-                        border: "1.5px solid #e5e7eb", fontSize: 13, outline: "none",
-                        background: "#fafafa", color: "#111", boxSizing: "border-box",
-                        transition: "border-color 0.18s",
-                      }}
-                      onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
-                      onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
-                    />
-                    <button type="button" onClick={() => setShowPassword(p => !p)}
-                      style={{ position: "absolute", right: 13, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
-                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                    </button>
-                  </div>
-                </div>
+            {/* Google button */}
+            <button
+              onClick={() => toast("Inicio con Google próximamente", { icon: "🚀" })}
+              style={{
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                width: "100%", padding: "10px 0",
+                border: "1.5px solid #e5e7eb", borderRadius: 10,
+                background: "#fff", cursor: "pointer",
+                fontWeight: 600, fontSize: 13, color: "#111",
+                transition: "background 0.18s",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.background = "#f7f7f7")}
+              onMouseLeave={e => (e.currentTarget.style.background = "#fff")}>
+              <GoogleIcon />
+              Continuar con Google
+            </button>
 
+            {/* Divider */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
+              <span style={{ color: "#bbb", fontSize: 10, fontWeight: 500 }}>o</span>
+              <div style={{ flex: 1, height: 1, background: "#f0f0f0" }} />
+            </div>
+
+            {/* Tab switcher */}
+            <div style={{ display: "flex", background: "#f5f5f7", borderRadius: 10, padding: 3 }}>
+              {(["login", "register"] as const).map(tab => (
                 <button
-                  type="submit" disabled={isLoading}
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
                   style={{
-                    width: "100%", padding: "13px 0", borderRadius: 12, border: "none",
-                    background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 14,
-                    cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    marginTop: 2,
+                    flex: 1, padding: "7px 0", borderRadius: 8, border: "none", cursor: "pointer",
+                    fontWeight: 600, fontSize: 12,
+                    background: activeTab === tab ? "#fff" : "transparent",
+                    color: activeTab === tab ? "#111" : "#999",
+                    boxShadow: activeTab === tab ? "0 1px 6px rgba(0,0,0,0.10)" : "none",
+                    transition: "all 0.2s",
                   }}>
-                  {isLoading ? "Verificando..." : <><span>Acceder</span><ArrowRight className="h-4 w-4" /></>}
+                  {tab === "login" ? "Iniciar Sesión" : "Registrarse"}
                 </button>
-              </motion.form>
-            ) : (
-              <motion.form
-                key="register"
-                initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}
-                transition={{ duration: 0.18 }}
-                onSubmit={handleRegisterSubmit}
-                style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+              ))}
+            </div>
 
-                {[
-                  { label: "Tu Nombre", name: "name", type: "text", placeholder: "Juan García", value: registerData.name },
-                  { label: "Correo Electrónico", name: "email", type: "email", placeholder: "correo@gmail.com", value: registerData.email },
-                ].map(field => (
-                  <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>{field.label}</label>
+            {/* Forms */}
+            <AnimatePresence mode="wait">
+              {activeTab === "login" ? (
+                <motion.form
+                  key="login"
+                  initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }}
+                  transition={{ duration: 0.18 }}
+                  onSubmit={handleLoginSubmit}
+                  style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    <label style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>Correo Electrónico</label>
                     <input
-                      type={field.type} name={field.name} placeholder={field.placeholder}
-                      value={field.value}
-                      onChange={e => setRegisterData(p => ({ ...p, [e.target.name]: e.target.value }))}
+                      type="email" name="email" placeholder="correo@gmail.com"
+                      value={loginData.email}
+                      onChange={e => setLoginData(p => ({ ...p, email: e.target.value }))}
                       disabled={isLoading}
                       style={{
-                        padding: "11px 13px", borderRadius: 11, border: "1.5px solid #e5e7eb",
+                        padding: "9px 11px", borderRadius: 9, border: "1.5px solid #e5e7eb",
                         fontSize: 13, outline: "none", background: "#fafafa", color: "#111",
                         transition: "border-color 0.18s",
                       }}
@@ -268,22 +221,17 @@ function AuthContent() {
                       onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
                     />
                   </div>
-                ))}
 
-                {[
-                  { label: "Contraseña", name: "password", placeholder: "Mínimo 6 caracteres", show: showPassword, toggle: () => setShowPassword(p => !p), value: registerData.password },
-                  { label: "Confirmar Contraseña", name: "confirmPassword", placeholder: "Repite tu contraseña", show: showConfirmPassword, toggle: () => setShowConfirmPassword(p => !p), value: registerData.confirmPassword },
-                ].map(field => (
-                  <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                    <label style={{ fontSize: 12, fontWeight: 600, color: "#444" }}>{field.label}</label>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    <label style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>Contraseña</label>
                     <div style={{ position: "relative" }}>
                       <input
-                        type={field.show ? "text" : "password"} name={field.name} placeholder={field.placeholder}
-                        value={field.value}
-                        onChange={e => setRegisterData(p => ({ ...p, [e.target.name]: e.target.value }))}
+                        type={showPassword ? "text" : "password"} name="password" placeholder="Tu contraseña"
+                        value={loginData.password}
+                        onChange={e => setLoginData(p => ({ ...p, password: e.target.value }))}
                         disabled={isLoading}
                         style={{
-                          width: "100%", padding: "11px 42px 11px 13px", borderRadius: 11,
+                          width: "100%", padding: "9px 38px 9px 11px", borderRadius: 9,
                           border: "1.5px solid #e5e7eb", fontSize: 13, outline: "none",
                           background: "#fafafa", color: "#111", boxSizing: "border-box",
                           transition: "border-color 0.18s",
@@ -291,37 +239,127 @@ function AuthContent() {
                         onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
                         onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
                       />
-                      <button type="button" onClick={field.toggle}
-                        style={{ position: "absolute", right: 13, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
-                        {field.show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      <button type="button" onClick={() => setShowPassword(p => !p)}
+                        style={{ position: "absolute", right: 11, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
+                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                       </button>
                     </div>
                   </div>
-                ))}
 
-                <button
-                  type="submit" disabled={isLoading}
-                  style={{
-                    width: "100%", padding: "13px 0", borderRadius: 12, border: "none",
-                    background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 14,
-                    cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
-                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                    marginTop: 2,
-                  }}>
-                  {isLoading ? "Creando cuenta..." : <><span>Crear mi cuenta</span><UserPlus className="h-4 w-4" /></>}
-                </button>
-              </motion.form>
-            )}
-          </AnimatePresence>
+                  <button
+                    type="submit" disabled={isLoading}
+                    style={{
+                      width: "100%", padding: "11px 0", borderRadius: 10, border: "none",
+                      background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 13,
+                      cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+                      marginTop: 1,
+                    }}>
+                    {isLoading ? "Verificando..." : <><span>Acceder</span><ArrowRight className="h-4 w-4" /></>}
+                  </button>
+                </motion.form>
+              ) : (
+                <motion.form
+                  key="register"
+                  initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -12 }}
+                  transition={{ duration: 0.18 }}
+                  onSubmit={handleRegisterSubmit}
+                  style={{ display: "flex", flexDirection: "column", gap: 10 }}>
 
-          {/* Security note */}
-          <p style={{ textAlign: "center", fontSize: 10.5, color: "#bbb", lineHeight: 1.5 }}>
-            Este sitio está protegido por reCAPTCHA y se aplican la{" "}
-            <span style={{ color: "#7c3aed" }}>Política de Privacidad</span> y los{" "}
-            <span style={{ color: "#7c3aed" }}>Términos de Servicio</span>.
-          </p>
+                  {[
+                    { label: "Tu Nombre", name: "name", type: "text", placeholder: "Juan García", value: registerData.name },
+                    { label: "Correo Electrónico", name: "email", type: "email", placeholder: "correo@gmail.com", value: registerData.email },
+                  ].map(field => (
+                    <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      <label style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>{field.label}</label>
+                      <input
+                        type={field.type} name={field.name} placeholder={field.placeholder}
+                        value={field.value}
+                        onChange={e => setRegisterData(p => ({ ...p, [e.target.name]: e.target.value }))}
+                        disabled={isLoading}
+                        style={{
+                          padding: "9px 11px", borderRadius: 9, border: "1.5px solid #e5e7eb",
+                          fontSize: 13, outline: "none", background: "#fafafa", color: "#111",
+                          transition: "border-color 0.18s",
+                        }}
+                        onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
+                        onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                      />
+                    </div>
+                  ))}
+
+                  {[
+                    { label: "Contraseña", name: "password", placeholder: "Mínimo 6 caracteres", show: showPassword, toggle: () => setShowPassword(p => !p), value: registerData.password },
+                    { label: "Confirmar Contraseña", name: "confirmPassword", placeholder: "Repite tu contraseña", show: showConfirmPassword, toggle: () => setShowConfirmPassword(p => !p), value: registerData.confirmPassword },
+                  ].map(field => (
+                    <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                      <label style={{ fontSize: 11, fontWeight: 600, color: "#444" }}>{field.label}</label>
+                      <div style={{ position: "relative" }}>
+                        <input
+                          type={field.show ? "text" : "password"} name={field.name} placeholder={field.placeholder}
+                          value={field.value}
+                          onChange={e => setRegisterData(p => ({ ...p, [e.target.name]: e.target.value }))}
+                          disabled={isLoading}
+                          style={{
+                            width: "100%", padding: "9px 38px 9px 11px", borderRadius: 9,
+                            border: "1.5px solid #e5e7eb", fontSize: 13, outline: "none",
+                            background: "#fafafa", color: "#111", boxSizing: "border-box",
+                            transition: "border-color 0.18s",
+                          }}
+                          onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
+                          onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                        />
+                        <button type="button" onClick={field.toggle}
+                          style={{ position: "absolute", right: 11, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
+                          {field.show ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+
+                  <button
+                    type="submit" disabled={isLoading}
+                    style={{
+                      width: "100%", padding: "11px 0", borderRadius: 10, border: "none",
+                      background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 13,
+                      cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 7,
+                      marginTop: 1,
+                    }}>
+                    {isLoading ? "Creando cuenta..." : <><span>Crear mi cuenta</span><UserPlus className="h-4 w-4" /></>}
+                  </button>
+                </motion.form>
+              )}
+            </AnimatePresence>
+
+            {/* Security note */}
+            <p style={{ textAlign: "center", fontSize: 10, color: "#bbb", lineHeight: 1.5 }}>
+              Este sitio está protegido por reCAPTCHA y se aplican la{" "}
+              <span style={{ color: "#7c3aed" }}>Política de Privacidad</span> y los{" "}
+              <span style={{ color: "#7c3aed" }}>Términos de Servicio</span>.
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Volver a inicio — below the form */}
+        <div style={{ position: "relative", zIndex: 1, marginTop: 18 }}>
+          <button
+            onClick={() => navigate("/")}
+            style={{
+              background: "none", border: "none", cursor: "pointer",
+              color: "rgba(255,255,255,0.80)", fontSize: 13, fontWeight: 500,
+              textDecoration: "underline", textUnderlineOffset: 3,
+              transition: "color 0.18s",
+            }}
+            onMouseEnter={e => { e.currentTarget.style.color = "#fff" }}
+            onMouseLeave={e => { e.currentTarget.style.color = "rgba(255,255,255,0.80)" }}>
+            ← Volver a inicio
+          </button>
         </div>
-      </motion.div>
+      </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   )
 }

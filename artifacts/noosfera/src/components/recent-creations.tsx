@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Star, ChevronRight, X, Send } from "lucide-react"
+import { Star, ChevronRight, X, Send, ChevronLeft } from "lucide-react"
 
 const BASE_ITEMS = [
   { src: "/images/nft-1.png",  title: "Forest Spirit" },
@@ -45,7 +45,25 @@ function getCardProps(offset: number) {
   return { rotateY, translateX, translateZ, opacity, zIndex }
 }
 
-function ReviewModal({ onClose }: { onClose: () => void }) {
+interface Review {
+  id: string
+  name: string
+  text: string
+  rating: number
+  initials: string
+}
+
+const DEFAULT_REVIEWS: Review[] = [
+  {
+    id: "default-1",
+    name: "María Camila",
+    text: "Noosfera es algo verdaderamente increíble, puedes crear retratos únicos, obras abstractas y arte digital que nunca se repite — todo desde tus propios datos cardíacos.",
+    rating: 5,
+    initials: "MC",
+  },
+]
+
+function ReviewModal({ onClose, onSubmit }: { onClose: () => void; onSubmit: (r: Review) => void }) {
   const [rating, setRating] = useState(0)
   const [hoverRating, setHoverRating] = useState(0)
   const [name, setName] = useState("")
@@ -55,6 +73,8 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!name.trim() || !text.trim() || rating === 0) return
+    const initials = name.trim().split(" ").map(w => w[0]).join("").toUpperCase().slice(0, 2)
+    onSubmit({ id: Date.now().toString(), name: name.trim(), text: text.trim(), rating, initials })
     setSubmitted(true)
     setTimeout(() => onClose(), 2200)
   }
@@ -76,7 +96,6 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
         transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
         className="w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden">
 
-        {/* Header */}
         <div className="relative px-6 pt-6 pb-4 text-center"
           style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
           <button onClick={onClose}
@@ -117,7 +136,6 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
               onSubmit={handleSubmit}
               className="px-6 py-5 flex flex-col gap-4">
 
-              {/* Star rating */}
               <div className="text-center">
                 <label className="text-sm font-semibold text-gray-700 block mb-2">
                   ¿Cómo calificarías tu experiencia?
@@ -142,7 +160,6 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
                 </div>
               </div>
 
-              {/* Name */}
               <div className="text-center" style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <label className="text-sm font-semibold text-gray-700 text-center">Tu nombre</label>
                 <input
@@ -161,7 +178,6 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
                 />
               </div>
 
-              {/* Review text */}
               <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <label className="text-sm font-semibold text-gray-700 text-center">Tu reseña</label>
                 <textarea
@@ -181,7 +197,6 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
                 />
               </div>
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={!name.trim() || !text.trim() || rating === 0}
@@ -203,14 +218,121 @@ function ReviewModal({ onClose }: { onClose: () => void }) {
   )
 }
 
+function TestimonialsCarousel({ reviews }: { reviews: Review[] }) {
+  const [current, setCurrent] = useState(0)
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const resetTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
+      setCurrent(prev => (prev + 1) % reviews.length)
+    }, 4500)
+  }
+
+  useEffect(() => {
+    resetTimer()
+    return () => { if (timerRef.current) clearInterval(timerRef.current) }
+  }, [reviews.length])
+
+  useEffect(() => {
+    setCurrent(0)
+  }, [reviews.length])
+
+  const prev = () => { setCurrent(p => (p - 1 + reviews.length) % reviews.length); resetTimer() }
+  const next = () => { setCurrent(p => (p + 1) % reviews.length); resetTimer() }
+
+  const review = reviews[current]
+
+  return (
+    <div className="flex flex-col items-center gap-6">
+      <div className="flex items-center gap-4 justify-center flex-wrap">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
+            style={{ backgroundColor: "#7c3aed" }}>
+            {review.initials}
+          </div>
+          <div>
+            <AnimatePresence mode="wait">
+              <motion.p
+                key={review.id + "-name"}
+                initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.28 }}
+                className="font-semibold text-gray-900 text-sm leading-tight">
+                {review.name}
+              </motion.p>
+            </AnimatePresence>
+            <p className="text-xs text-gray-400 uppercase tracking-wide">Usuario verificado</p>
+          </div>
+        </div>
+        <div className="flex gap-0.5">
+          {[...Array(review.rating)].map((_, i) => (
+            <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+          ))}
+        </div>
+      </div>
+
+      <div className="relative min-h-[80px] flex items-center justify-center w-full">
+        <AnimatePresence mode="wait">
+          <motion.blockquote
+            key={review.id}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.35 }}
+            className="text-gray-700 leading-relaxed text-center">
+            {review.text.includes("algo verdaderamente increíble") ? (
+              <>
+                Noosfera es{" "}
+                <span className="text-purple-600 font-semibold">algo verdaderamente increíble</span>
+                , puedes crear retratos únicos, obras abstractas y arte digital que nunca se
+                repite — todo desde tus propios datos cardíacos.
+              </>
+            ) : (
+              <span>"{review.text}"</span>
+            )}
+          </motion.blockquote>
+        </AnimatePresence>
+      </div>
+
+      {reviews.length > 1 && (
+        <div className="flex items-center gap-3">
+          <button onClick={prev}
+            className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center transition-all hover:border-purple-400 hover:text-purple-600">
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <div className="flex gap-1.5">
+            {reviews.map((_, i) => (
+              <button key={i} onClick={() => { setCurrent(i); resetTimer() }}
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: i === current ? 20 : 7, height: 7,
+                  backgroundColor: i === current ? "#7c3aed" : "#e5e7eb",
+                }} />
+            ))}
+          </div>
+          <button onClick={next}
+            className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center transition-all hover:border-purple-400 hover:text-purple-600">
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export function RecentCreations() {
   const [active, setActive] = useState(0)
   const [showReviewModal, setShowReviewModal] = useState(false)
+  const [reviews, setReviews] = useState<Review[]>(DEFAULT_REVIEWS)
 
   useEffect(() => {
     const id = setInterval(() => setActive(prev => mod(prev + 1, N)), INTERVAL)
     return () => clearInterval(id)
   }, [])
+
+  const handleNewReview = (review: Review) => {
+    setReviews(prev => [...prev, review])
+  }
 
   return (
     <>
@@ -230,7 +352,6 @@ export function RecentCreations() {
           </motion.h2>
         </div>
 
-        {/* 3-D stage — fixed card size, circular corners always enforced */}
         <div className="relative flex items-center justify-center"
           style={{ height: CARD_H + 60, perspective: PERSPECTIVE }}>
 
@@ -295,7 +416,6 @@ export function RecentCreations() {
           })}
         </div>
 
-        {/* Dot navigation only — no arrows */}
         <div className="flex items-center justify-center gap-2 mt-8">
           {BASE_ITEMS.map((_, idx) => (
             <button key={idx} onClick={() => setActive(idx)}
@@ -340,7 +460,6 @@ export function RecentCreations() {
       <section className="overflow-hidden border-t border-gray-100 bg-white">
         <div className="flex flex-col lg:flex-row min-h-[480px]">
 
-          {/* Left — image: reduced height, custom borders, only bottom signature cropped */}
           <motion.div
             className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
             initial={{ opacity: 0, x: -24 }} whileInView={{ opacity: 1, x: 0 }}
@@ -366,7 +485,6 @@ export function RecentCreations() {
             </div>
           </motion.div>
 
-          {/* Right — text content */}
           <motion.div className="lg:w-1/2 flex flex-col justify-center px-14 py-16 space-y-8"
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}>
@@ -381,30 +499,7 @@ export function RecentCreations() {
               en obras visuales únicas e irrepetibles.
             </p>
 
-            <div className="flex items-center gap-4 justify-center flex-wrap">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold flex-shrink-0"
-                  style={{ backgroundColor: "#7c3aed" }}>
-                  MC
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900 text-sm leading-tight">María Camila</p>
-                  <p className="text-xs text-gray-400 uppercase tracking-wide">Usuario verificado</p>
-                </div>
-              </div>
-              <div className="flex gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-            </div>
-
-            <blockquote className="text-gray-700 leading-relaxed text-center">
-              Noosfera es{" "}
-              <span className="text-purple-600 font-semibold">algo verdaderamente increíble</span>
-              , puedes crear retratos únicos, obras abstractas y arte digital que nunca se
-              repite — todo desde tus propios datos cardíacos.
-            </blockquote>
+            <TestimonialsCarousel reviews={reviews} />
 
             <div className="flex justify-center">
               <button
@@ -419,10 +514,9 @@ export function RecentCreations() {
         </div>
       </section>
 
-      {/* ── Review Modal ── */}
       <AnimatePresence>
         {showReviewModal && (
-          <ReviewModal onClose={() => setShowReviewModal(false)} />
+          <ReviewModal onClose={() => setShowReviewModal(false)} onSubmit={handleNewReview} />
         )}
       </AnimatePresence>
     </>
