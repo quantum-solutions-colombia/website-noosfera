@@ -372,17 +372,17 @@ export default function PricingPage() {
           >
             <div className="text-center w-full">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">Preguntas</p>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3"
+              <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3 whitespace-nowrap"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}>
-                Preguntas<br />Frecuentes
+                Preguntas Frecuentes
               </h2>
               <p className="text-gray-500 text-sm leading-relaxed">
                 Todo lo que necesitas saber antes de empezar tu viaje en Noosfera.
               </p>
             </div>
 
-            {/* FAQ Carousel */}
-            <div className="relative w-full" style={{ minHeight: 160 }}>
+            {/* FAQ Carousel — no box, plain centered text */}
+            <div className="relative w-full" style={{ minHeight: 140 }}>
               <AnimatePresence mode="wait" custom={faqDir}>
                 <motion.div
                   key={faqIndex}
@@ -392,11 +392,10 @@ export default function PricingPage() {
                   animate="center"
                   exit="exit"
                   transition={{ duration: 0.3, ease: "easeInOut" }}
+                  className="text-center"
                 >
-                  <div className="rounded-2xl p-6 text-center" style={{ background: "#f9f5ff", border: "1.5px solid rgba(124,58,237,0.15)" }}>
-                    <p className="text-sm font-bold text-gray-900 mb-3 leading-snug">{faqs[faqIndex].q}</p>
-                    <p className="text-sm text-gray-500 leading-relaxed">{faqs[faqIndex].a}</p>
-                  </div>
+                  <p className="text-sm font-bold text-gray-900 mb-3 leading-snug">{faqs[faqIndex].q}</p>
+                  <p className="text-sm text-gray-500 leading-relaxed">{faqs[faqIndex].a}</p>
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -415,6 +414,7 @@ export default function PricingPage() {
           {/* Right — Viking warrior image */}
           <motion.div
             className="lg:w-1/2 flex items-center justify-center p-6 lg:p-10"
+            style={{ marginLeft: "-60px" }}
             initial={{ opacity: 0, x: 24 }} whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }} viewport={{ once: true }}
           >
