@@ -51,8 +51,8 @@ export function Footer() {
 
   return (
     <footer style={{ backgroundColor: "#0a0a0a" }}>
-      {/* Wave SVG transition: purple CTA → black footer */}
-      <div style={{ lineHeight: 0, backgroundColor: "#7c3aed", marginBottom: -1 }}>
+      {/* Wave SVG transition */}
+      <div style={{ lineHeight: 0, backgroundColor: "transparent", marginBottom: -1 }}>
         <svg
           viewBox="0 0 1440 80"
           xmlns="http://www.w3.org/2000/svg"
