@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { motion } from "framer-motion"
 import { Footer } from "@/components/footer"
 import { DarkNav } from "@/components/dark-nav"
@@ -16,6 +17,7 @@ function FadeSection({ children }: { children: React.ReactNode }) {
 }
 
 export default function CookiesPage() {
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }) }, [])
   return (
     <div className="min-h-screen bg-white">
       <DarkNav />
@@ -38,7 +40,7 @@ export default function CookiesPage() {
 
         <div className="space-y-8 text-gray-600 leading-relaxed">
           <FadeSection>
-            <p>
+            <p className="text-center text-base text-gray-500 leading-relaxed">
               En Noosfera, utilizamos cookies y tecnologías similares para mejorar tu experiencia de navegación.
               Esta política explica qué son las cookies, cómo las utilizamos y tus opciones respecto a ellas.
             </p>

@@ -1,4 +1,4 @@
-import { useLocation } from "wouter"
+import { useEffect } from "react"
 import { motion } from "framer-motion"
 import { Footer } from "@/components/footer"
 import { DarkNav } from "@/components/dark-nav"
@@ -17,6 +17,7 @@ function FadeSection({ children, delay = 0 }: { children: React.ReactNode; delay
 }
 
 export default function TermsPage() {
+  useEffect(() => { window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior }) }, [])
   return (
     <div className="min-h-screen bg-white">
       <DarkNav />
@@ -39,7 +40,7 @@ export default function TermsPage() {
 
         <div className="space-y-8 text-gray-600 leading-relaxed">
           <FadeSection>
-            <p>
+            <p className="text-center text-base text-gray-500 leading-relaxed">
               Bienvenido a Noosfera. Al acceder y utilizar este sistema, aceptas los siguientes términos y
               condiciones. Por favor, lee detenidamente este documento antes de utilizar nuestros servicios.
             </p>
