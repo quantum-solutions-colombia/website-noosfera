@@ -232,8 +232,7 @@ export default function PricingPage() {
 
           {/* Right — Toggle + Card */}
           <motion.div
-            className="lg:w-1/2 flex flex-col items-center justify-center pr-8 lg:pr-12 py-10"
-            style={{ marginLeft: "-60px" }}
+            className="lg:w-1/2 flex flex-col items-center justify-center px-6 lg:pr-12 py-10"
             initial={{ opacity: 0, x: 24 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
@@ -404,7 +403,7 @@ export default function PricingPage() {
           >
             <div className="text-center w-full">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">Preguntas</p>
-              <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-3 whitespace-nowrap"
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 leading-tight mb-3"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Preguntas Frecuentes
               </h2>

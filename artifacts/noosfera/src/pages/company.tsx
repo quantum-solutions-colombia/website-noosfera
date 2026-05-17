@@ -69,7 +69,7 @@ export default function CompanyPage() {
             transition={{ duration: 0.7 }} viewport={{ once: true }}
           >
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-4">Nuestra misión</p>
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-6 whitespace-nowrap"
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black text-gray-900 leading-tight mb-6"
               style={{ fontFamily: "'DM Sans', sans-serif" }}>
               ¿Qué es <span className="text-purple-600">Noosfera?</span>
             </h2>
