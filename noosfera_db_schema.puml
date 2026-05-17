@@ -1,0 +1,115 @@
+@startuml noosfera_db_schema
+
+' ─── Estilo ────────────────────────────────────────────────
+skinparam backgroundColor #FFFFFF
+skinparam defaultFontName DM Sans
+skinparam defaultFontSize 12
+skinparam classBackgroundColor #FEFEFE
+skinparam classBorderColor #A78BFA
+skinparam classHeaderBackgroundColor #7C3AED
+skinparam classFontColor #FFFFFF
+skinparam classHeaderFontColor #FFFFFF
+skinparam classFontSize 13
+skinparam ArrowColor #7C3AED
+skinparam ArrowThickness 1.5
+skinparam shadowing false
+skinparam roundcorner 8
+skinparam linetype ortho
+
+' ─── Entidades ─────────────────────────────────────────────
+
+entity users <<entity>> {
+  * id : UUID <PK>
+  --
+  email         : TEXT UNIQUE
+  password_hash : TEXT
+  plan          : ENUM('free','standard','premium')
+  created_at    : TIMESTAMPTZ
+  updated_at    : TIMESTAMPTZ
+  metadata      : JSONB
+}
+
+entity captures <<entity>> {
+  * id : UUID <PK>
+  --
+  # user_id      : UUID <FK>
+  pulse_vector  : JSONB
+  hex_sequence  : TEXT
+  duration_ms   : INTEGER
+  sdnn          : FLOAT
+  rmssd         : FLOAT
+  lf_hf_ratio   : FLOAT
+  coherence     : FLOAT
+  captured_at   : TIMESTAMPTZ
+}
+
+entity artworks <<entity>> {
+  * id : UUID <PK>
+  --
+  # capture_id  : UUID <FK>
+  prompt        : TEXT
+  style         : TEXT
+  image_url     : TEXT
+  ipfs_cid      : TEXT
+  sha256        : TEXT
+  width         : INTEGER
+  height        : INTEGER
+  created_at    : TIMESTAMPTZ
+}
+
+entity nfts <<entity>> {
+  * id : UUID <PK>
+  --
+  # artwork_id    : UUID <FK>
+  token_id        : BIGINT
+  contract        : TEXT
+  chain           : TEXT
+  tx_hash         : TEXT
+  owner_wallet    : TEXT
+  metadata_uri    : TEXT
+  pulse_hash      : TEXT
+  royalty_bps     : INTEGER
+  minted_at       : TIMESTAMPTZ
+}
+
+entity subscriptions <<entity>> {
+  * id : UUID <PK>
+  --
+  # user_id      : UUID <FK>
+  plan          : ENUM('free','standard','premium')
+  billing_cycle : ENUM('monthly','annual')
+  status        : ENUM('active','cancelled','expired')
+  started_at    : TIMESTAMPTZ
+  expires_at    : TIMESTAMPTZ
+  amount_cop    : INTEGER
+}
+
+' ─── Relaciones ────────────────────────────────────────────
+
+users          ||--o{ captures      : "1 user\nN captures"
+captures       ||--o{ artworks      : "1 capture\nN artworks"
+artworks       ||--o| nfts          : "1 artwork\n0..1 nft"
+users          ||--o{ subscriptions : "1 user\nN subscriptions"
+
+' ─── Notas ─────────────────────────────────────────────────
+
+note top of users
+  RLS activo: cada fila filtrada
+  por user_id a nivel DB.
+  Cifrado AES-256 en reposo.
+end note
+
+note bottom of nfts
+  ERC-721 en Polygon.
+  pulse_hash almacenado on-chain
+  como evidencia biométrica.
+  Royalties: 10% (ERC-2981).
+end note
+
+note right of captures
+  pulse_vector: array JSON
+  de intervalos R-R en ms.
+  Ej: [842, 856, 831, 869]
+end note
+
+@enduml

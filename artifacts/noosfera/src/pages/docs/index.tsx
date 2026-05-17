@@ -139,6 +139,14 @@ function DBSchema() {
 }
 
 /* ─── Interactive AI Generation Demo ───────────────────────── */
+const NFT_IMAGES = [
+  "/images/nft-1.png", "/images/nft-2.png", "/images/nft-3.png",
+  "/images/nft-4.png", "/images/nft-5.png", "/images/nft-6.png",
+  "/images/nft-7.png", "/images/nft-8.png", "/images/nft-9.png",
+  "/images/nft-10.png", "/images/collage-1.png", "/images/collage-2.png",
+  "/images/collage-3.png", "/images/collage-4.png", "/images/collage-5.png",
+]
+
 const PULSE_VALUES = [842, 856, 831, 869, 844, 852]
 const DEMO_STEPS = [
   {
@@ -176,11 +184,13 @@ const DEMO_STEPS = [
 function InteractiveDemo() {
   const [step, setStep] = useState(-1)
   const [isRunning, setIsRunning] = useState(false)
+  const [randomImage, setRandomImage] = useState("")
 
   const runDemo = () => {
     if (isRunning) return
     setIsRunning(true)
     setStep(-1)
+    setRandomImage(NFT_IMAGES[Math.floor(Math.random() * NFT_IMAGES.length)])
     let i = 0
     const interval = setInterval(() => {
       setStep(i)
@@ -220,10 +230,16 @@ function InteractiveDemo() {
             <div className="font-mono text-xs text-gray-500 mb-1">{s.label}</div>
             {s.output === "IMAGE" ? (
               <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.6 }}
-                className="h-28 rounded-xl flex items-center justify-center text-white text-xs font-bold"
-                style={{ background: "linear-gradient(135deg, #7c3aed 0%, #2563eb 40%, #7c3aed 70%, #6d28d9 100%)", backgroundSize: "200% 200%", animation: "gradient-shift 3s ease infinite" }}>
-                Obra digital generada — hash: SHA256:a4f3b7c2...
+                transition={{ duration: 0.6 }}>
+                <img
+                  src={randomImage}
+                  alt="Obra generada por IA"
+                  className="w-full rounded-xl object-cover"
+                  style={{ maxHeight: "180px" }}
+                />
+                <p className="font-mono text-xs mt-2" style={{ color: "#34d399" }}>
+                  ✓ Obra digital generada por IA — NFT ready
+                </p>
               </motion.div>
             ) : (
               <pre className="font-mono text-xs leading-relaxed whitespace-pre-wrap" style={{ color: s.color }}>
@@ -512,7 +528,8 @@ function TimelineEntry({ section, index }: { section: typeof timelineSections[0]
           <span className="text-[10px] font-bold uppercase tracking-[0.18em] text-purple-500">
             {section.tag}
           </span>
-          <h2 className="text-xl font-black text-gray-900 mt-0.5 leading-snug">
+          <h2 className="text-xl font-black text-gray-900 mt-0.5 leading-snug"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
             {section.title}
           </h2>
         </div>
@@ -525,7 +542,6 @@ function TimelineEntry({ section, index }: { section: typeof timelineSections[0]
 
         {section.special === "schema" && (
           <div className="space-y-5">
-            <DBSchema />
             {section.items.map((item, idx) => (
               <motion.div key={idx}
                 initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }}
@@ -572,24 +588,25 @@ export default function DocsPage() {
     <div className="min-h-screen bg-white text-gray-900">
       <DarkNav activeLink="docs" />
 
-      <section className="pt-28 pb-12 text-center bg-white border-b border-gray-100">
-        <div className="container mx-auto px-6">
+      <section className="pt-28 pb-12 bg-white border-b border-gray-100">
+        <div className="px-6 md:px-12">
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
             className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-4">
             Documentación Técnica
           </motion.p>
           <motion.h1 initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-4">
+            className="text-3xl md:text-4xl font-black text-gray-900 leading-tight mb-4"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Arquitectura y Desarrollo de Noosfera
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-gray-500 max-w-xl mx-auto text-sm leading-relaxed">
+            className="text-gray-500 max-w-xl text-sm leading-relaxed">
             Pipeline técnico completo: desde el latido del usuario hasta la obra digital certificada en blockchain.
           </motion.p>
         </div>
       </section>
 
-      <div className="container mx-auto px-6 py-14" style={{ maxWidth: "780px" }}>
+      <div className="px-6 md:px-12 py-14" style={{ maxWidth: "820px" }}>
         <div className="relative">
           {timelineSections.map((section, index) => (
             <TimelineEntry key={section.id} section={section} index={index} />

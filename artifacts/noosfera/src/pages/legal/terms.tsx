@@ -145,7 +145,24 @@ export default function TermsPage() {
         </div>
       </main>
 
-      <Footer />
+      <div className="container mx-auto px-6 max-w-3xl py-12">
+        <div className="rounded-2xl p-8 text-center" style={{ backgroundColor: "#f5f3ff" }}>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">Comienza Hoy</p>
+          <h2 className="text-2xl font-black text-gray-900 mb-3" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            Transforma tus latidos en arte digital
+          </h2>
+          <p className="text-gray-500 text-sm mb-6 max-w-md mx-auto">
+            Al registrarte aceptas estos términos y condiciones. Empieza gratis, sin tarjeta de crédito.
+          </p>
+          <a href="/auth/register"
+            className="inline-block px-8 py-3.5 rounded-full font-semibold text-white text-sm transition-all hover:opacity-90"
+            style={{ backgroundColor: "#7c3aed" }}>
+            Crear cuenta gratis
+          </a>
+        </div>
+      </div>
+
+      <Footer waveBg="#ffffff" />
     </div>
   )
 }
