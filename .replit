@@ -18,23 +18,11 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "Frontend"
+args = "API Server"
 
 [[workflows.workflow.tasks]]
 task = "workflow.run"
-args = "API Server"
-
-[[workflows.workflow]]
-name = "Frontend"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "PORT=5000 BASE_PATH=/ pnpm --filter @workspace/noosfera run dev"
-waitForPort = 5000
-
-[workflows.workflow.metadata]
-outputType = "webview"
+args = "Start application"
 
 [[workflows.workflow]]
 name = "API Server"
@@ -48,6 +36,18 @@ waitForPort = 8000
 [workflows.workflow.metadata]
 outputType = "console"
 
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "PORT=5000 BASE_PATH=/ pnpm --filter @workspace/noosfera run dev"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
 [agent]
 stack = "BEST_EFFORT_FALLBACK"
 expertMode = true
@@ -59,10 +59,6 @@ timeoutMs = 20000
 [[ports]]
 localPort = 5000
 externalPort = 80
-
-[[ports]]
-localPort = 8000
-externalPort = 8000
 
 [[ports]]
 localPort = 8080
