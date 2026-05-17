@@ -9,44 +9,6 @@ args = ["pnpm", "store", "prune"]
 env = { "CI" = "true" }
 
 [workflows]
-runButton = "Project"
-
-[[workflows.workflow]]
-name = "Project"
-mode = "parallel"
-author = "agent"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "API Server"
-
-[[workflows.workflow.tasks]]
-task = "workflow.run"
-args = "Start application"
-
-[[workflows.workflow]]
-name = "API Server"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "console"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "PORT=8080 pnpm --filter @workspace/api-server run dev"
-waitForPort = 8080
-
-[[workflows.workflow]]
-name = "Start application"
-author = "agent"
-
-[workflows.workflow.metadata]
-outputType = "webview"
-
-[[workflows.workflow.tasks]]
-task = "shell.exec"
-args = "PORT=22391 BASE_PATH=/ pnpm --filter @workspace/noosfera run dev"
-waitForPort = 22391
 
 [agent]
 stack = "BEST_EFFORT_FALLBACK"
@@ -71,6 +33,26 @@ externalPort = 3000
 [[ports]]
 localPort = 8083
 externalPort = 3001
+
+[[ports]]
+localPort = 8084
+externalPort = 5000
+
+[[ports]]
+localPort = 8085
+externalPort = 5173
+
+[[ports]]
+localPort = 8086
+externalPort = 6000
+
+[[ports]]
+localPort = 8087
+externalPort = 3002
+
+[[ports]]
+localPort = 8088
+externalPort = 4200
 
 [[ports]]
 localPort = 22391
