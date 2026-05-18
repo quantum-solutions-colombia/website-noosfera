@@ -75,6 +75,7 @@
     "zod": "catalog:"
   },
   "dependencies": {
+    "jspdf": "^4.2.1",
     "react-hot-toast": "^2.6.0"
   }
 }

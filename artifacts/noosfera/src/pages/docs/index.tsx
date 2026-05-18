@@ -7,6 +7,7 @@ import {
 } from "lucide-react"
 import { Footer } from "@/components/footer"
 import { DarkNav } from "@/components/dark-nav"
+import { jsPDF } from "jspdf"
 
 /* ─── PlantUML-style DB Schema ──────────────────────────────── */
 const dbTables = [
@@ -141,6 +142,11 @@ function DBSchema() {
 /* ─── Interactive AI Generation Demo ───────────────────────── */
 const NFT_IMAGES = [
   "/images/pipeline-ai-battle.png",
+  "/images/pipeline-forest.png",
+  "/images/pipeline-castle.png",
+  "/images/pipeline-ship.png",
+  "/images/pipeline-pyramids.png",
+  "/images/pipeline-ocean.png",
 ]
 
 const PULSE_VALUES = [842, 856, 831, 869, 844, 852]
@@ -288,102 +294,246 @@ function InteractiveDemo() {
 
 /* ─── PDF Download ──────────────────────────────────────────── */
 function downloadPDF() {
-  const printWindow = window.open("", "_blank")
-  if (!printWindow) return
-  printWindow.document.write(`<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <title>Arquitectura y Desarrollo de Noosfera — Documentación Técnica</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;700;900&family=DM+Mono&display=swap');
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'DM Sans', Arial, sans-serif; color: #111; background: #fff; font-size: 11pt; line-height: 1.6; }
-    .page { max-width: 700px; margin: 0 auto; padding: 60px 50px; }
-    .header { border-bottom: 3px solid #7c3aed; padding-bottom: 24px; margin-bottom: 36px; display: flex; justify-content: space-between; align-items: flex-end; }
-    .logo { font-size: 22pt; font-weight: 900; color: #7c3aed; letter-spacing: -0.5px; }
-    .doc-meta { text-align: right; font-size: 9pt; color: #888; }
-    h1 { font-size: 20pt; font-weight: 900; color: #111; margin-bottom: 8px; }
-    .subtitle { font-size: 11pt; color: #666; margin-bottom: 40px; }
-    h2 { font-size: 14pt; font-weight: 900; color: #7c3aed; margin-top: 32px; margin-bottom: 10px; border-left: 3px solid #7c3aed; padding-left: 10px; }
-    h3 { font-size: 11pt; font-weight: 700; color: #222; margin-top: 14px; margin-bottom: 6px; }
-    p { color: #444; margin-bottom: 8px; }
-    .tag { display: inline-block; font-size: 8pt; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #7c3aed; background: #f5f3ff; padding: 2px 8px; border-radius: 4px; margin-bottom: 6px; }
-    .footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #e9d5ff; display: flex; justify-content: space-between; font-size: 9pt; color: #aaa; }
-    .badge { display: inline-block; padding: 2px 8px; border: 1px solid #a78bfa; border-radius: 4px; font-size: 8pt; color: #7c3aed; margin-right: 6px; }
-    @media print { body { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }
-  </style>
-</head>
-<body>
-  <div class="page">
-    <div class="header">
-      <div class="logo">Noosfera</div>
-      <div class="doc-meta">
-        Documentación Técnica v2.0<br/>
-        Actualizada mayo 2025<br/>
-        Confidencial — uso interno
-      </div>
-    </div>
+  const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" })
+  const pageW = doc.internal.pageSize.getWidth()
+  const pageH = doc.internal.pageSize.getHeight()
+  const margin = 20
+  const contentW = pageW - margin * 2
+  let y = margin
 
-    <h1>Arquitectura y Desarrollo de Noosfera</h1>
-    <p class="subtitle">Pipeline técnico completo: desde el latido del usuario hasta la obra digital certificada en blockchain.</p>
+  const purple = [124, 58, 237] as [number, number, number]
+  const darkGray = [17, 17, 17] as [number, number, number]
+  const midGray = [68, 68, 68] as [number, number, number]
+  const lightGray = [170, 170, 170] as [number, number, number]
 
-    <div style="margin-bottom:20px;">
-      <span class="badge">Gemini API</span>
-      <span class="badge">WebGL 3D</span>
-      <span class="badge">ERC-721 NFT</span>
-      <span class="badge">PostgreSQL RLS</span>
-      <span class="badge">Express 5</span>
-    </div>
+  const checkNewPage = (needed: number) => {
+    if (y + needed > pageH - margin) {
+      doc.addPage()
+      y = margin
+      addPageFooter()
+    }
+  }
 
-    <h2>1. ¿Qué es Noosfera?</h2>
-    <div class="tag">Plataforma</div>
-    <h3>Definición Central</h3>
-    <p>Noosfera es la primera plataforma de arte biométrico que captura los pulsos cardíacos del usuario, los procesa mediante algoritmos de análisis matemático, y convierte esa información en obras de arte digital únicas generadas por Inteligencia Artificial (Gemini API). Cada obra es certificada como NFT en blockchain.</p>
-    <h3>Premisa Fundamental</h3>
-    <p>No hay dos seres humanos con el mismo patrón cardíaco. Esa unicidad biológica es el motor creativo de Noosfera: la variabilidad de los pulsos actúa como semilla generativa para producir arte literalmente único.</p>
+  const addPageFooter = () => {
+    const pg = doc.getNumberOfPages()
+    doc.setFontSize(8)
+    doc.setTextColor(...lightGray)
+    doc.text("Noosfera Platform — Documentación Técnica v2.0", margin, pageH - 10)
+    doc.text(`Página ${pg}`, pageW - margin, pageH - 10, { align: "right" })
+  }
 
-    <h2>2. Arquitectura del Sistema</h2>
-    <div class="tag">Infraestructura</div>
-    <h3>Estructura Monorepo</h3>
-    <p>pnpm workspaces: @workspace/noosfera (React/Vite), @workspace/api-server (Express 5), @workspace/db (Drizzle ORM), @workspace/api-spec (OpenAPI + Orval).</p>
-    <h3>Stack Tecnológico</h3>
-    <p>Frontend: React 19 + Vite + TypeScript 5.9 + Tailwind CSS v4 + Framer Motion + React Three Fiber. Backend: Node.js 24 + Express 5 + Zod v4. DB: PostgreSQL con RLS. IA: Gemini API.</p>
+  const addSectionTag = (tag: string) => {
+    checkNewPage(10)
+    doc.setFontSize(7)
+    doc.setTextColor(...purple)
+    doc.setFont("helvetica", "bold")
+    doc.text(tag.toUpperCase(), margin, y)
+    y += 6
+  }
 
-    <h2>3. Pipeline: Pulsos → Arte</h2>
-    <div class="tag">Motor de Generación</div>
-    <p><strong>Paso 1 — Pulsos cardíacos:</strong> Captura de señal como secuencia de intervalos R-R en ms. Ej: [842, 856, 831, 869] ms</p>
-    <p><strong>Paso 2 — Hexadecimal:</strong> Conversión de cada valor. Ej: 0x034A 0x0358 0x033F 0x0365</p>
-    <p><strong>Paso 3 — Binario:</strong> 0000001101001010 0000001101011000...</p>
-    <p><strong>Paso 4 — Patrones:</strong> SDNN: 42.3ms · RMSSD: 38.1ms · LF/HF: 1.24 · Coherencia: 0.82</p>
-    <p><strong>Paso 5 — IA:</strong> Traducción a prompt estructurado para Gemini API.</p>
-    <p><strong>Paso 6 — Obra NFT:</strong> Imagen certificada con SHA-256 del vector de pulsos, subida a IPFS y minteada como ERC-721.</p>
+  const addHeading2 = (text: string) => {
+    checkNewPage(14)
+    doc.setDrawColor(...purple)
+    doc.setLineWidth(0.8)
+    doc.line(margin, y + 1, margin, y + 6)
+    doc.setFontSize(13)
+    doc.setTextColor(...purple)
+    doc.setFont("helvetica", "bold")
+    doc.text(text, margin + 3, y + 5)
+    y += 12
+  }
 
-    <h2>4. Base de Datos</h2>
-    <div class="tag">PostgreSQL + Drizzle</div>
-    <p><strong>Tablas:</strong> users → captures → artworks → nfts (relaciones 1:N con FK). RLS activo en todas las tablas. Cifrado AES-256 en reposo para datos sensibles. Backups automáticos con retención 30 días.</p>
+  const addHeading3 = (text: string) => {
+    checkNewPage(10)
+    doc.setFontSize(10)
+    doc.setTextColor(...darkGray)
+    doc.setFont("helvetica", "bold")
+    doc.text(text, margin, y)
+    y += 6
+  }
 
-    <h2>5. NFTs & Blockchain</h2>
-    <div class="tag">Web3</div>
-    <p>ERC-721 en Polygon. Proceso: imagen → IPFS (CID inmutable) → metadatos con hash biométrico → mint en smart contract. Royalties automáticos 10% vía ERC-2981.</p>
+  const addParagraph = (text: string) => {
+    checkNewPage(8)
+    doc.setFontSize(9.5)
+    doc.setTextColor(...midGray)
+    doc.setFont("helvetica", "normal")
+    const lines = doc.splitTextToSize(text, contentW) as string[]
+    lines.forEach((line: string) => {
+      checkNewPage(6)
+      doc.text(line, margin, y)
+      y += 5.5
+    })
+    y += 2
+  }
 
-    <h2>6. Seguridad & Privacidad</h2>
-    <div class="tag">Compliance</div>
-    <p>Ley 1581/2012 (Habeas Data, Colombia). TLS 1.3 en tránsito. AES-256 en reposo. JWT con rotación automática. Facturación DIAN 000042/2020.</p>
+  const addBulletLine = (label: string, value: string) => {
+    checkNewPage(8)
+    doc.setFontSize(9.5)
+    doc.setFont("helvetica", "bold")
+    doc.setTextColor(...darkGray)
+    const labelText = `${label}: `
+    doc.text(labelText, margin, y)
+    const labelW = doc.getTextWidth(labelText)
+    doc.setFont("helvetica", "normal")
+    doc.setTextColor(...midGray)
+    const rest = doc.splitTextToSize(value, contentW - labelW) as string[]
+    doc.text(rest[0] || "", margin + labelW, y)
+    y += 5.5
+    for (let i = 1; i < rest.length; i++) {
+      checkNewPage(5.5)
+      doc.text(rest[i], margin + labelW, y)
+      y += 5.5
+    }
+  }
 
-    <h2>7. Monetización</h2>
-    <div class="tag">Finanzas</div>
-    <p>Free: $0 / 10 capturas mes. Estándar: $39.900 COP/mes. Premium: $89.900 COP/mes. Proyección mes 12: $32M COP/mes. Punto equilibrio: mes 8.</p>
+  /* ── COVER PAGE ── */
+  doc.setFillColor(...purple)
+  doc.rect(0, 0, pageW, 60, "F")
 
-    <div class="footer">
-      <div>Noosfera Platform — Documentación Técnica v2.0</div>
-      <div>privacy@noosfera.com · +57 300 123 4567</div>
-    </div>
-  </div>
-  <script>window.onload = () => { window.print(); }<\/script>
-</body>
-</html>`)
-  printWindow.document.close()
+  doc.setFontSize(28)
+  doc.setTextColor(255, 255, 255)
+  doc.setFont("helvetica", "bold")
+  doc.text("Noosfera", margin, 32)
+
+  doc.setFontSize(10)
+  doc.setFont("helvetica", "normal")
+  doc.setTextColor(220, 200, 255)
+  doc.text("Documentación Técnica v2.0  ·  Actualizada mayo 2026  ·  Confidencial — uso interno", margin, 42)
+
+  doc.setDrawColor(220, 200, 255)
+  doc.setLineWidth(0.5)
+  doc.line(margin, 48, pageW - margin, 48)
+
+  y = 75
+  doc.setFontSize(18)
+  doc.setTextColor(...darkGray)
+  doc.setFont("helvetica", "bold")
+  doc.text("Arquitectura y Desarrollo de Noosfera", margin, y)
+  y += 9
+
+  doc.setFontSize(10.5)
+  doc.setTextColor(...midGray)
+  doc.setFont("helvetica", "normal")
+  const subtitle = "Pipeline técnico completo: desde el latido del usuario hasta la obra digital certificada en blockchain."
+  const subLines = doc.splitTextToSize(subtitle, contentW) as string[]
+  subLines.forEach((l: string) => { doc.text(l, margin, y); y += 6 })
+  y += 8
+
+  const badges = ["Gemini API", "WebGL 3D", "ERC-721 NFT", "PostgreSQL RLS", "Express 5"]
+  let bx = margin
+  badges.forEach(b => {
+    doc.setFillColor(245, 243, 255)
+    doc.setDrawColor(...purple)
+    doc.setLineWidth(0.3)
+    doc.roundedRect(bx, y - 4, doc.getTextWidth(b) + 6, 7, 1.5, 1.5, "FD")
+    doc.setFontSize(7.5)
+    doc.setTextColor(...purple)
+    doc.setFont("helvetica", "bold")
+    doc.text(b, bx + 3, y + 0.5)
+    bx += doc.getTextWidth(b) + 10
+  })
+  y += 16
+
+  doc.setDrawColor(233, 213, 255)
+  doc.setLineWidth(0.4)
+  doc.line(margin, y, pageW - margin, y)
+  y += 10
+
+  /* ── SECTION 1 ── */
+  addSectionTag("Plataforma")
+  addHeading2("1. ¿Qué es Noosfera?")
+  addHeading3("Definición Central")
+  addParagraph("Noosfera es la primera plataforma de arte biométrico que captura los pulsos cardíacos del usuario, los procesa mediante algoritmos de análisis matemático, y convierte esa información en obras de arte digital únicas generadas por Inteligencia Artificial (Gemini API). Cada obra es certificada como NFT en blockchain, garantizando irrepetibilidad absoluta.")
+  addHeading3("Premisa Fundamental")
+  addParagraph("No hay dos seres humanos con el mismo patrón cardíaco. Esa unicidad biológica es el motor creativo de Noosfera: la variabilidad de los pulsos actúa como semilla generativa para producir arte que es literalmente una extensión del latido de quien lo crea.")
+  addHeading3("Diferenciación de Mercado")
+  addParagraph("A diferencia de plataformas NFT genéricas, Noosfera vincula la propiedad intelectual directamente a la biometría del creador. El resultado es un activo digital con evidencia criptográfica de origen biológico, único en el mercado latinoamericano.")
+
+  /* ── SECTION 2 ── */
+  y += 4
+  addSectionTag("Infraestructura")
+  addHeading2("2. Arquitectura del Sistema")
+  addHeading3("Estructura Monorepo (pnpm workspaces)")
+  addBulletLine("@workspace/noosfera", "React 19 + Vite + TypeScript 5.9 + Tailwind CSS v4 + Framer Motion")
+  addBulletLine("@workspace/api-server", "Express 5 + Zod v4 + Pino logging")
+  addBulletLine("@workspace/db", "Drizzle ORM + PostgreSQL con Row-Level Security")
+  addBulletLine("@workspace/api-spec", "OpenAPI 3.1 + Orval para generación de hooks y esquemas Zod")
+  addHeading3("Stack Tecnológico Completo")
+  addParagraph("Frontend: React 19 + Vite + TypeScript 5.9 + Tailwind CSS v4 + Framer Motion + React Three Fiber. Backend: Node.js 24 + Express 5 + Zod v4. Base de datos: PostgreSQL con RLS habilitado. Inteligencia Artificial: Gemini API (Google). Blockchain: Polygon (ERC-721, ERC-2981). Build: esbuild (CJS bundle).")
+  addHeading3("Patrones de Arquitectura")
+  addParagraph("API-first design con contrato OpenAPI como fuente de verdad. Validación en ambos extremos (Zod en frontend y backend). Separación estricta de responsabilidades con monorepo. JWT stateless con rotación automática cada 24h.")
+
+  /* ── SECTION 3 ── */
+  y += 4
+  addSectionTag("Motor de Generación")
+  addHeading2("3. Pipeline: Pulsos → Arte")
+  addBulletLine("Paso 1 — Captura biométrica", "Secuencia de intervalos R-R en ms capturada vía sensor o entrada manual. Ej: [842, 856, 831, 869] ms. Validación: 40-200 BPM, 1-8 valores.")
+  addBulletLine("Paso 2 — Conversión hexadecimal", "Cada valor se convierte a representación hex de 16 bits. Ej: 842ms → 0x034A, 856ms → 0x0358, 831ms → 0x033F, 869ms → 0x0365.")
+  addBulletLine("Paso 3 — Codificación binaria", "Representación binaria completa: 0000001101001010 0000001101011000 0000001100111111 0000001101100101.")
+  addBulletLine("Paso 4 — Métricas de variabilidad", "SDNN: 42.3ms | RMSSD: 38.1ms | LF/HF: 1.24 | pNN50: 18.7% | Coherencia: 0.82. Estas métricas determinan el estado emocional inferido.")
+  addBulletLine("Paso 5 — Generación del prompt", "Traducción a prompt estructurado para Gemini API. Ejemplo: 'Composicion armonica de trazos fluidos, paleta violeta-azul profunda, energia media, alta coherencia ritmica, forma organica expansiva'.")
+  addBulletLine("Paso 6 — Obra certificada NFT", "Imagen generada por IA certificada con SHA-256 del vector biométrico, subida a IPFS (CID inmutable) y minteada como token ERC-721 en Polygon con metadatos biométricos.")
+
+  /* ── SECTION 4 ── */
+  y += 4
+  addSectionTag("PostgreSQL + Drizzle ORM")
+  addHeading2("4. Base de Datos")
+  addHeading3("Esquema de Tablas")
+  addBulletLine("users", "id, email, name, avatar, plan, created_at. RLS: el usuario solo ve sus propios datos.")
+  addBulletLine("captures", "id, user_id (FK), pulse_values (jsonb), hex_values, binary_values, sdnn, rmssd, lf_hf, coherence, created_at.")
+  addBulletLine("artworks", "id, capture_id (FK), user_id (FK), image_url, ipfs_cid, prompt, style, energy, coherence, nft_ready, created_at.")
+  addBulletLine("nfts", "id, artwork_id (FK), user_id (FK), token_id, contract_address, tx_hash, opensea_url, created_at.")
+  addHeading3("Seguridad de Datos")
+  addParagraph("Row-Level Security (RLS) activo en todas las tablas. Cifrado AES-256 en reposo para datos biométricos sensibles. Backups automáticos con retención de 30 días. Índices en columnas de búsqueda frecuente.")
+
+  /* ── SECTION 5 ── */
+  y += 4
+  addSectionTag("Web3 — Blockchain")
+  addHeading2("5. NFTs & Blockchain")
+  addParagraph("Implementación sobre Polygon (PoS) para minimizar gas fees. Contrato inteligente ERC-721 con extensión ERC-2981 para royalties automáticos.")
+  addHeading3("Flujo de Minting")
+  addBulletLine("1. Generación", "Imagen generada por Gemini API y almacenada temporalmente.")
+  addBulletLine("2. IPFS Upload", "Imagen subida a IPFS via Pinata. CID generado es inmutable y permanente.")
+  addBulletLine("3. Metadatos", "JSON con CID de imagen, hash biométrico SHA-256, métricas HRV, timestamp, propietario.")
+  addBulletLine("4. Minting", "Llamada al smart contract con tokenURI apuntando a metadatos en IPFS.")
+  addBulletLine("5. Royalties", "10% automático en cada reventa vía ERC-2981. Distribuido al creador original.")
+  addHeading3("Verificación de Autenticidad")
+  addParagraph("Cada NFT incluye el hash SHA-256 del vector de pulsos cardíacos en sus metadatos on-chain, permitiendo verificación criptográfica de que el arte fue generado a partir de los pulsos biológicos del creador.")
+
+  /* ── SECTION 6 ── */
+  y += 4
+  addSectionTag("Compliance & Seguridad")
+  addHeading2("6. Seguridad & Privacidad")
+  addHeading3("Marco Legal")
+  addParagraph("Cumplimiento Ley 1581/2012 (Habeas Data, Colombia). Registro ante SIC como responsable de tratamiento de datos personales sensibles (biométricos). Facturación electrónica DIAN resolución 000042/2020.")
+  addHeading3("Medidas de Seguridad Técnica")
+  addBulletLine("Tránsito", "TLS 1.3 obligatorio en todas las conexiones. HSTS activado.")
+  addBulletLine("Reposo", "AES-256-GCM para datos biométricos almacenados.")
+  addBulletLine("Autenticación", "JWT con rotación automática cada 24h. Refresh tokens con rotación. Rate limiting por IP y por usuario.")
+  addBulletLine("Infraestructura", "Firewall de aplicaciones (WAF). Escaneo de vulnerabilidades mensual. Penetration testing trimestral.")
+  addHeading3("Derechos del Usuario")
+  addParagraph("Los usuarios pueden solicitar acceso, corrección, supresión o portabilidad de sus datos biométricos en cualquier momento. Los datos son eliminados definitivamente 30 días después de la solicitud de baja.")
+
+  /* ── SECTION 7 ── */
+  y += 4
+  addSectionTag("Finanzas & Crecimiento")
+  addHeading2("7. Monetización")
+  addHeading3("Planes de Suscripción")
+  addBulletLine("Free", "$0 / mes · 10 capturas/mes · 2 NFTs/mes · galería pública.")
+  addBulletLine("Estándar", "$39.900 COP/mes · 100 capturas/mes · 20 NFTs/mes · analytics básico · sin marca de agua.")
+  addBulletLine("Premium", "$89.900 COP/mes · capturas ilimitadas · NFTs ilimitados · analytics avanzado · API access · soporte prioritario.")
+  addHeading3("Proyecciones Financieras")
+  addBulletLine("Mes 3", "200 usuarios activos. MRR: $4.5M COP.")
+  addBulletLine("Mes 6", "800 usuarios activos. MRR: $16M COP.")
+  addBulletLine("Mes 8", "Punto de equilibrio. 1.200 usuarios activos.")
+  addBulletLine("Mes 12", "2.500 usuarios activos. MRR: $32M COP. CAC recuperado en mes 4.")
+  addHeading3("Estrategia de Crecimiento")
+  addParagraph("Canal principal: comunidades de arte digital en Instagram y TikTok (LATAM). Partnerships con plataformas de bienestar y wellness. Programa de referidos con 30 días Premium gratis. Presencia en Art Basel Miami y eventos NFT de Bogotá y Medellín.")
+
+  /* ── FOOTER on last page ── */
+  addPageFooter()
+
+  doc.save("Noosfera-Documentacion-Tecnica-v2.0.pdf")
 }
 
 /* ─── Timeline Sections ─────────────────────────────────────── */

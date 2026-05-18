@@ -240,3 +240,33 @@ id = "akm580yHOz4WXAf_-Kj5J"
 uri = "file://artifacts/noosfera/public/images/pipeline-ai-battle.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "p6mE0I-z_ykXit0wNknro"
+uri = "file://artifacts/noosfera/public/images/pipeline-forest.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "dywAm-d9xbQHlNTlyO8ZA"
+uri = "file://artifacts/noosfera/public/images/pipeline-castle.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "r9u8UVC3m5IfBixLftp1X"
+uri = "file://artifacts/noosfera/public/images/pipeline-ship.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "XgTsqynQ1V3d5JNiQZr7k"
+uri = "file://artifacts/noosfera/public/images/pipeline-pyramids.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "7oPQJFZY_lx-GVwa2qLau"
+uri = "file://artifacts/noosfera/public/images/pipeline-ocean.png"
+type = "image"
+title = "generated_image"
