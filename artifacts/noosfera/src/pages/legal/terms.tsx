@@ -155,16 +155,11 @@ export default function TermsPage() {
             <p className="text-purple-200 text-base leading-relaxed">
               Al registrarte aceptas estos términos y condiciones. Empieza gratis, sin tarjeta de crédito.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
+            <div className="flex justify-center pt-2">
               <a href="/auth/register"
                 className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 inline-block"
                 style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
-                Crear cuenta gratis
-              </a>
-              <a href="/pricing"
-                className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 inline-block"
-                style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
-                Ver planes
+                Regístrate ahora
               </a>
             </div>
           </div>

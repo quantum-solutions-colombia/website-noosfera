@@ -140,11 +140,7 @@ function DBSchema() {
 
 /* ─── Interactive AI Generation Demo ───────────────────────── */
 const NFT_IMAGES = [
-  "/images/auth-L3-1.png", "/images/auth-L3-2.png", "/images/auth-L3-3.png",
-  "/images/auth-L3-4.png", "/images/auth-L3-5.png", "/images/auth-L4-1.png",
-  "/images/auth-L4-2.png", "/images/auth-L4-3.png", "/images/auth-L4-4.png",
-  "/images/nft-castle-1.png", "/images/nft-castle-2.png", "/images/nft-castle-ai.png",
-  "/images/nft-ghost.png", "/images/nft-ghost-2.png", "/images/viking-warrior.png",
+  "/images/pipeline-ai-battle.png",
 ]
 
 const PULSE_VALUES = [842, 856, 831, 869, 844, 852]
@@ -234,8 +230,8 @@ function InteractiveDemo() {
                 <img
                   src={randomImage}
                   alt="Obra generada por IA"
-                  className="w-full rounded-xl object-cover"
-                  style={{ maxHeight: "180px" }}
+                  className="w-full rounded-xl"
+                  style={{ display: "block", width: "100%", height: "auto", objectFit: "contain" }}
                 />
                 <p className="font-mono text-xs mt-2" style={{ color: "#34d399" }}>
                   ✓ Obra digital generada por IA — NFT ready
@@ -496,9 +492,9 @@ const timelineSections = [
 ]
 
 /* ─── Timeline Entry ─────────────────────────────────────────── */
-function TimelineEntry({ section, index }: { section: typeof timelineSections[0]; index: number }) {
+function TimelineEntry({ section, index, noLine }: { section: typeof timelineSections[0]; index: number; noLine?: boolean }) {
   const Icon = section.icon
-  const isLast = index === timelineSections.length - 1
+  const isLast = noLine || index === timelineSections.length - 1
 
   return (
     <div className="relative flex gap-0">
@@ -611,11 +607,32 @@ export default function DocsPage() {
         </div>
       </section>
 
-      <div className="px-6 md:px-12 py-14" style={{ maxWidth: "820px" }}>
+      {/* Mobile: single column */}
+      <div className="md:hidden px-6 py-14">
         <div className="relative">
           {timelineSections.map((section, index) => (
             <TimelineEntry key={section.id} section={section} index={index} />
           ))}
+        </div>
+      </div>
+
+      {/* Desktop: alternating left-right two-column layout */}
+      <div className="hidden md:grid md:grid-cols-2 md:gap-x-10 px-10 lg:px-16 py-14">
+        {/* Left column: even sections (0, 2, 4…) */}
+        <div className="relative">
+          {timelineSections.filter((_, i) => i % 2 === 0).map((section, colIdx) => {
+            const realIndex = colIdx * 2
+            const isLastInCol = colIdx === Math.ceil(timelineSections.length / 2) - 1
+            return <TimelineEntry key={section.id} section={section} index={realIndex} noLine={isLastInCol} />
+          })}
+        </div>
+        {/* Right column: odd sections (1, 3, 5…) — offset by 1 for stagger */}
+        <div className="relative mt-28">
+          {timelineSections.filter((_, i) => i % 2 !== 0).map((section, colIdx) => {
+            const realIndex = colIdx * 2 + 1
+            const isLastInCol = colIdx === Math.floor(timelineSections.length / 2) - 1
+            return <TimelineEntry key={section.id} section={section} index={realIndex} noLine={isLastInCol} />
+          })}
         </div>
       </div>
 
