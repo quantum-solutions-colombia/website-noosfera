@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Link } from "wouter"
+import { Heart } from "lucide-react"
 import React from "react"
 
 const SOCIAL_HREFS: Record<string, string> = {
@@ -70,10 +71,13 @@ export function Footer({ waveBg = "#7c3aed" }: { waveBg?: string } = {}) {
           <motion.div className="mb-8"
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }} viewport={{ once: true }}>
-            <span className="text-2xl font-black text-white"
-              style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Noosfera
-            </span>
+            <div className="flex items-center gap-2">
+              <Heart className="h-6 w-6 fill-current" style={{ color: "#7c3aed" }} />
+              <span className="text-2xl font-black text-white"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                Noosfera
+              </span>
+            </div>
           </motion.div>
 
           <motion.div className="flex items-center gap-4 mb-6"

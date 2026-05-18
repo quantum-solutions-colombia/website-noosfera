@@ -324,3 +324,21 @@ id = "bKraVuNNbPAFbBGlZG0D3"
 uri = "file://artifacts/noosfera/public/images/community-6.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "w35unVQii02HZxj5Mb7r2"
+uri = "file://artifacts/noosfera/public/images/hero-4.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "Y2Ow7pnZQOVnh-PqmuS0k"
+uri = "file://artifacts/noosfera/public/images/hero-5.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "VW2aTXC4Mjti6S20L9VDv"
+uri = "file://artifacts/noosfera/public/images/hero-6.png"
+type = "image"
+title = "generated_image"
