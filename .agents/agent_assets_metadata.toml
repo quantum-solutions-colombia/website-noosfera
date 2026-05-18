@@ -270,3 +270,57 @@ id = "7oPQJFZY_lx-GVwa2qLau"
 uri = "file://artifacts/noosfera/public/images/pipeline-ocean.png"
 type = "image"
 title = "generated_image"
+
+[[generated]]
+id = "L4-Lwit7kU-VSSgwtbHjt"
+uri = "file://artifacts/noosfera/public/images/hero-1.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "qSqr3K_fdEZ_BcTabpnNk"
+uri = "file://artifacts/noosfera/public/images/hero-2.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "QEqRrly1--NvXWs8fp3X1"
+uri = "file://artifacts/noosfera/public/images/hero-3.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "JmNvu1gVkNI1yhGJwsv9R"
+uri = "file://artifacts/noosfera/public/images/community-1.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "fEjt8Ar4DW0XGfDH-Wnm2"
+uri = "file://artifacts/noosfera/public/images/community-2.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "IiA-ww5iRfVf54UdukoT4"
+uri = "file://artifacts/noosfera/public/images/community-3.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "jFxIzbpufzCcwV-LbIrb7"
+uri = "file://artifacts/noosfera/public/images/community-4.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "3LKFj1J-zK-q5x0GA2qh6"
+uri = "file://artifacts/noosfera/public/images/community-5.png"
+type = "image"
+title = "generated_image"
+
+[[generated]]
+id = "bKraVuNNbPAFbBGlZG0D3"
+uri = "file://artifacts/noosfera/public/images/community-6.png"
+type = "image"
+title = "generated_image"
