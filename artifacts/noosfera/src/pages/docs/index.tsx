@@ -140,11 +140,11 @@ function DBSchema() {
 
 /* ─── Interactive AI Generation Demo ───────────────────────── */
 const NFT_IMAGES = [
-  "/images/nft-1.png", "/images/nft-2.png", "/images/nft-3.png",
-  "/images/nft-4.png", "/images/nft-5.png", "/images/nft-6.png",
-  "/images/nft-7.png", "/images/nft-8.png", "/images/nft-9.png",
-  "/images/nft-10.png", "/images/collage-1.png", "/images/collage-2.png",
-  "/images/collage-3.png", "/images/collage-4.png", "/images/collage-5.png",
+  "/images/auth-L3-1.png", "/images/auth-L3-2.png", "/images/auth-L3-3.png",
+  "/images/auth-L3-4.png", "/images/auth-L3-5.png", "/images/auth-L4-1.png",
+  "/images/auth-L4-2.png", "/images/auth-L4-3.png", "/images/auth-L4-4.png",
+  "/images/nft-castle-1.png", "/images/nft-castle-2.png", "/images/nft-castle-ai.png",
+  "/images/nft-ghost.png", "/images/nft-ghost-2.png", "/images/viking-warrior.png",
 ]
 
 const PULSE_VALUES = [842, 856, 831, 869, 844, 852]
@@ -550,9 +550,11 @@ function TimelineEntry({ section, index }: { section: typeof timelineSections[0]
                 <div className="flex items-start gap-3 mb-2">
                   <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 text-[9px] font-black text-purple-600"
                     style={{ backgroundColor: "#f5f3ff" }}>{idx + 1}</span>
-                  <h3 className="text-sm font-bold text-gray-900">{item.subtitle}</h3>
+                  <h3 className="text-sm font-bold text-gray-900"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>{item.subtitle}</h3>
                 </div>
-                <p className="text-sm text-gray-500 leading-relaxed pl-8">{item.text}</p>
+                <p className="text-sm text-gray-500 leading-relaxed pl-8"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}>{item.text}</p>
               </motion.div>
             ))}
           </div>
@@ -568,9 +570,11 @@ function TimelineEntry({ section, index }: { section: typeof timelineSections[0]
                 <div className="flex items-start gap-3 mb-2">
                   <span className="w-5 h-5 rounded-md flex items-center justify-center flex-shrink-0 mt-0.5 text-[9px] font-black text-purple-600"
                     style={{ backgroundColor: "#f5f3ff" }}>{idx + 1}</span>
-                  <h3 className="text-sm font-bold text-gray-900">{item.subtitle}</h3>
+                  <h3 className="text-sm font-bold text-gray-900"
+                    style={{ fontFamily: "'DM Sans', sans-serif" }}>{item.subtitle}</h3>
                 </div>
-                <p className="text-sm text-gray-500 leading-relaxed pl-8">{item.text}</p>
+                <p className="text-sm text-gray-500 leading-relaxed pl-8"
+                  style={{ fontFamily: "'DM Sans', sans-serif" }}>{item.text}</p>
               </motion.div>
             ))}
           </div>
@@ -589,7 +593,7 @@ export default function DocsPage() {
       <DarkNav activeLink="docs" />
 
       <section className="pt-28 pb-12 bg-white border-b border-gray-100">
-        <div className="px-6 md:px-12">
+        <div className="px-6 md:px-12 text-center">
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }}
             className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-4">
             Documentación Técnica
@@ -600,7 +604,8 @@ export default function DocsPage() {
             Arquitectura y Desarrollo de Noosfera
           </motion.h1>
           <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 0.2 }}
-            className="text-gray-500 max-w-xl text-sm leading-relaxed">
+            className="text-gray-500 max-w-xl text-sm leading-relaxed mx-auto"
+            style={{ fontFamily: "'DM Sans', sans-serif" }}>
             Pipeline técnico completo: desde el latido del usuario hasta la obra digital certificada en blockchain.
           </motion.p>
         </div>
@@ -612,31 +617,47 @@ export default function DocsPage() {
             <TimelineEntry key={section.id} section={section} index={index} />
           ))}
         </div>
-
-        {/* Purple CTA Footer */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false }} transition={{ duration: 0.5 }}
-          className="rounded-2xl p-8 flex flex-col sm:flex-row items-center justify-between gap-6"
-          style={{ background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)" }}>
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-purple-200 mb-1">
-              Documentación Técnica v2.0
-            </p>
-            <p className="text-white font-bold text-lg leading-snug">Noosfera Platform</p>
-            <p className="text-purple-200 text-sm mt-0.5">Actualizada mayo 2025 · Confidencial</p>
-          </div>
-          <button
-            onClick={downloadPDF}
-            className="flex items-center gap-2.5 px-6 py-3 rounded-xl font-bold text-sm text-purple-700 hover:bg-white/90 transition-all whitespace-nowrap"
-            style={{ backgroundColor: "#ffffff" }}>
-            <Download className="h-4 w-4" />
-            Descargar Documentación
-          </button>
-        </motion.div>
       </div>
 
-      <Footer />
+      {/* Purple CTA Footer — full-width, uniform with other pages */}
+      <motion.section
+        initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }} transition={{ duration: 0.5 }}
+        className="py-16 text-center"
+        style={{ backgroundColor: "#7c3aed", borderRadius: "2.5rem 2.5rem 0 0" }}>
+        <div className="container mx-auto px-6">
+          <div className="max-w-2xl mx-auto space-y-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-200"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Documentación Técnica v2.0
+            </p>
+            <h2 className="text-3xl md:text-4xl font-black text-white leading-tight"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Noosfera Platform
+            </h2>
+            <p className="text-purple-200 text-base leading-relaxed"
+              style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Actualizada mayo 2026 · Descarga la documentación técnica completa.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
+              <button
+                onClick={downloadPDF}
+                className="flex items-center justify-center gap-2.5 px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95"
+                style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
+                <Download className="h-4 w-4" />
+                Descargar Documentación
+              </button>
+              <a href="/auth/register"
+                className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 inline-block"
+                style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
+                Crear cuenta gratis
+              </a>
+            </div>
+          </div>
+        </div>
+      </motion.section>
+
+      <Footer waveBg="#7c3aed" />
     </div>
   )
 }

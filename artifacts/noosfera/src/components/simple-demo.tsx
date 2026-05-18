@@ -32,7 +32,7 @@ interface GeneratedResult {
 
 // Art styles for random generation
 const artStyles = [
-  { name: "Armonia Vital", color: "from-emerald-400 to-teal-500", emotion: "Tranquilidad y equilibrio" },
+  { name: "Armonia Vital", color: "from-purple-500 to-violet-600", emotion: "Tranquilidad y equilibrio" },
   { name: "Energia Pulsante", color: "from-rose-400 to-pink-500", emotion: "Vitalidad y pasion" },
   { name: "Flujo Cosmico", color: "from-violet-400 to-purple-500", emotion: "Creatividad y misterio" },
   { name: "Ritmo Dorado", color: "from-amber-400 to-orange-500", emotion: "Alegria y optimismo" },
@@ -268,7 +268,7 @@ export default function SimpleDemo() {
 
   const getGradientColors = (gradientClass: string) => {
     const colorMap: Record<string, { from: string; to: string }> = {
-      "from-emerald-400 to-teal-500": { from: "#34d399", to: "#14b8a6" },
+      "from-purple-500 to-violet-600": { from: "#34d399", to: "#14b8a6" },
       "from-rose-400 to-pink-500": { from: "#fb7185", to: "#ec4899" },
       "from-violet-400 to-purple-500": { from: "#a78bfa", to: "#a855f7" },
       "from-amber-400 to-orange-500": { from: "#fbbf24", to: "#f97316" },
@@ -334,17 +334,17 @@ export default function SimpleDemo() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-purple-50/30">
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Heart className="h-7 w-7 text-emerald-500" />
-              <span className="text-xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
+              <Heart className="h-7 w-7 text-purple-600" />
+              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-violet-600 bg-clip-text text-transparent">
                 Noosfera
               </span>
-              <Badge variant="outline" className="ml-2 bg-emerald-500/10 text-emerald-600 border-emerald-200">
+              <Badge variant="outline" className="ml-2 bg-purple-600/10 text-purple-700 border-purple-200">
                 DEMO
               </Badge>
             </div>
@@ -360,7 +360,7 @@ export default function SimpleDemo() {
                     <Button variant="ghost" className="flex items-center gap-2">
                       <Avatar className="h-8 w-8">
                         <AvatarImage src={user?.avatar} />
-                        <AvatarFallback className="bg-emerald-100 text-emerald-700">
+                        <AvatarFallback className="bg-purple-100 text-purple-800">
                           {user?.name?.charAt(0) || "U"}
                         </AvatarFallback>
                       </Avatar>
@@ -388,7 +388,7 @@ export default function SimpleDemo() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               ) : (
-                <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700" onClick={() => navigate("/auth/login")}>
+                <Button size="sm" className="bg-purple-700 hover:bg-purple-800" onClick={() => navigate("/auth/login")}>
                   <UserPlus className="mr-2 h-4 w-4" />
                   Iniciar Sesion
                 </Button>
@@ -399,7 +399,7 @@ export default function SimpleDemo() {
       </header>
 
       {/* Attempts remaining indicator */}
-      <div className="bg-emerald-50/50 border-b border-emerald-100">
+      <div className="bg-purple-50/50 border-b border-purple-100">
         <div className="container mx-auto px-4 py-2">
           <div className="flex items-center justify-center gap-4">
             <Badge variant="outline" className="bg-amber-50 text-amber-600 border-amber-200">
@@ -410,7 +410,7 @@ export default function SimpleDemo() {
                 <div
                   key={i}
                   className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                    i < attemptsRemaining ? "bg-emerald-500" : "bg-gray-200"
+                    i < attemptsRemaining ? "bg-purple-600" : "bg-gray-200"
                   }`}
                 />
               ))}
@@ -438,13 +438,13 @@ export default function SimpleDemo() {
               <motion.div
                 animate={{ scale: [1, 1.1, 1] }}
                 transition={{ duration: 2, repeat: Infinity }}
-                className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 mb-8"
+                className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 mb-8"
               >
                 <Heart className="h-12 w-12 text-white" />
               </motion.div>
 
               <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Bienvenido a <span className="text-emerald-500">Noosfera</span>
+                Bienvenido a <span className="text-purple-600">Noosfera</span>
               </h1>
               
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
@@ -452,12 +452,12 @@ export default function SimpleDemo() {
                 En este demo podras experimentar nuestra tecnologia de interpretacion emocional.
               </p>
 
-              <Card className="bg-white/80 backdrop-blur border-emerald-100 mb-8">
+              <Card className="bg-white/80 backdrop-blur border-purple-100 mb-8">
                 <CardContent className="pt-6">
                   <h3 className="font-semibold text-gray-900 mb-4">Como funciona el demo:</h3>
                   <div className="grid gap-4 text-left">
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 font-bold">
                         1
                       </div>
                       <div>
@@ -466,7 +466,7 @@ export default function SimpleDemo() {
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 font-bold">
                         2
                       </div>
                       <div>
@@ -475,7 +475,7 @@ export default function SimpleDemo() {
                       </div>
                     </div>
                     <div className="flex items-start gap-3">
-                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold">
+                      <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center text-purple-700 font-bold">
                         3
                       </div>
                       <div>
@@ -489,7 +489,7 @@ export default function SimpleDemo() {
 
               <Button 
                 size="lg" 
-                className="bg-emerald-600 hover:bg-emerald-700 text-white px-8"
+                className="bg-purple-700 hover:bg-purple-800 text-white px-8"
                 onClick={() => setStep("input")}
               >
                 Comenzar Demo
@@ -511,9 +511,9 @@ export default function SimpleDemo() {
               exit={{ opacity: 0, y: -20 }}
               className="max-w-md mx-auto"
             >
-              <Card className="bg-white/90 backdrop-blur shadow-xl border-emerald-100">
+              <Card className="bg-white/90 backdrop-blur shadow-xl border-purple-100">
                 <CardHeader className="text-center pb-4">
-                  <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-3">
+                  <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex items-center justify-center mb-3">
                     <Heart className="h-7 w-7 text-white" />
                   </div>
                   <CardTitle className="text-xl">Ingresa tus Pulsos</CardTitle>
@@ -524,7 +524,7 @@ export default function SimpleDemo() {
                 <CardContent className="space-y-4">
                   {/* Inline Pulse Input */}
                   <div 
-                    className="min-h-[56px] p-3 border-2 border-gray-200 rounded-xl bg-white focus-within:border-emerald-400 focus-within:ring-2 focus-within:ring-emerald-100 transition-all cursor-text"
+                    className="min-h-[56px] p-3 border-2 border-gray-200 rounded-xl bg-white focus-within:border-purple-500 focus-within:ring-2 focus-within:ring-purple-100 transition-all cursor-text"
                     onClick={() => inputRef.current?.focus()}
                   >
                     <div className="flex flex-wrap items-center gap-2">
@@ -534,16 +534,16 @@ export default function SimpleDemo() {
                           initial={{ scale: 0, opacity: 0 }}
                           animate={{ scale: 1, opacity: 1 }}
                           exit={{ scale: 0, opacity: 0 }}
-                          className="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-700 px-3 py-1.5 rounded-full text-sm font-medium"
+                          className="inline-flex items-center gap-1.5 bg-purple-100 text-purple-800 px-3 py-1.5 rounded-full text-sm font-medium"
                         >
                           <span>{pulse}</span>
-                          <span className="text-emerald-500 text-xs">BPM</span>
+                          <span className="text-purple-600 text-xs">BPM</span>
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
                               removePulse(index)
                             }}
-                            className="ml-0.5 hover:bg-emerald-200 rounded-full p-0.5 transition-colors"
+                            className="ml-0.5 hover:bg-purple-200 rounded-full p-0.5 transition-colors"
                           >
                             <X className="h-3 w-3" />
                           </button>
@@ -568,7 +568,7 @@ export default function SimpleDemo() {
                           {currentPulseInput && parseInt(currentPulseInput) >= 40 && parseInt(currentPulseInput) <= 200 && (
                             <button
                               onClick={addPulse}
-                              className="text-emerald-500 hover:text-emerald-600 transition-colors"
+                              className="text-purple-600 hover:text-purple-700 transition-colors"
                             >
                               <Check className="h-4 w-4" />
                             </button>
@@ -584,7 +584,7 @@ export default function SimpleDemo() {
                       <div
                         key={i}
                         className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                          i < pulses.length ? "bg-emerald-500" : "bg-gray-200"
+                          i < pulses.length ? "bg-purple-600" : "bg-gray-200"
                         }`}
                       />
                     ))}
@@ -601,7 +601,7 @@ export default function SimpleDemo() {
                   )}
 
                   <Button 
-                    className="w-full bg-emerald-600 hover:bg-emerald-700 h-11"
+                    className="w-full bg-purple-700 hover:bg-purple-800 h-11"
                     disabled={!canGenerate}
                     onClick={generateImage}
                   >
@@ -628,12 +628,12 @@ export default function SimpleDemo() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="max-w-md mx-auto text-center"
             >
-              <Card className="bg-white/90 backdrop-blur shadow-xl border-emerald-100">
+              <Card className="bg-white/90 backdrop-blur shadow-xl border-purple-100">
                 <CardContent className="py-12">
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                    className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 mb-6"
+                    className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 mb-6"
                   >
                     <Heart className="h-10 w-10 text-white" />
                   </motion.div>
@@ -674,7 +674,7 @@ export default function SimpleDemo() {
 
               <div className="grid md:grid-cols-2 gap-8">
                 {/* Generated Image */}
-                <Card className="bg-white/90 backdrop-blur shadow-xl border-emerald-100 overflow-hidden">
+                <Card className="bg-white/90 backdrop-blur shadow-xl border-purple-100 overflow-hidden">
                   <CardContent className="p-0">
                     <div className="aspect-square relative">
                       <img
@@ -685,7 +685,7 @@ export default function SimpleDemo() {
                     </div>
                     <div className="p-4">
                       <h3 className="text-xl font-bold text-gray-900">{generatedResult.title}</h3>
-                      <Badge className="mt-2 bg-emerald-100 text-emerald-700 border-0">
+                      <Badge className="mt-2 bg-purple-100 text-purple-800 border-0">
                         {generatedResult.emotionalState}
                       </Badge>
                     </div>
@@ -694,7 +694,7 @@ export default function SimpleDemo() {
 
                 {/* Analysis */}
                 <div className="space-y-6">
-                  <Card className="bg-white/90 backdrop-blur shadow-xl border-emerald-100">
+                  <Card className="bg-white/90 backdrop-blur shadow-xl border-purple-100">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg">Interpretacion</CardTitle>
                     </CardHeader>
@@ -706,7 +706,7 @@ export default function SimpleDemo() {
                   </Card>
 
                   {/* Circular Charts */}
-                  <Card className="bg-white/90 backdrop-blur shadow-xl border-emerald-100">
+                  <Card className="bg-white/90 backdrop-blur shadow-xl border-purple-100">
                     <CardHeader className="pb-2">
                       <CardTitle className="text-lg">Metricas</CardTitle>
                     </CardHeader>
@@ -715,7 +715,7 @@ export default function SimpleDemo() {
                         <CircularProgress 
                           value={generatedResult.energyLevel} 
                           label="Energia" 
-                          color="text-emerald-500"
+                          color="text-purple-600"
                         />
                         <CircularProgress 
                           value={generatedResult.coherenceLevel} 
@@ -739,7 +739,7 @@ export default function SimpleDemo() {
                       </Button>
                     )}
                     <Button 
-                      className="flex-1 bg-emerald-600 hover:bg-emerald-700"
+                      className="flex-1 bg-purple-700 hover:bg-purple-800"
                       onClick={() => navigate("/auth/login")}
                     >
                       <UserPlus className="mr-2 h-4 w-4" />
@@ -766,7 +766,7 @@ export default function SimpleDemo() {
               exit={{ opacity: 0, y: -20 }}
               className="max-w-md mx-auto text-center"
             >
-              <Card className="bg-white/90 backdrop-blur shadow-xl border-emerald-100">
+              <Card className="bg-white/90 backdrop-blur shadow-xl border-purple-100">
                 <CardContent className="py-10">
                   <div className="mx-auto w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-6">
                     <ImageIcon className="h-8 w-8 text-gray-400" />
@@ -782,7 +782,7 @@ export default function SimpleDemo() {
 
                   <div className="space-y-3">
                     <Button 
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 h-11"
+                      className="w-full bg-purple-700 hover:bg-purple-800 h-11"
                       onClick={() => navigate("/auth/register")}
                     >
                       <UserPlus className="mr-2 h-4 w-4" />
@@ -812,7 +812,7 @@ export default function SimpleDemo() {
                   className="mt-6"
                 >
                   <p className="text-sm text-gray-500 mb-3">Tu ultima creacion:</p>
-                  <Card className="bg-white/90 backdrop-blur shadow-xl border-emerald-100 overflow-hidden">
+                  <Card className="bg-white/90 backdrop-blur shadow-xl border-purple-100 overflow-hidden">
                     <div className="aspect-video relative">
                       <img
                         src={generatedResult.imageUrl}

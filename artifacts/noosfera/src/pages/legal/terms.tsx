@@ -145,24 +145,33 @@ export default function TermsPage() {
         </div>
       </main>
 
-      <div className="container mx-auto px-6 max-w-3xl py-12">
-        <div className="rounded-2xl p-8 text-center" style={{ backgroundColor: "#f5f3ff" }}>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-600 mb-3">Comienza Hoy</p>
-          <h2 className="text-2xl font-black text-gray-900 mb-3" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-            Transforma tus latidos en arte digital
-          </h2>
-          <p className="text-gray-500 text-sm mb-6 max-w-md mx-auto">
-            Al registrarte aceptas estos términos y condiciones. Empieza gratis, sin tarjeta de crédito.
-          </p>
-          <a href="/auth/register"
-            className="inline-block px-8 py-3.5 rounded-full font-semibold text-white text-sm transition-all hover:opacity-90"
-            style={{ backgroundColor: "#7c3aed" }}>
-            Crear cuenta gratis
-          </a>
+      <section className="py-16" style={{ backgroundColor: "#7c3aed", borderRadius: "2.5rem 2.5rem 0 0", marginTop: "0.5rem" }}>
+        <div className="container mx-auto px-6 text-center">
+          <div className="max-w-2xl mx-auto space-y-5">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-purple-200">Comienza Hoy</p>
+            <h2 className="text-3xl md:text-4xl font-black text-white leading-tight" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+              Transforma tus latidos<br />en arte digital
+            </h2>
+            <p className="text-purple-200 text-base leading-relaxed">
+              Al registrarte aceptas estos términos y condiciones. Empieza gratis, sin tarjeta de crédito.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-2">
+              <a href="/auth/register"
+                className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 inline-block"
+                style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
+                Crear cuenta gratis
+              </a>
+              <a href="/pricing"
+                className="px-8 py-4 font-semibold text-purple-700 text-sm tracking-wide transition-all hover:opacity-95 inline-block"
+                style={{ backgroundColor: "#ffffff", borderRadius: "14px" }}>
+                Ver planes
+              </a>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <Footer waveBg="#ffffff" />
+      <Footer waveBg="#7c3aed" />
     </div>
   )
 }
