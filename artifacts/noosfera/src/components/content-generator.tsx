@@ -545,31 +545,26 @@ export default function ContentGenerator() {
     setGeneratingContent(true)
     setGenerationProgress(0)
 
-    // Simular progreso con animación más fluida
-    const startTime = Date.now()
-    const totalDuration = 3000 * (1 - (config.processingSpeed / 100) * 0.7) // Duración basada en la velocidad configurada
-
-    const updateProgress = () => {
-      const elapsed = Date.now() - startTime
-      const progress = Math.min(100, (elapsed / totalDuration) * 100)
-      setGenerationProgress(progress)
-
-      if (progress < 100) {
-        requestAnimationFrame(updateProgress)
-      }
-    }
-
-    requestAnimationFrame(updateProgress)
+    // Animate progress bar
+    let progressInterval: ReturnType<typeof setInterval> | null = null
+    let fakeProgress = 0
+    progressInterval = setInterval(() => {
+      fakeProgress += generationType === "image" ? 0.6 : 1.5
+      if (fakeProgress < 90) setGenerationProgress(fakeProgress)
+    }, 100)
 
     try {
-      await generateContent(generationType)
+      const result = await generateContent(generationType, { style: selectedStyle })
+      if (result && generationType === "image" && result.content) {
+        setPreviewContent(result.content)
+      }
       setSuccess(true)
-      toast.success(`${generationType === "text" ? "Texto" : "Imagen"} generado correctamente`)
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "Error al generar contenido"
       setError(errorMessage)
       toast.error(errorMessage)
     } finally {
+      if (progressInterval) clearInterval(progressInterval)
       setGenerationProgress(100)
       setGeneratingContent(false)
     }
