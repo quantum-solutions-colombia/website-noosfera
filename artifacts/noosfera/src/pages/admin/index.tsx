@@ -1,6 +1,6 @@
 
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { motion } from "framer-motion"
 import { Users, Shield, LogOut, UserPlus, UserCheck, Heart, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -21,6 +21,13 @@ interface User {
   lastLogin: string | null
 }
 
+function getAdminGreeting(): string {
+  const hour = new Date().getHours()
+  if (hour >= 6 && hour < 12) return "Buenos días, Admin"
+  if (hour >= 12 && hour < 18) return "Buenas tardes, Admin"
+  return "Buenas noches, Admin"
+}
+
 export default function AdminDashboard() {
   const [, navigate] = useLocation()
   const [users, setUsers] = useState<User[]>([])
@@ -33,6 +40,7 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true)
   const [isAdminUser, setIsAdminUser] = useState(false)
   const [lastUpdate, setLastUpdate] = useState(new Date())
+  const greeting = useMemo(() => getAdminGreeting(), [])
 
   useEffect(() => {
     const checkAdminAndFetchData = async () => {
@@ -47,7 +55,8 @@ export default function AdminDashboard() {
 
         const user = localDB.getUserById(currentUserId)
 
-        if (!user || user.email !== "admin@noosfera.com") {
+        const ADMIN_EMAILS = ["admin@noosfera.com", "noosferasuperadmin@gmail.com"]
+        if (!user || !ADMIN_EMAILS.includes(user.email)) {
           toast.error("No tienes permisos de administrador")
           navigate("/")
           return
@@ -185,8 +194,8 @@ export default function AdminDashboard() {
                 <Shield className="h-6 w-6 text-emerald-600" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Panel de Administracion</h1>
-                <p className="text-sm text-gray-500">Noosfera - Tiempo Real</p>
+                <h1 className="text-xl font-bold text-gray-900">Panel de Administración</h1>
+                <p className="text-sm text-emerald-600 font-medium">Hola, {greeting} 👋</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -202,6 +211,23 @@ export default function AdminDashboard() {
           </div>
         </div>
       </header>
+
+      {/* Greeting banner */}
+      <motion.div
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="bg-gradient-to-r from-emerald-50 via-white to-emerald-50 border-b border-emerald-100"
+      >
+        <div className="container mx-auto px-4 py-3 flex items-center gap-3">
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 flex-shrink-0">
+            <Shield className="h-4 w-4 text-emerald-600" />
+          </div>
+          <p className="text-gray-700 font-medium text-sm">
+            <span className="text-emerald-600 font-bold">Hola Admin</span> — {greeting.replace("Admin", "").trim()}, bienvenido al panel de control de Noosfera.
+          </p>
+        </div>
+      </motion.div>
 
       <main className="container mx-auto px-4 py-8">
         {/* Stats Cards */}

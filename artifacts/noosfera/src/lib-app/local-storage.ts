@@ -160,8 +160,33 @@ class LocalStorageDB {
 
   // Inicializar datos de demostración
   initializeDemoData(): void {
-    // Solo inicializar si no hay usuarios
-    if (this.getUsers().length === 0) {
+    const users = this.getUsers()
+
+    // Asegurarse de que el super admin siempre exista
+    const superAdminExists = users.some((u) => u.email === "noosferasuperadmin@gmail.com")
+    if (!superAdminExists) {
+      const superAdmin: User = {
+        id: "superadmin-001",
+        name: "Super Administrador",
+        email: "noosferasuperadmin@gmail.com",
+        password: simpleHash(""),
+        role: "admin",
+        plan: "premium",
+        is_active: true,
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        preferences: {
+          theme: "light",
+          notifications: true,
+          tutorialCompleted: true,
+        },
+      }
+      this.addUser(superAdmin)
+    }
+
+    // Solo inicializar datos demo si no hay otros usuarios
+    if (users.length === 0) {
       const demoUser: User = {
         id: "demo-001",
         name: "Usuario Demo",
