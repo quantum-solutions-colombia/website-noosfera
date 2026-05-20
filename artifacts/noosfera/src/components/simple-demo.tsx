@@ -604,31 +604,44 @@ export default function SimpleDemo() {
 
               {/* ── EXHAUSTED (sin resultado) ── */}
               {showModal === "exhausted" && !generatedResult && (
-                <div className="p-8 text-center">
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                    style={{ backgroundColor: "#fef3c7" }}>
-                    <Heart className="h-6 w-6 text-amber-500" />
-                  </div>
-                  <h3 className="font-black text-gray-900 text-lg mb-1" style={font}>Límite alcanzado</h3>
-                  <p className="text-sm text-gray-400 mb-2" style={font}>Has usado tus {DAILY_LIMIT} generaciones del demo.</p>
-                  {resetAt && (
-                    <div className="rounded-xl p-3 mb-4" style={{ backgroundColor: "#fef3c7", border: "1px solid #fde68a" }}>
-                      <p className="text-sm font-bold text-amber-700" style={font}>
-                        Tu plan se restablece mañana a las {new Date(resetAt).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
-                      </p>
-                      <p className="text-xs text-amber-600 mt-0.5" style={font}>
-                        El sistema recuerda tu uso aunque cambies de navegador
-                      </p>
+                <div>
+                  {/* Hero image — same style as other modals */}
+                  <div style={{ position: "relative", height: 80, flexShrink: 0 }}>
+                    <img src="/images/hero-3.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", display: "block" }} />
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(20,5,40,0.75) 100%)" }} />
+                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 16, color: "#fff", textShadow: "0 2px 20px rgba(124,58,237,0.9), 0 2px 12px rgba(0,0,0,0.6)" }}>
+                        Límite alcanzado
+                      </span>
                     </div>
-                  )}
-                  <button onClick={() => navigate("/auth/register")}
-                    className="w-full py-3.5 rounded-2xl font-bold text-sm text-white"
-                    style={{ backgroundColor: "#7c3aed", ...font }}>
-                    Crear Cuenta Gratis
-                  </button>
-                  <button onClick={closeModal} className="mt-2 text-sm text-gray-400 hover:text-gray-600 transition-colors" style={font}>
-                    Cerrar
-                  </button>
+                    <button onClick={closeModal} className="absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-black/30 text-white hover:bg-black/50 transition-colors">
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+
+                  <div className="p-6 text-center">
+                    <p className="text-sm text-gray-500 mb-3" style={font}>
+                      Has usado tus {DAILY_LIMIT} generaciones del plan de prueba.
+                    </p>
+                    {resetAt && (
+                      <div className="rounded-xl p-3 mb-4" style={{ backgroundColor: "#fef3c7", border: "1px solid #fde68a" }}>
+                        <p className="text-sm font-bold text-amber-700" style={font}>
+                          Tu plan se restablece a las {new Date(resetAt).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
+                        </p>
+                        <p className="text-xs text-amber-600 mt-0.5" style={font}>
+                          El sistema recuerda tu uso aunque cambies de navegador
+                        </p>
+                      </div>
+                    )}
+                    <button onClick={() => navigate("/auth/register")}
+                      className="w-full py-3.5 rounded-2xl font-bold text-sm text-white hover:opacity-90 transition-all"
+                      style={{ backgroundColor: "#7c3aed", border: "none", ...font }}>
+                      Crear Cuenta Gratis
+                    </button>
+                    <button onClick={closeModal} className="mt-2 text-sm text-gray-400 hover:text-gray-600 transition-colors" style={font}>
+                      Cerrar
+                    </button>
+                  </div>
                 </div>
               )}
 
