@@ -56,7 +56,10 @@ router.post("/generate-description", async (req, res) => {
   const avg = Math.round((pulses as number[]).reduce((a: number, b: number) => a + b, 0) / pulses.length)
   const range = Math.max(...pulses) - Math.min(...pulses)
 
-  const prompt = `Eres un artista digital y poeta. Genera una descripción única y poética en español (2 oraciones máximo) para una obra de arte creada a partir de los pulsos cardíacos de una persona. El promedio de los pulsos fue ${avg} BPM con una variación de ${range} puntos. El estado emocional detectado: "${emotionalState}". El estilo artístico: "${title}". La descripción debe ser íntima, introspectiva y única — como si el arte revelara el estado interior de quien la creó. No menciones los números de BPM. Solo responde con el texto poético, sin comillas ni introducción.`
+  const intensity = avg > 100 ? "elevada tensión interna" : avg > 80 ? "energía moderada y consciente" : "calma profunda y meditativa"
+  const variability = range > 30 ? "ritmo irregular que sugiere emociones en conflicto" : range > 15 ? "oscilación controlada entre estados" : "ritmo estable y centrado"
+
+  const prompt = `Eres un analista de arte biométrico de nivel mundial. A partir de los datos cardíacos de una persona, genera UNA sola frase en español (25-35 palabras) que describa de forma precisa y profesional qué revela esta obra sobre su estado interior en el momento de crearla. Datos clave: intensidad vital → ${intensity}; patrón de variabilidad → ${variability}; estilo visual → "${title}". La frase debe sonar como el texto de una galería de arte contemporáneo: específica, reveladora, sin clichés. No menciones BPM ni números. Solo responde con la frase, sin comillas.`
 
   try {
     const response = await openai.chat.completions.create({

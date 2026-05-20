@@ -58,17 +58,17 @@ const HERO_IMAGES = [
   "/images/hero-2.png",
   "/images/hero-3.png",
   "/images/hero-4.png",
-  "/images/hero-5.png",
+  "/images/hero-inca.png",
   "/images/hero-6.png",
   "/images/hero-dragon.png",
-  "/images/community-3.png",
+  "/images/hero-gorilla.png",
 ]
 
 /* ── Community gallery ── */
 const COMMUNITY_IMAGES = [
   { src: "/images/community-1.png", label: "Tiempo Disuelto" },
   { src: "/images/community-roman-city.png", label: "Ciudad Romana" },
-  { src: "/images/community-3.png", label: "Kraken de Luz" },
+  { src: "/images/hero-gorilla.png", label: "Gorila Cósmico" },
   { src: "/images/community-4.png", label: "Diosa Primavera" },
   { src: "/images/pipeline-ocean.png", label: "Océano Interior" },
   { src: "/images/pipeline-forest.png", label: "Bosque Místico" },
@@ -388,7 +388,7 @@ export default function SimpleDemo() {
                     <p className="text-xs text-gray-400 text-center mb-3" style={font}>Valores entre 40–200 BPM · Enter para agregar</p>
                     {/* Pulse chips input */}
                     <div className="rounded-2xl mb-3 overflow-hidden" style={{ border: "2px solid #e9d5ff", background: "#faf5ff" }}>
-                      <div className="p-3 cursor-text min-h-[56px]" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px" }}
+                      <div className="p-3 cursor-text min-h-[56px]" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: "6px" }}
                         onClick={() => inputRef.current?.focus()}>
                         {pulses.map((p, i) => {
                           const hues = ["#6d28d9","#7c3aed","#8b5cf6","#5b21b6","#7e22ce"]
@@ -408,7 +408,7 @@ export default function SimpleDemo() {
                             </motion.div>
                           )
                         })}
-                        {pulses.length < 8 && (
+                        {pulses.length < 9 && (
                           <input ref={inputRef} type="text" inputMode="numeric"
                             placeholder={pulses.length === 0 ? "Ej: 72, 65, 80..." : `Pulso ${pulses.length + 1}`}
                             value={currentPulseInput}
@@ -420,11 +420,11 @@ export default function SimpleDemo() {
                         )}
                       </div>
                       <div className="flex items-center gap-1 px-3 pb-2.5">
-                        {[...Array(8)].map((_, i) => (
+                        {[...Array(9)].map((_, i) => (
                           <div key={i} className="flex-1 h-1 rounded-full transition-all"
                             style={{ backgroundColor: i < pulses.length ? "#7c3aed" : "#e9d5ff" }} />
                         ))}
-                        <span className="text-[10px] text-purple-400 ml-1.5 font-bold" style={font}>{pulses.length}/8</span>
+                        <span className="text-[10px] text-purple-400 ml-1.5 font-bold" style={font}>{pulses.length}/9</span>
                       </div>
                     </div>
                     <button onClick={generateImage} disabled={pulses.length === 0}
@@ -477,10 +477,6 @@ export default function SimpleDemo() {
               {/* ── RESULT ── */}
               {(showModal === "result" || (showModal === "exhausted" && generatedResult)) && generatedResult && (
                 <div>
-                  <button onClick={closeModal} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 z-10 transition-colors">
-                    <X className="h-4 w-4" />
-                  </button>
-
                   {/* Image — heart watermark, no circle */}
                   <div className="relative overflow-hidden" style={{ borderRadius: "22px 22px 0 0" }}>
                     <img src={generatedResult.imageUrl} alt="Arte generado"
@@ -488,6 +484,11 @@ export default function SimpleDemo() {
                     <div className="absolute bottom-2.5 right-3" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.5)", fontSize: 20, lineHeight: 1 }}>
                       🤍
                     </div>
+                    <button onClick={closeModal}
+                      className="absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-black/40 text-white hover:bg-black/60 transition-colors"
+                      style={{ zIndex: 50 }}>
+                      <X className="h-4 w-4" />
+                    </button>
                   </div>
 
                   <div className="p-4">
@@ -526,24 +527,24 @@ export default function SimpleDemo() {
                       </div>
                     )}
 
-                    {/* 3 buttons — no borders, filled style */}
-                    <div className="grid grid-cols-3 gap-2">
+                    {/* 3 buttons — text only, no background */}
+                    <div className="grid grid-cols-3 gap-1 pt-1">
                       <button onClick={openInput}
-                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs transition-all hover:brightness-95"
-                        style={{ backgroundColor: "#ede9fe", color: "#7c3aed", ...font }}>
-                        <RefreshCw className="h-3.5 w-3.5" />
+                        className="flex flex-col items-center justify-center gap-1.5 py-3 font-bold text-xs transition-all hover:opacity-70"
+                        style={{ color: "#7c3aed", background: "none", border: "none", ...font }}>
+                        <RefreshCw className="h-4 w-4" />
                         Nueva
                       </button>
                       <button onClick={handleDownload}
-                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs text-white transition-all hover:brightness-110"
-                        style={{ backgroundColor: "#7c3aed", ...font }}>
-                        <Download className="h-3.5 w-3.5" />
+                        className="flex flex-col items-center justify-center gap-1.5 py-3 font-black text-xs transition-all hover:opacity-80"
+                        style={{ color: "#7c3aed", background: "none", border: "none", ...font }}>
+                        <Download className="h-4 w-4" />
                         Descargar
                       </button>
                       <button onClick={() => setShowMintModal(true)}
-                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs transition-all hover:brightness-95"
-                        style={{ backgroundColor: "#f5f3ff", color: "#6d28d9", ...font }}>
-                        <Sparkles className="h-3.5 w-3.5" />
+                        className="flex flex-col items-center justify-center gap-1.5 py-3 font-bold text-xs transition-all hover:opacity-70"
+                        style={{ color: "#7c3aed", background: "none", border: "none", ...font }}>
+                        <Sparkles className="h-4 w-4" />
                         Mintear
                       </button>
                     </div>
