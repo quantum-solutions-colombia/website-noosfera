@@ -17,6 +17,7 @@ interface GeneratedResult {
   coherenceLevel: number
   pulses: number[]
   tokenId: string
+  description?: string
 }
 
 /* ── Diverse AI prompts — a new one picked at random every time ── */
@@ -59,6 +60,8 @@ const HERO_IMAGES = [
   "/images/hero-4.png",
   "/images/hero-5.png",
   "/images/hero-6.png",
+  "/images/community-2.png",
+  "/images/community-3.png",
 ]
 
 /* ── Community gallery ── */
@@ -99,19 +102,19 @@ async function consumeUsage(fp: string): Promise<{ remaining: number; blocked: b
   return { remaining: Math.max(0, DAILY_LIMIT - used - 1), blocked: false }
 }
 
-function addWatermark(src: string, tokenId: string): Promise<string> {
+function addWatermark(src: string, _tokenId: string): Promise<string> {
   return new Promise(resolve => {
     const img = new Image(); img.crossOrigin = "anonymous"
     img.onload = () => {
       const c = document.createElement("canvas"); c.width = img.width || 600; c.height = img.height || 600
       const ctx = c.getContext("2d")!; ctx.drawImage(img, 0, 0)
-      ctx.fillStyle = "rgba(124, 58, 237, 0.6)"; ctx.fillRect(0, c.height - 52, c.width, 52)
-      ctx.fillStyle = "#fff"; ctx.font = `bold ${Math.max(13, c.width / 38)}px DM Sans, Arial`
-      ctx.textAlign = "left"; ctx.fillText("© Noosfera Demo", 14, c.height - 28)
-      ctx.font = `${Math.max(10, c.width / 52)}px DM Sans, Arial`; ctx.textAlign = "right"
-      ctx.fillText("Token: " + tokenId, c.width - 14, c.height - 28)
-      ctx.font = `${Math.max(9, c.width / 60)}px DM Sans, Arial`; ctx.textAlign = "left"
-      ctx.fillStyle = "rgba(255,255,255,0.75)"; ctx.fillText("noosfera.com — Arte biométrico con IA", 14, c.height - 10)
+      const r = Math.max(22, c.width / 22)
+      const cx = c.width - r - 12, cy = c.height - r - 12
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2)
+      ctx.fillStyle = "rgba(124, 58, 237, 0.72)"; ctx.fill()
+      ctx.fillStyle = "#fff"; ctx.font = `bold ${Math.round(r * 1.1)}px Arial`
+      ctx.textAlign = "center"; ctx.textBaseline = "middle"
+      ctx.fillText("♥", cx, cy + 1)
       resolve(c.toDataURL("image/png"))
     }
     img.onerror = () => resolve(src); img.src = src
@@ -145,18 +148,19 @@ function generateCanvasArt(pulses: number[]): string {
   return c.toDataURL("image/png")
 }
 
-/* ── Hero side panel — collage style, bigger, no gaps ── */
+/* ── Hero side panel — collage style, 4 images, no gaps ── */
 function HeroSidePanel({ side }: { side: "left" | "right" }) {
-  const imgs = side === "left" ? [HERO_IMAGES[0], HERO_IMAGES[1], HERO_IMAGES[2]] : [HERO_IMAGES[3], HERO_IMAGES[4], HERO_IMAGES[5]]
-  const heights = [160, 130, 150]
+  const imgs = side === "left"
+    ? [HERO_IMAGES[0], HERO_IMAGES[6], HERO_IMAGES[2], HERO_IMAGES[1]]
+    : [HERO_IMAGES[3], HERO_IMAGES[7], HERO_IMAGES[5], HERO_IMAGES[4]]
   return (
     <div className="absolute inset-y-0 pointer-events-none overflow-hidden flex"
       style={side === "left" ? { left: 0, width: 240 } : { right: 0, width: 240 }}>
       <div className="flex w-full">
         {[0, 1].map(col => (
-          <div key={col} className="flex flex-col flex-1" style={{ marginTop: col === 1 ? -20 : 0 }}>
-            {(col === 0 ? [imgs[0], imgs[2]] : [imgs[1]]).map((src, i) => (
-              <div key={i} className="overflow-hidden flex-shrink-0" style={{ height: heights[col === 0 ? i * 2 : 1] }}>
+          <div key={col} className="flex flex-col flex-1" style={{ marginTop: col === 1 ? -18 : 0 }}>
+            {[imgs[col * 2], imgs[col * 2 + 1]].map((src, i) => (
+              <div key={i} className="overflow-hidden flex-shrink-0" style={{ height: i === 0 ? 158 : 152 }}>
                 <img src={src} alt="" className="w-full h-full object-cover" />
               </div>
             ))}
@@ -182,6 +186,10 @@ export default function SimpleDemo() {
   const [pulses, setPulses] = useState<number[]>([])
   const [currentPulseInput, setCurrentPulseInput] = useState("")
   const [generationProgress, setGenerationProgress] = useState(0)
+  const [tokenFirstView, setTokenFirstView] = useState(false)
+  const [copiedToken, setCopiedToken] = useState(false)
+  const [showMintModal, setShowMintModal] = useState(false)
+  const [showTokenModal, setShowTokenModal] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
@@ -221,27 +229,43 @@ export default function SimpleDemo() {
     if (usage.blocked) { setAttemptsRemaining(0); setShowModal("exhausted"); return }
     setAttemptsRemaining(usage.remaining)
     setShowModal("generating"); setGenerationProgress(0)
-    const iv = setInterval(() => setGenerationProgress(p => p >= 100 ? (clearInterval(iv), 100) : p + 3), 90)
+    const iv = setInterval(() => setGenerationProgress(p => p >= 95 ? p : p + 1.8), 90)
     const style = artStyles[Math.floor(Math.random() * artStyles.length)]
     const tokenId = Math.abs((Date.now() ^ (Math.random() * 0xffffff | 0))).toString(16).toUpperCase().padStart(8, "0")
     const prompt = AI_PROMPTS[Math.floor(Math.random() * AI_PROMPTS.length)]
-    let imageUrl = ""
-    try {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 50000)
-      const r = await fetch("/api/generate-image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pulses, style: style.name, prompt }), signal: controller.signal })
-      clearTimeout(timeoutId)
-      imageUrl = r.ok ? (await r.json()).imageUrl : generateCanvasArt(pulses)
-    } catch { imageUrl = generateCanvasArt(pulses) }
+
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 50000)
+
+    const [imageData, descData] = await Promise.allSettled([
+      fetch("/api/generate-image", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pulses, style: style.name, prompt }),
+        signal: controller.signal,
+      }).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch("/api/noosfera/generate-description", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pulses, emotionalState: style.emotion, title: style.name }),
+      }).then(r => r.ok ? r.json() : null).catch(() => null),
+    ])
+
+    clearTimeout(timeoutId)
     clearInterval(iv); setGenerationProgress(100)
+
+    const imageUrl = (imageData.status === "fulfilled" && imageData.value?.imageUrl)
+      ? imageData.value.imageUrl : generateCanvasArt(pulses)
+    const description = (descData.status === "fulfilled" && descData.value?.description)
+      ? descData.value.description : ""
+
     const avg = pulses.reduce((a, b) => a + b, 0) / pulses.length
     const result: GeneratedResult = {
       imageUrl, title: style.name, emotionalState: style.emotion,
       energyLevel: Math.min(100, Math.round((avg / 180) * 100)),
       coherenceLevel: Math.round(70 + Math.random() * 25),
-      pulses: [...pulses], tokenId,
+      pulses: [...pulses], tokenId, description,
     }
     setGeneratedResult(result); setMyCreations(p => [result, ...p.slice(0, 7)])
+    setTokenFirstView(true); setCopiedToken(false)
     setShowModal(usage.remaining <= 0 ? "exhausted" : "result")
   }
 
@@ -251,7 +275,10 @@ export default function SimpleDemo() {
     const a = document.createElement("a"); a.href = wm; a.download = `noosfera-demo-${generatedResult.tokenId}.png`; a.click()
   }
 
-  const closeModal = () => { setShowModal(null); setPulses([]); setCurrentPulseInput("") }
+  const closeModal = () => {
+    setShowModal(null); setPulses([]); setCurrentPulseInput("")
+    setTokenFirstView(false); setCopiedToken(false)
+  }
 
   if (!isLoaded) return (
     <div className="min-h-screen flex items-center justify-center bg-white">
@@ -441,87 +468,96 @@ export default function SimpleDemo() {
 
               {/* ── RESULT ── */}
               {(showModal === "result" || (showModal === "exhausted" && generatedResult)) && generatedResult && (
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h2 className="font-black text-gray-900 text-lg" style={font}>{generatedResult.title}</h2>
-                      <p className="text-sm text-gray-400" style={font}>{generatedResult.emotionalState}</p>
+                <div>
+                  <button onClick={closeModal} className="absolute top-3 right-3 p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 z-10 transition-colors">
+                    <X className="h-4 w-4" />
+                  </button>
+
+                  {/* Image — no text watermark, just heart icon */}
+                  <div className="relative overflow-hidden" style={{ borderRadius: "22px 22px 0 0" }}>
+                    <img src={generatedResult.imageUrl} alt="Arte generado"
+                      className="w-full object-cover block" style={{ maxHeight: "270px" }} />
+                    <div className="absolute bottom-2 right-2">
+                      <div className="rounded-full w-8 h-8 flex items-center justify-center"
+                        style={{ backgroundColor: "rgba(124,58,237,0.75)", backdropFilter: "blur(4px)" }}>
+                        <Heart className="h-4 w-4 text-white" />
+                      </div>
                     </div>
-                    {showModal === "result" && (
+                  </div>
+
+                  <div className="p-4">
+                    {/* AI description */}
+                    {generatedResult.description && (
+                      <p className="text-xs text-gray-500 italic text-center mb-3 leading-relaxed px-1" style={font}>
+                        {generatedResult.description}
+                      </p>
+                    )}
+
+                    {/* Token — only visible once */}
+                    <div className="rounded-xl p-3 mb-3" style={{ backgroundColor: "#faf5ff", border: "1.5px solid #e9d5ff" }}>
+                      <div className="flex items-center justify-between mb-1.5">
+                        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#7c3aed", ...font }}>
+                          Token de Autenticidad
+                        </p>
+                        <button onClick={() => setShowTokenModal(true)}
+                          className="text-[10px] font-semibold underline decoration-dotted" style={{ color: "#7c3aed" }}>
+                          ¿Qué es esto?
+                        </button>
+                      </div>
+                      {tokenFirstView ? (
+                        <>
+                          <div className="flex items-center gap-2 mb-1">
+                            <p className="font-mono font-black text-gray-900 text-sm tracking-wider flex-1">
+                              {generatedResult.tokenId}
+                            </p>
+                            <button
+                              onClick={() => { navigator.clipboard.writeText(generatedResult.tokenId); setCopiedToken(true) }}
+                              className="px-2 py-0.5 rounded-lg text-xs font-bold transition-all"
+                              style={{ backgroundColor: copiedToken ? "#d1fae5" : "#f5f3ff", color: copiedToken ? "#065f46" : "#7c3aed", ...font }}>
+                              {copiedToken ? "✓ Copiado" : "Copiar"}
+                            </button>
+                          </div>
+                          <p className="text-[10px] text-amber-600 font-semibold" style={font}>
+                            ⚠ Este token solo será visible una vez por seguridad
+                          </p>
+                        </>
+                      ) : (
+                        <p className="font-mono text-gray-300 text-sm tracking-[4px]">••••••••</p>
+                      )}
+                      <p className="text-[10px] text-gray-400 mt-1 text-right" style={font}>ERC-721 · Polygon</p>
+                    </div>
+
+                    {/* 3 buttons */}
+                    <div className="grid grid-cols-3 gap-2">
                       <button onClick={openInput}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold hover:bg-gray-50 border border-gray-200 transition-all"
-                        style={{ color: "#7c3aed", ...font }}>
+                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs border-2 hover:bg-gray-50 transition-all"
+                        style={{ borderColor: "#7c3aed", color: "#7c3aed", ...font }}>
                         <RefreshCw className="h-3.5 w-3.5" />
                         Nueva
                       </button>
+                      <button onClick={handleDownload}
+                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs text-white hover:opacity-90 transition-all"
+                        style={{ backgroundColor: "#7c3aed", ...font }}>
+                        <Download className="h-3.5 w-3.5" />
+                        Descargar
+                      </button>
+                      <button onClick={() => setShowMintModal(true)}
+                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs border-2 hover:bg-gray-50 transition-all"
+                        style={{ borderColor: "#7c3aed", color: "#7c3aed", ...font }}>
+                        <Sparkles className="h-3.5 w-3.5" />
+                        Mintear
+                      </button>
+                    </div>
+
+                    {showModal === "exhausted" && (
+                      <div className="mt-3 p-3 rounded-xl text-center" style={{ backgroundColor: "#fef3c7", border: "1px solid #fde68a" }}>
+                        <p className="text-xs font-bold text-amber-700" style={font}>Has agotado tus {DAILY_LIMIT} generaciones</p>
+                        <a href="/auth/register" className="text-xs text-amber-600 underline font-semibold" style={font}>
+                          Crea una cuenta gratis para continuar
+                        </a>
+                      </div>
                     )}
-                    <button onClick={closeModal} className="p-2 rounded-xl hover:bg-gray-100 text-gray-400 transition-colors">
-                      <X className="h-4 w-4" />
-                    </button>
                   </div>
-
-                  <div className="rounded-2xl overflow-hidden shadow-lg mb-4 relative border border-gray-100">
-                    <img src={generatedResult.imageUrl} alt={generatedResult.title}
-                      className="w-full object-cover" style={{ maxHeight: "300px" }} />
-                    <div className="absolute bottom-0 left-0 right-0 py-2 px-3 flex items-center justify-between"
-                      style={{ backgroundColor: "rgba(124, 58, 237, 0.68)" }}>
-                      <span className="text-white text-xs font-bold" style={font}>© Noosfera Demo</span>
-                      <span className="text-white/80 text-[10px] font-mono">Token: {generatedResult.tokenId}</span>
-                    </div>
-                  </div>
-
-                  <div className="rounded-xl p-3 border mb-3"
-                    style={{ backgroundColor: "#faf5ff", borderColor: "#e9d5ff" }}>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] font-bold uppercase tracking-widest mb-0.5" style={{ color: "#7c3aed", ...font }}>Token de Autenticidad</p>
-                        <p className="font-mono font-black text-gray-900 text-sm tracking-wider">{generatedResult.tokenId}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[10px] text-gray-400" style={font}>Estándar NFT</p>
-                        <p className="text-xs font-bold" style={{ color: "#7c3aed", ...font }}>ERC-721 · Polygon</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    {[{ label: "Energía", v: generatedResult.energyLevel }, { label: "Coherencia", v: generatedResult.coherenceLevel }].map(m => (
-                      <div key={m.label} className="bg-gray-50 rounded-xl p-3 border border-gray-100">
-                        <div className="flex justify-between items-center mb-1.5">
-                          <span className="text-xs text-gray-400" style={font}>{m.label}</span>
-                          <span className="font-black text-base" style={{ color: "#7c3aed", ...font }}>{m.v}%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-1.5">
-                          <div className="h-1.5 rounded-full" style={{ width: `${m.v}%`, backgroundColor: "#7c3aed" }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="flex gap-2.5">
-                    <button onClick={handleDownload}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl font-bold text-sm text-white hover:opacity-90 transition-all"
-                      style={{ backgroundColor: "#7c3aed", ...font }}>
-                      <Download className="h-4 w-4" />
-                      Descargar
-                    </button>
-                    <button onClick={() => navigate("/auth/register")}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl font-bold text-sm border-2 hover:bg-gray-50 transition-all"
-                      style={{ borderColor: "#7c3aed", color: "#7c3aed", ...font }}>
-                      <Sparkles className="h-4 w-4" />
-                      Mintear NFT
-                    </button>
-                  </div>
-
-                  {showModal === "exhausted" && (
-                    <div className="mt-3 p-3 rounded-xl text-center"
-                      style={{ backgroundColor: "#fef3c7", border: "1px solid #fde68a" }}>
-                      <p className="text-sm font-bold text-amber-700" style={font}>Has agotado tus {DAILY_LIMIT} generaciones</p>
-                      <a href="/auth/register" className="text-xs text-amber-600 underline font-semibold" style={font}>
-                        Crea una cuenta gratis para continuar
-                      </a>
-                    </div>
-                  )}
                 </div>
               )}
 
@@ -545,6 +581,106 @@ export default function SimpleDemo() {
                 </div>
               )}
 
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── MINT MODAL ── */}
+      <AnimatePresence>
+        {showMintModal && (
+          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowMintModal(false)} />
+            <motion.div className="relative bg-white rounded-3xl max-w-xs w-full z-10 overflow-hidden"
+              style={{ border: "2px solid #7c3aed" }}
+              initial={{ scale: 0.9, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9 }}>
+              <div style={{ position: "relative", height: 72 }}>
+                <img src="/images/hero-4.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%", display: "block" }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(20,5,40,0.78))" }} />
+                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 15, color: "#fff", textShadow: "0 2px 16px rgba(124,58,237,0.9)" }}>
+                    ¿Qué es Mintear un NFT?
+                  </span>
+                </div>
+              </div>
+              <div className="p-5" style={font}>
+                <p className="text-xs text-gray-600 mb-3 leading-relaxed">
+                  <strong>Mintear</strong> significa registrar tu obra de arte en la blockchain de <strong>Polygon</strong>, convirtiéndola en un NFT (Token No Fungible).
+                </p>
+                <div className="space-y-2 mb-4">
+                  {[
+                    "Tu arte queda registrado de forma permanente e inmutable",
+                    "Demuestras ser el creador original con prueba criptográfica",
+                    "Puedes venderlo o transferirlo en mercados NFT",
+                    "Requiere crear una cuenta completa de Noosfera",
+                  ].map((t, i) => (
+                    <div key={i} className="flex gap-2 text-xs text-gray-600">
+                      <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: "#f5f3ff" }}>
+                        <Check className="h-2.5 w-2.5" style={{ color: "#7c3aed" }} />
+                      </div>
+                      {t}
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => { setShowMintModal(false); navigate("/auth/register") }}
+                  className="w-full py-2.5 rounded-2xl font-black text-white text-sm hover:opacity-90 transition-all mb-2"
+                  style={{ backgroundColor: "#7c3aed" }}>
+                  Crear Cuenta y Mintear
+                </button>
+                <button onClick={() => setShowMintModal(false)}
+                  className="w-full text-xs text-gray-400 hover:text-gray-600 transition-colors">
+                  Cerrar
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* ── TOKEN MODAL ── */}
+      <AnimatePresence>
+        {showTokenModal && (
+          <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowTokenModal(false)} />
+            <motion.div className="relative bg-white rounded-3xl max-w-xs w-full z-10 overflow-hidden"
+              style={{ border: "2px solid #7c3aed" }}
+              initial={{ scale: 0.9, y: 12 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.9 }}>
+              <div style={{ position: "relative", height: 72 }}>
+                <img src="/images/hero-6.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 35%", display: "block" }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.1), rgba(20,5,40,0.78))" }} />
+                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 15, color: "#fff", textShadow: "0 2px 16px rgba(124,58,237,0.9)" }}>
+                    Token de Autenticidad
+                  </span>
+                </div>
+              </div>
+              <div className="p-5" style={font}>
+                <p className="text-xs text-gray-600 mb-3 leading-relaxed">
+                  El <strong>Token de Autenticidad</strong> es un identificador único criptográfico que vincula tu imagen biométrica a su origen.
+                </p>
+                <div className="space-y-2 mb-4">
+                  {[
+                    "Generado a partir de tu sesión y tiempo de creación",
+                    "Único e irrepetible para cada obra",
+                    "Sirve como prueba de autoría antes del minteo",
+                    "Solo visible una vez por seguridad — guárdalo bien",
+                  ].map((t, i) => (
+                    <div key={i} className="flex gap-2 text-xs text-gray-600">
+                      <div className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: "#f5f3ff" }}>
+                        <Check className="h-2.5 w-2.5" style={{ color: "#7c3aed" }} />
+                      </div>
+                      {t}
+                    </div>
+                  ))}
+                </div>
+                <button onClick={() => setShowTokenModal(false)}
+                  className="w-full py-2.5 rounded-2xl font-black text-white text-sm hover:opacity-90 transition-all"
+                  style={{ backgroundColor: "#7c3aed" }}>
+                  Entendido
+                </button>
+              </div>
             </motion.div>
           </motion.div>
         )}

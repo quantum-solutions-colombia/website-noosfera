@@ -51,6 +51,26 @@ const STYLE_DESCRIPTORS: Record<string, string> = {
   fractal: "fractal recursive mandelbrot art style, infinitely detailed,",
 }
 
+router.post("/generate-description", async (req, res) => {
+  const { pulses, emotionalState, title } = req.body
+  const avg = Math.round((pulses as number[]).reduce((a: number, b: number) => a + b, 0) / pulses.length)
+  const range = Math.max(...pulses) - Math.min(...pulses)
+
+  const prompt = `Eres un artista digital y poeta. Genera una descripción única y poética en español (2 oraciones máximo) para una obra de arte creada a partir de los pulsos cardíacos de una persona. El promedio de los pulsos fue ${avg} BPM con una variación de ${range} puntos. El estado emocional detectado: "${emotionalState}". El estilo artístico: "${title}". La descripción debe ser íntima, introspectiva y única — como si el arte revelara el estado interior de quien la creó. No menciones los números de BPM. Solo responde con el texto poético, sin comillas ni introducción.`
+
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
+      max_tokens: 120,
+    })
+    res.json({ description: response.choices[0]?.message?.content?.trim() || "" })
+  } catch (err: any) {
+    console.error("Description generation error:", err)
+    res.status(500).json({ error: err.message })
+  }
+})
+
 router.post("/generate-image", async (req, res) => {
   const { style, emotionalState, stressLevel, heartHealthScore } = req.body
 
