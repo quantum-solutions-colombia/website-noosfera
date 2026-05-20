@@ -108,11 +108,11 @@ function addWatermark(src: string, _tokenId: string): Promise<string> {
     img.onload = () => {
       const c = document.createElement("canvas"); c.width = img.width || 600; c.height = img.height || 600
       const ctx = c.getContext("2d")!; ctx.drawImage(img, 0, 0)
-      const r = Math.max(22, c.width / 22)
-      const cx = c.width - r - 12, cy = c.height - r - 12
-      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2)
-      ctx.fillStyle = "rgba(124, 58, 237, 0.72)"; ctx.fill()
-      ctx.fillStyle = "#fff"; ctx.font = `bold ${Math.round(r * 1.1)}px Arial`
+      const sz = Math.max(28, c.width / 18)
+      const cx = c.width - sz - 14, cy = c.height - sz - 14
+      ctx.shadowColor = "rgba(0,0,0,0.45)"; ctx.shadowBlur = 8
+      ctx.fillStyle = "rgba(255,255,255,0.88)"
+      ctx.font = `bold ${sz}px Arial`
       ctx.textAlign = "center"; ctx.textBaseline = "middle"
       ctx.fillText("♥", cx, cy + 1)
       resolve(c.toDataURL("image/png"))
@@ -388,18 +388,26 @@ export default function SimpleDemo() {
                     <p className="text-xs text-gray-400 text-center mb-3" style={font}>Valores entre 40–200 BPM · Enter para agregar</p>
                     {/* Pulse chips input */}
                     <div className="rounded-2xl mb-3 overflow-hidden" style={{ border: "2px solid #e9d5ff", background: "#faf5ff" }}>
-                      <div className="flex flex-wrap items-center gap-1.5 p-3 cursor-text min-h-[48px]"
+                      <div className="p-3 cursor-text min-h-[56px]" style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px" }}
                         onClick={() => inputRef.current?.focus()}>
-                        {pulses.map((p, i) => (
-                          <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
-                            style={{ backgroundColor: "#7c3aed", color: "#fff", ...font }}>
-                            {p} <span className="opacity-70">BPM</span>
-                            <button onClick={e => { e.stopPropagation(); removePulse(i) }} className="hover:opacity-70 ml-0.5">
-                              <X className="h-2.5 w-2.5" />
-                            </button>
-                          </motion.div>
-                        ))}
+                        {pulses.map((p, i) => {
+                          const hues = ["#6d28d9","#7c3aed","#8b5cf6","#5b21b6","#7e22ce"]
+                          const bg = hues[i % hues.length]
+                          const rotations = [-2, 1.5, -1, 2, -1.5, 1, -2.5, 0.5]
+                          const pads = ["px-3 py-1","px-2.5 py-1.5","px-3 py-0.5","px-2 py-1","px-3.5 py-1"]
+                          return (
+                            <motion.div key={i}
+                              initial={{ scale: 0, rotate: -10 }} animate={{ scale: 1, rotate: rotations[i % rotations.length] }}
+                              transition={{ type: "spring", stiffness: 380, damping: 18 }}
+                              className={`inline-flex items-center gap-1 rounded-full text-xs font-bold ${pads[i % pads.length]}`}
+                              style={{ backgroundColor: bg, color: "#fff", ...font }}>
+                              {p} <span className="opacity-60 text-[10px]">BPM</span>
+                              <button onClick={e => { e.stopPropagation(); removePulse(i) }} className="hover:opacity-70 ml-0.5">
+                                <X className="h-2.5 w-2.5" />
+                              </button>
+                            </motion.div>
+                          )
+                        })}
                         {pulses.length < 8 && (
                           <input ref={inputRef} type="text" inputMode="numeric"
                             placeholder={pulses.length === 0 ? "Ej: 72, 65, 80..." : `Pulso ${pulses.length + 1}`}
@@ -473,77 +481,68 @@ export default function SimpleDemo() {
                     <X className="h-4 w-4" />
                   </button>
 
-                  {/* Image — no text watermark, just heart icon */}
+                  {/* Image — heart watermark, no circle */}
                   <div className="relative overflow-hidden" style={{ borderRadius: "22px 22px 0 0" }}>
                     <img src={generatedResult.imageUrl} alt="Arte generado"
                       className="w-full object-cover block" style={{ maxHeight: "270px" }} />
-                    <div className="absolute bottom-2 right-2">
-                      <div className="rounded-full w-8 h-8 flex items-center justify-center"
-                        style={{ backgroundColor: "rgba(124,58,237,0.75)", backdropFilter: "blur(4px)" }}>
-                        <Heart className="h-4 w-4 text-white" />
-                      </div>
+                    <div className="absolute bottom-2.5 right-3" style={{ textShadow: "0 2px 8px rgba(0,0,0,0.5)", fontSize: 20, lineHeight: 1 }}>
+                      🤍
                     </div>
                   </div>
 
                   <div className="p-4">
-                    {/* AI description */}
-                    {generatedResult.description && (
-                      <p className="text-xs text-gray-500 italic text-center mb-3 leading-relaxed px-1" style={font}>
-                        {generatedResult.description}
-                      </p>
+                    {/* AI description — always show; fallback to emotionalState if empty */}
+                    <p className="text-xs text-gray-500 italic text-center mb-3 leading-relaxed px-1" style={font}>
+                      {generatedResult.description || `Una obra única nacida de tus latidos — ${generatedResult.emotionalState.toLowerCase()}.`}
+                    </p>
+
+                    {/* Token — ONLY visible on first view; hidden completely when revisiting */}
+                    {tokenFirstView && (
+                      <div className="rounded-xl p-3 mb-3" style={{ backgroundColor: "#faf5ff", border: "1.5px solid #e9d5ff" }}>
+                        <div className="flex items-center justify-between mb-1.5">
+                          <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#7c3aed", ...font }}>
+                            Token de Autenticidad
+                          </p>
+                          <button onClick={() => setShowTokenModal(true)}
+                            className="text-[10px] font-semibold underline decoration-dotted" style={{ color: "#7c3aed" }}>
+                            ¿Qué es esto?
+                          </button>
+                        </div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-mono font-black text-gray-900 text-sm tracking-wider flex-1">
+                            {generatedResult.tokenId}
+                          </p>
+                          <button
+                            onClick={() => { navigator.clipboard.writeText(generatedResult.tokenId); setCopiedToken(true) }}
+                            className="px-2.5 py-1 rounded-lg text-xs font-bold transition-all"
+                            style={{ backgroundColor: copiedToken ? "#d1fae5" : "#ede9fe", color: copiedToken ? "#065f46" : "#7c3aed", ...font }}>
+                            {copiedToken ? "✓ Copiado" : "Copiar"}
+                          </button>
+                        </div>
+                        <p className="text-[10px] text-amber-600 font-semibold" style={font}>
+                          ⚠ Visible solo esta vez — guárdalo antes de cerrar
+                        </p>
+                        <p className="text-[10px] text-gray-400 mt-1 text-right" style={font}>ERC-721 · Polygon</p>
+                      </div>
                     )}
 
-                    {/* Token — only visible once */}
-                    <div className="rounded-xl p-3 mb-3" style={{ backgroundColor: "#faf5ff", border: "1.5px solid #e9d5ff" }}>
-                      <div className="flex items-center justify-between mb-1.5">
-                        <p className="text-[10px] font-bold uppercase tracking-widest" style={{ color: "#7c3aed", ...font }}>
-                          Token de Autenticidad
-                        </p>
-                        <button onClick={() => setShowTokenModal(true)}
-                          className="text-[10px] font-semibold underline decoration-dotted" style={{ color: "#7c3aed" }}>
-                          ¿Qué es esto?
-                        </button>
-                      </div>
-                      {tokenFirstView ? (
-                        <>
-                          <div className="flex items-center gap-2 mb-1">
-                            <p className="font-mono font-black text-gray-900 text-sm tracking-wider flex-1">
-                              {generatedResult.tokenId}
-                            </p>
-                            <button
-                              onClick={() => { navigator.clipboard.writeText(generatedResult.tokenId); setCopiedToken(true) }}
-                              className="px-2 py-0.5 rounded-lg text-xs font-bold transition-all"
-                              style={{ backgroundColor: copiedToken ? "#d1fae5" : "#f5f3ff", color: copiedToken ? "#065f46" : "#7c3aed", ...font }}>
-                              {copiedToken ? "✓ Copiado" : "Copiar"}
-                            </button>
-                          </div>
-                          <p className="text-[10px] text-amber-600 font-semibold" style={font}>
-                            ⚠ Este token solo será visible una vez por seguridad
-                          </p>
-                        </>
-                      ) : (
-                        <p className="font-mono text-gray-300 text-sm tracking-[4px]">••••••••</p>
-                      )}
-                      <p className="text-[10px] text-gray-400 mt-1 text-right" style={font}>ERC-721 · Polygon</p>
-                    </div>
-
-                    {/* 3 buttons */}
+                    {/* 3 buttons — no borders, filled style */}
                     <div className="grid grid-cols-3 gap-2">
                       <button onClick={openInput}
-                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs border-2 hover:bg-gray-50 transition-all"
-                        style={{ borderColor: "#7c3aed", color: "#7c3aed", ...font }}>
+                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs transition-all hover:brightness-95"
+                        style={{ backgroundColor: "#ede9fe", color: "#7c3aed", ...font }}>
                         <RefreshCw className="h-3.5 w-3.5" />
                         Nueva
                       </button>
                       <button onClick={handleDownload}
-                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs text-white hover:opacity-90 transition-all"
+                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs text-white transition-all hover:brightness-110"
                         style={{ backgroundColor: "#7c3aed", ...font }}>
                         <Download className="h-3.5 w-3.5" />
                         Descargar
                       </button>
                       <button onClick={() => setShowMintModal(true)}
-                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs border-2 hover:bg-gray-50 transition-all"
-                        style={{ borderColor: "#7c3aed", color: "#7c3aed", ...font }}>
+                        className="flex flex-col items-center justify-center gap-1 py-2.5 rounded-xl font-bold text-xs transition-all hover:brightness-95"
+                        style={{ backgroundColor: "#f5f3ff", color: "#6d28d9", ...font }}>
                         <Sparkles className="h-3.5 w-3.5" />
                         Mintear
                       </button>
