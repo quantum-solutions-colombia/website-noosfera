@@ -68,7 +68,7 @@ const HERO_IMAGES = [
 const COMMUNITY_IMAGES = [
   { src: "/images/community-1.png", label: "Tiempo Disuelto" },
   { src: "/images/community-roman-city.png", label: "Ciudad Romana" },
-  { src: "/images/hero-gorilla.png", label: "Gorila Cósmico" },
+  { src: "/images/community-3.png", label: "Kraken de Luz" },
   { src: "/images/community-4.png", label: "Diosa Primavera" },
   { src: "/images/pipeline-ocean.png", label: "Océano Interior" },
   { src: "/images/pipeline-forest.png", label: "Bosque Místico" },
@@ -207,7 +207,7 @@ export default function SimpleDemo() {
 
   const addPulse = useCallback(() => {
     const num = parseInt(currentPulseInput)
-    if (num >= 40 && num <= 200 && pulses.length < 8) { setPulses(p => [...p, num]); setCurrentPulseInput(""); inputRef.current?.focus() }
+    if (num >= 40 && num <= 200 && pulses.length < 9) { setPulses(p => [...p, num]); setCurrentPulseInput(""); inputRef.current?.focus() }
   }, [currentPulseInput, pulses])
 
   const removePulse = (i: number) => setPulses(pulses.filter((_, j) => j !== i))
@@ -378,7 +378,7 @@ export default function SimpleDemo() {
                     <button onClick={closeModal} className="absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-black/30 text-white hover:bg-black/50 transition-colors">
                       <X className="h-4 w-4" />
                     </button>
-                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
                       <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 16, color: "#fff", textShadow: "0 2px 20px rgba(124,58,237,0.9), 0 2px 12px rgba(0,0,0,0.6)" }}>
                         Ingresa tus Pulsos
                       </span>
