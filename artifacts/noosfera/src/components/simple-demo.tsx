@@ -83,23 +83,50 @@ function generateFingerprint(): string {
   return Math.abs(h).toString(36) + c.length.toString(36)
 }
 
-async function checkUsage(fp: string): Promise<number> {
-  try {
-    const r = await fetch("/api/demo/check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fingerprint: fp }) })
-    if (r.ok) return (await r.json()).remaining as number
-  } catch {}
-  return Math.max(0, DAILY_LIMIT - parseInt(localStorage.getItem("nfp_" + fp) ?? "0"))
+const RESET_KEY = (fp: string) => `nfp_reset_${fp}`
+const USED_KEY  = (fp: string) => `nfp_${fp}`
+
+function localResetAt(fp: string): number | null {
+  const v = localStorage.getItem(RESET_KEY(fp)); return v ? parseInt(v) : null
+}
+function isLocallyExpired(fp: string): boolean {
+  const ra = localResetAt(fp); return ra != null && Date.now() >= ra
+}
+function storeUsage(fp: string, used: number, resetAt: number | null) {
+  localStorage.setItem(USED_KEY(fp), String(used))
+  if (resetAt) localStorage.setItem(RESET_KEY(fp), String(resetAt))
 }
 
-async function consumeUsage(fp: string): Promise<{ remaining: number; blocked: boolean }> {
+async function checkUsage(fp: string): Promise<{ remaining: number; resetAt: number | null }> {
+  if (isLocallyExpired(fp)) {
+    localStorage.removeItem(USED_KEY(fp)); localStorage.removeItem(RESET_KEY(fp))
+  }
+  try {
+    const r = await fetch("/api/demo/check", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fingerprint: fp }) })
+    if (r.ok) {
+      const d = await r.json()
+      if (d.resetAt) storeUsage(fp, d.used, d.resetAt)
+      return { remaining: d.remaining as number, resetAt: d.resetAt ?? localResetAt(fp) }
+    }
+  } catch {}
+  const used = parseInt(localStorage.getItem(USED_KEY(fp)) ?? "0")
+  return { remaining: Math.max(0, DAILY_LIMIT - used), resetAt: localResetAt(fp) }
+}
+
+async function consumeUsage(fp: string): Promise<{ remaining: number; blocked: boolean; resetAt: number | null }> {
   try {
     const r = await fetch("/api/demo/use", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ fingerprint: fp }) })
-    if (r.ok) { const d = await r.json(); localStorage.setItem("nfp_" + fp, d.used.toString()); return { remaining: d.remaining, blocked: d.blocked } }
+    if (r.ok) {
+      const d = await r.json()
+      storeUsage(fp, d.used, d.resetAt)
+      return { remaining: d.remaining, blocked: d.blocked, resetAt: d.resetAt ?? null }
+    }
   } catch {}
-  const used = parseInt(localStorage.getItem("nfp_" + fp) ?? "0")
-  if (used >= DAILY_LIMIT) return { remaining: 0, blocked: true }
-  localStorage.setItem("nfp_" + fp, String(used + 1))
-  return { remaining: Math.max(0, DAILY_LIMIT - used - 1), blocked: false }
+  const used = parseInt(localStorage.getItem(USED_KEY(fp)) ?? "0")
+  if (used >= DAILY_LIMIT) return { remaining: 0, blocked: true, resetAt: localResetAt(fp) }
+  const resetAt = localResetAt(fp) ?? (Date.now() + 24 * 60 * 60 * 1000)
+  storeUsage(fp, used + 1, resetAt)
+  return { remaining: Math.max(0, DAILY_LIMIT - used - 1), blocked: false, resetAt }
 }
 
 function addWatermark(src: string, _tokenId: string): Promise<string> {
@@ -190,11 +217,17 @@ export default function SimpleDemo() {
   const [copiedToken, setCopiedToken] = useState(false)
   const [showMintModal, setShowMintModal] = useState(false)
   const [showTokenModal, setShowTokenModal] = useState(false)
+  const [resetAt, setResetAt] = useState<number | null>(null)
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const fp = generateFingerprint(); setFingerprint(fp)
-    checkUsage(fp).then(r => { setAttemptsRemaining(r); if (r <= 0) setShowModal("exhausted"); setIsLoaded(true) })
+    checkUsage(fp).then(r => {
+      setAttemptsRemaining(r.remaining)
+      if (r.resetAt) setResetAt(r.resetAt)
+      if (r.remaining <= 0) setShowModal("exhausted")
+      setIsLoaded(true)
+    })
     if (!localStorage.getItem("noosfera_demo_disclaimer")) setShowDisclaimer(true)
   }, [])
 
@@ -226,6 +259,7 @@ export default function SimpleDemo() {
   const generateImage = async () => {
     if (pulses.length === 0 || attemptsRemaining <= 0) return
     const usage = await consumeUsage(fingerprint)
+    if (usage.resetAt) setResetAt(usage.resetAt)
     if (usage.blocked) { setAttemptsRemaining(0); setShowModal("exhausted"); return }
     setAttemptsRemaining(usage.remaining)
     setShowModal("generating"); setGenerationProgress(0)
@@ -553,7 +587,12 @@ export default function SimpleDemo() {
 
                     {showModal === "exhausted" && (
                       <div className="mt-3 p-3 rounded-xl text-center" style={{ backgroundColor: "#fef3c7", border: "1px solid #fde68a" }}>
-                        <p className="text-xs font-bold text-amber-700" style={font}>Has agotado tus {DAILY_LIMIT} generaciones</p>
+                        <p className="text-xs font-bold text-amber-700 mb-0.5" style={font}>Has agotado tus {DAILY_LIMIT} generaciones</p>
+                        {resetAt && (
+                          <p className="text-xs text-amber-600 font-semibold mb-1" style={font}>
+                            Tu plan se restablece mañana a las {new Date(resetAt).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
+                          </p>
+                        )}
                         <a href="/auth/register" className="text-xs text-amber-600 underline font-semibold" style={font}>
                           Crea una cuenta gratis para continuar
                         </a>
@@ -571,7 +610,17 @@ export default function SimpleDemo() {
                     <Heart className="h-6 w-6 text-amber-500" />
                   </div>
                   <h3 className="font-black text-gray-900 text-lg mb-1" style={font}>Límite alcanzado</h3>
-                  <p className="text-sm text-gray-400 mb-5" style={font}>Has usado tus {DAILY_LIMIT} generaciones del demo.</p>
+                  <p className="text-sm text-gray-400 mb-2" style={font}>Has usado tus {DAILY_LIMIT} generaciones del demo.</p>
+                  {resetAt && (
+                    <div className="rounded-xl p-3 mb-4" style={{ backgroundColor: "#fef3c7", border: "1px solid #fde68a" }}>
+                      <p className="text-sm font-bold text-amber-700" style={font}>
+                        Tu plan se restablece mañana a las {new Date(resetAt).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
+                      </p>
+                      <p className="text-xs text-amber-600 mt-0.5" style={font}>
+                        El sistema recuerda tu uso aunque cambies de navegador
+                      </p>
+                    </div>
+                  )}
                   <button onClick={() => navigate("/auth/register")}
                     className="w-full py-3.5 rounded-2xl font-bold text-sm text-white"
                     style={{ backgroundColor: "#7c3aed", ...font }}>
