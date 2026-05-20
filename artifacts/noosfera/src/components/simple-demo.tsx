@@ -60,14 +60,14 @@ const HERO_IMAGES = [
   "/images/hero-4.png",
   "/images/hero-5.png",
   "/images/hero-6.png",
-  "/images/community-2.png",
+  "/images/hero-dragon.png",
   "/images/community-3.png",
 ]
 
 /* ── Community gallery ── */
 const COMMUNITY_IMAGES = [
   { src: "/images/community-1.png", label: "Tiempo Disuelto" },
-  { src: "/images/community-2.png", label: "Unicornio Cósmico" },
+  { src: "/images/community-roman-city.png", label: "Ciudad Romana" },
   { src: "/images/community-3.png", label: "Kraken de Luz" },
   { src: "/images/community-4.png", label: "Diosa Primavera" },
   { src: "/images/pipeline-ocean.png", label: "Océano Interior" },
