@@ -59,7 +59,7 @@ router.post("/generate-description", async (req, res) => {
   const intensity = avg > 100 ? "elevada tensión interna" : avg > 80 ? "energía moderada y consciente" : "calma profunda y meditativa"
   const variability = range > 30 ? "ritmo irregular que sugiere emociones en conflicto" : range > 15 ? "oscilación controlada entre estados" : "ritmo estable y centrado"
 
-  const prompt = `Eres un analista de arte biométrico de nivel mundial. A partir de los datos cardíacos de una persona, genera UNA sola frase en español (25-35 palabras) que describa de forma precisa y profesional qué revela esta obra sobre su estado interior en el momento de crearla. Datos clave: intensidad vital → ${intensity}; patrón de variabilidad → ${variability}; estilo visual → "${title}". La frase debe sonar como el texto de una galería de arte contemporáneo: específica, reveladora, sin clichés. No menciones BPM ni números. Solo responde con la frase, sin comillas.`
+  const prompt = `Eres un analista de arte biométrico de nivel mundial. Completa la siguiente frase en español con 20-30 palabras que describan de forma precisa y profesional qué expresa visualmente esta obra y qué revela del estado interior de quien la creó: "La imagen generada representa ___". Datos clave: intensidad vital → ${intensity}; patrón de variabilidad → ${variability}; estilo visual → "${title}". El texto debe sonar como el catálogo de una galería de arte contemporáneo: concreto, evocador, sin clichés. No menciones BPM ni números. Responde SOLO con el texto que va después de "representa", sin comillas ni punto final.`
 
   try {
     const response = await openai.chat.completions.create({

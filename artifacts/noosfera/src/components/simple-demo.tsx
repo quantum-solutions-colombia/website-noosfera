@@ -494,7 +494,9 @@ export default function SimpleDemo() {
                   <div className="p-4">
                     {/* AI description — always show; fallback to emotionalState if empty */}
                     <p className="text-xs text-gray-500 italic text-center mb-3 leading-relaxed px-1" style={font}>
-                      {generatedResult.description || `Una obra única nacida de tus latidos — ${generatedResult.emotionalState.toLowerCase()}.`}
+                      {generatedResult.description
+                        ? `La imagen generada representa ${generatedResult.description}.`
+                        : `La imagen generada representa una obra única nacida de tus latidos — ${generatedResult.emotionalState.toLowerCase()}.`}
                     </p>
 
                     {/* Token — ONLY visible on first view; hidden completely when revisiting */}
