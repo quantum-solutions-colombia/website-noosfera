@@ -222,9 +222,12 @@ export default function SimpleDemo() {
 
   useEffect(() => {
     const fp = generateFingerprint(); setFingerprint(fp)
+    const localReset = localResetAt(fp)
+    if (localReset) setResetAt(localReset)
     checkUsage(fp).then(r => {
       setAttemptsRemaining(r.remaining)
       if (r.resetAt) setResetAt(r.resetAt)
+      else if (localReset) setResetAt(localReset)
       if (r.remaining <= 0) setShowModal("exhausted")
       setIsLoaded(true)
     })
@@ -607,7 +610,7 @@ export default function SimpleDemo() {
                 <div>
                   {/* Hero image — same style as other modals */}
                   <div style={{ position: "relative", height: 80, flexShrink: 0 }}>
-                    <img src="/images/hero-3.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", display: "block" }} />
+                    <img src="/images/hero-maya.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", display: "block" }} />
                     <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(20,5,40,0.75) 100%)" }} />
                     <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
                       <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 16, color: "#fff", textShadow: "0 2px 20px rgba(124,58,237,0.9), 0 2px 12px rgba(0,0,0,0.6)" }}>
@@ -634,8 +637,8 @@ export default function SimpleDemo() {
                       </div>
                     )}
                     <button onClick={() => navigate("/auth/register")}
-                      className="w-full py-3.5 rounded-2xl font-bold text-sm text-white hover:opacity-90 transition-all"
-                      style={{ backgroundColor: "#7c3aed", border: "none", ...font }}>
+                      className="w-full py-3 font-black text-sm hover:opacity-70 transition-all"
+                      style={{ color: "#7c3aed", background: "none", border: "none", ...font }}>
                       Crear Cuenta Gratis
                     </button>
                     <button onClick={closeModal} className="mt-2 text-sm text-gray-400 hover:text-gray-600 transition-colors" style={font}>
