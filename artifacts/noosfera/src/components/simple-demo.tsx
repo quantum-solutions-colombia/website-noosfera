@@ -145,26 +145,24 @@ function generateCanvasArt(pulses: number[]): string {
   return c.toDataURL("image/png")
 }
 
-/* ── Hero side panel (like login page) ── */
+/* ── Hero side panel — collage style, bigger, no gaps ── */
 function HeroSidePanel({ side }: { side: "left" | "right" }) {
   const imgs = side === "left" ? [HERO_IMAGES[0], HERO_IMAGES[1], HERO_IMAGES[2]] : [HERO_IMAGES[3], HERO_IMAGES[4], HERO_IMAGES[5]]
-  const rotations = side === "left" ? [-8, -4, -6] : [7, 4, 6]
-  const cols: [number[], number[]] = side === "left"
-    ? [[0, 2], [1]]
-    : [[0], [1, 2]]
+  const heights = [160, 130, 150]
   return (
-    <div className="absolute inset-y-0 w-52 flex gap-2 pointer-events-none overflow-hidden"
-      style={side === "left" ? { left: 0 } : { right: 0 }}>
-      {cols.map((colImgs, ci) => (
-        <div key={ci} className="flex flex-col gap-2" style={{ marginTop: ci === (side === "left" ? 1 : 0) ? 28 : 0 }}>
-          {colImgs.map((imgIdx) => (
-            <div key={imgIdx} className="rounded-2xl overflow-hidden shadow-xl flex-shrink-0"
-              style={{ width: 96, height: 128, transform: `rotate(${rotations[imgIdx]}deg)` }}>
-              <img src={imgs[imgIdx]} alt="" className="w-full h-full object-cover" />
-            </div>
-          ))}
-        </div>
-      ))}
+    <div className="absolute inset-y-0 pointer-events-none overflow-hidden flex"
+      style={side === "left" ? { left: 0, width: 240 } : { right: 0, width: 240 }}>
+      <div className="flex w-full">
+        {[0, 1].map(col => (
+          <div key={col} className="flex flex-col flex-1" style={{ marginTop: col === 1 ? -20 : 0 }}>
+            {(col === 0 ? [imgs[0], imgs[2]] : [imgs[1]]).map((src, i) => (
+              <div key={i} className="overflow-hidden flex-shrink-0" style={{ height: heights[col === 0 ? i * 2 : 1] }}>
+                <img src={src} alt="" className="w-full h-full object-cover" />
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -229,7 +227,10 @@ export default function SimpleDemo() {
     const prompt = AI_PROMPTS[Math.floor(Math.random() * AI_PROMPTS.length)]
     let imageUrl = ""
     try {
-      const r = await fetch("/api/generate-image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pulses, style: style.name, prompt }) })
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 50000)
+      const r = await fetch("/api/generate-image", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ pulses, style: style.name, prompt }), signal: controller.signal })
+      clearTimeout(timeoutId)
       imageUrl = r.ok ? (await r.json()).imageUrl : generateCanvasArt(pulses)
     } catch { imageUrl = generateCanvasArt(pulses) }
     clearInterval(iv); setGenerationProgress(100)
@@ -262,7 +263,7 @@ export default function SimpleDemo() {
   const font = { fontFamily: "'DM Sans', sans-serif" }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50" style={font}>
+    <div className="flex h-screen overflow-hidden bg-white" style={font}>
 
       {/* ── DISCLAIMER ── */}
       <AnimatePresence>
@@ -336,92 +337,106 @@ export default function SimpleDemo() {
           <motion.div className="fixed inset-0 z-40 flex items-center justify-center p-4"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={showModal === "input" ? closeModal : undefined} />
-            <motion.div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md z-10"
-              initial={{ scale: 0.93, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.93, y: 10 }}
-              style={font}>
+            <motion.div className="relative bg-white rounded-3xl w-full max-w-sm z-10 overflow-hidden"
+              style={{ border: "2px solid #7c3aed" }}
+              initial={{ scale: 0.93, y: 20 }} animate={{ scale: 1, y: 0 }} exit={{ scale: 0.93, y: 10 }}>
 
               {/* ── INPUT ── */}
               {showModal === "input" && (
-                <div className="p-8">
-                  <button onClick={closeModal} className="absolute top-4 right-4 p-2 rounded-xl hover:bg-gray-100 text-gray-400 transition-colors">
-                    <X className="h-5 w-5" />
-                  </button>
-                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                    style={{ backgroundColor: "#f5f3ff" }}>
-                    <Heart className="h-6 w-6" style={{ color: "#7c3aed" }} />
-                  </div>
-                  <h2 className="text-xl font-black text-gray-900 text-center mb-1" style={font}>Ingresa tus Pulsos</h2>
-                  <p className="text-sm text-gray-400 text-center mb-6">Valores entre 40–200 BPM · Enter para agregar</p>
-                  <div className="min-h-[52px] p-3 border-2 border-gray-200 rounded-2xl bg-gray-50 focus-within:border-purple-400 focus-within:bg-white transition-all cursor-text mb-4"
-                    onClick={() => inputRef.current?.focus()}>
-                    <div className="flex flex-wrap items-center gap-2">
-                      {pulses.map((p, i) => (
-                        <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }}
-                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-bold"
-                          style={{ backgroundColor: "#f5f3ff", color: "#7c3aed", ...font }}>
-                          {p} <span className="text-xs font-medium opacity-60">BPM</span>
-                          <button onClick={e => { e.stopPropagation(); removePulse(i) }} className="hover:opacity-80 p-0.5">
-                            <X className="h-3 w-3" />
-                          </button>
-                        </motion.div>
-                      ))}
-                      {pulses.length < 8 && (
-                        <input ref={inputRef} type="text" inputMode="numeric"
-                          placeholder={pulses.length === 0 ? "72, 65, 80..." : `Pulso ${pulses.length + 1}`}
-                          value={currentPulseInput}
-                          onChange={e => handlePulseInputChange(e.target.value)}
-                          onKeyDown={handleKeyDown}
-                          onBlur={() => { if (currentPulseInput) addPulse() }}
-                          className="flex-1 min-w-[80px] outline-none bg-transparent text-gray-700 placeholder:text-gray-400 text-sm"
-                          style={font} />
-                      )}
+                <>
+                  {/* Hero image */}
+                  <div style={{ position: "relative", height: 80, flexShrink: 0 }}>
+                    <img src="/images/hero-2.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 25%", display: "block" }} />
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(20,5,40,0.72) 100%)" }} />
+                    <button onClick={closeModal} className="absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-black/30 text-white hover:bg-black/50 transition-colors">
+                      <X className="h-4 w-4" />
+                    </button>
+                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 16, color: "#fff", textShadow: "0 2px 20px rgba(124,58,237,0.9), 0 2px 12px rgba(0,0,0,0.6)" }}>
+                        Ingresa tus Pulsos
+                      </span>
                     </div>
                   </div>
-                  <div className="flex items-center justify-center gap-1.5 mb-5">
-                    {[...Array(8)].map((_, i) => (
-                      <div key={i} className="w-2 h-2 rounded-full transition-all"
-                        style={{ backgroundColor: i < pulses.length ? "#7c3aed" : "#e5e7eb" }} />
-                    ))}
-                    <span className="text-xs text-gray-400 ml-2" style={font}>{pulses.length}/8</span>
+                  <div className="p-5">
+                    <p className="text-xs text-gray-400 text-center mb-3" style={font}>Valores entre 40–200 BPM · Enter para agregar</p>
+                    {/* Pulse chips input */}
+                    <div className="rounded-2xl mb-3 overflow-hidden" style={{ border: "2px solid #e9d5ff", background: "#faf5ff" }}>
+                      <div className="flex flex-wrap items-center gap-1.5 p-3 cursor-text min-h-[48px]"
+                        onClick={() => inputRef.current?.focus()}>
+                        {pulses.map((p, i) => (
+                          <motion.div key={i} initial={{ scale: 0 }} animate={{ scale: 1 }}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
+                            style={{ backgroundColor: "#7c3aed", color: "#fff", ...font }}>
+                            {p} <span className="opacity-70">BPM</span>
+                            <button onClick={e => { e.stopPropagation(); removePulse(i) }} className="hover:opacity-70 ml-0.5">
+                              <X className="h-2.5 w-2.5" />
+                            </button>
+                          </motion.div>
+                        ))}
+                        {pulses.length < 8 && (
+                          <input ref={inputRef} type="text" inputMode="numeric"
+                            placeholder={pulses.length === 0 ? "Ej: 72, 65, 80..." : `Pulso ${pulses.length + 1}`}
+                            value={currentPulseInput}
+                            onChange={e => handlePulseInputChange(e.target.value)}
+                            onKeyDown={handleKeyDown}
+                            onBlur={() => { if (currentPulseInput) addPulse() }}
+                            className="flex-1 min-w-[80px] outline-none bg-transparent text-gray-700 placeholder:text-purple-300 text-sm"
+                            style={font} />
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1 px-3 pb-2.5">
+                        {[...Array(8)].map((_, i) => (
+                          <div key={i} className="flex-1 h-1 rounded-full transition-all"
+                            style={{ backgroundColor: i < pulses.length ? "#7c3aed" : "#e9d5ff" }} />
+                        ))}
+                        <span className="text-[10px] text-purple-400 ml-1.5 font-bold" style={font}>{pulses.length}/8</span>
+                      </div>
+                    </div>
+                    <button onClick={generateImage} disabled={pulses.length === 0}
+                      className="w-full py-3 rounded-2xl font-black text-white text-sm tracking-wide transition-all disabled:opacity-35 flex items-center justify-center gap-2"
+                      style={{ backgroundColor: "#7c3aed", ...font }}>
+                      <Sparkles className="h-4 w-4" />
+                      Crear Imagen
+                    </button>
+                    <p className="text-center text-xs text-gray-400 mt-2" style={font}>
+                      {attemptsRemaining} generación{attemptsRemaining !== 1 ? "es" : ""} disponible{attemptsRemaining !== 1 ? "s" : ""}
+                    </p>
                   </div>
-                  <button onClick={generateImage} disabled={pulses.length === 0}
-                    className="w-full py-4 rounded-2xl font-black text-white text-sm tracking-wide transition-all disabled:opacity-35 flex items-center justify-center gap-2"
-                    style={{ backgroundColor: "#7c3aed", ...font }}>
-                    <Sparkles className="h-4 w-4" />
-                    Generar Mi Arte Biométrico
-                  </button>
-                  <p className="text-center text-xs text-gray-400 mt-2.5" style={font}>
-                    {attemptsRemaining} generación{attemptsRemaining !== 1 ? "es" : ""} disponible{attemptsRemaining !== 1 ? "s" : ""}
-                  </p>
-                </div>
+                </>
               )}
 
               {/* ── GENERATING ── */}
               {showModal === "generating" && (
-                <div className="p-8 text-center">
-                  <motion.div animate={{ scale: [1, 1.08, 1] }} transition={{ duration: 1.5, repeat: Infinity }}
-                    className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-lg"
-                    style={{ backgroundColor: "#7c3aed" }}>
-                    <Heart className="h-8 w-8 text-white" />
-                  </motion.div>
-                  <h3 className="text-xl font-black text-gray-900 mb-1" style={font}>Creando tu obra</h3>
-                  <p className="text-sm text-gray-400 mb-6" style={font}>Transformando tus pulsos en arte único</p>
-                  <div className="w-full bg-gray-100 rounded-full h-2 mb-2">
-                    <div className="h-2 rounded-full transition-all" style={{ width: `${generationProgress}%`, backgroundColor: "#7c3aed" }} />
+                <>
+                  {/* Hero image */}
+                  <div style={{ position: "relative", height: 80, flexShrink: 0 }}>
+                    <img src="/images/hero-5.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", display: "block" }} />
+                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(20,5,40,0.75) 100%)" }} />
+                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 16, color: "#fff", textShadow: "0 2px 20px rgba(124,58,237,0.9), 0 2px 12px rgba(0,0,0,0.6)" }}>
+                        Creando tu obra
+                      </span>
+                    </div>
                   </div>
-                  <p className="text-xs text-gray-400 mb-5" style={font}>{generationProgress}%</p>
-                  <div className="space-y-2">
-                    {["Analizando patrones de pulso...", "Generando prompt biométrico...", "Renderizando con IA..."].map((msg, i) => (
-                      <div key={i} className="text-xs text-gray-400 flex items-center gap-2 justify-center"
-                        style={{ opacity: generationProgress > i * 33 ? 1 : 0.3, ...font }}>
-                        {generationProgress > i * 33 + 10
-                          ? <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
-                          : <div className="w-3 h-3 border-2 border-gray-300 border-t-purple-500 rounded-full animate-spin flex-shrink-0" />}
-                        {msg}
-                      </div>
-                    ))}
+                  <div className="p-5 text-center">
+                    <p className="text-xs text-gray-400 mb-4" style={font}>Transformando tus pulsos en arte único</p>
+                    <div className="w-full bg-gray-100 rounded-full h-2 mb-1.5">
+                      <div className="h-2 rounded-full transition-all" style={{ width: `${generationProgress}%`, backgroundColor: "#7c3aed" }} />
+                    </div>
+                    <p className="text-xs text-gray-400 mb-4" style={font}>{Math.round(generationProgress)}%</p>
+                    <div className="space-y-1.5">
+                      {["Analizando patrones de pulso...", "Generando prompt biométrico...", "Renderizando con IA..."].map((msg, i) => (
+                        <div key={i} className="text-xs text-gray-400 flex items-center gap-2 justify-center"
+                          style={{ opacity: generationProgress > i * 33 ? 1 : 0.3, ...font }}>
+                          {generationProgress > i * 33 + 10
+                            ? <Check className="h-3 w-3 text-green-500 flex-shrink-0" />
+                            : <div className="w-3 h-3 border-2 border-gray-300 border-t-purple-500 rounded-full animate-spin flex-shrink-0" />}
+                          {msg}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                </>
               )}
 
               {/* ── RESULT ── */}
@@ -612,12 +627,12 @@ export default function SimpleDemo() {
               </>
             )}
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs"
-            style={{ backgroundColor: attemptsRemaining > 0 ? "#fef3c7" : "#fee2e2", color: attemptsRemaining > 0 ? "#92400e" : "#991b1b" }}>
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs text-white"
+            style={{ backgroundColor: attemptsRemaining > 0 ? "#7c3aed" : "#991b1b" }}>
             <span className="font-bold" style={font}>Plan de prueba</span>
             <div className="flex gap-1">
               {[...Array(DAILY_LIMIT)].map((_, i) => (
-                <div key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: i < attemptsRemaining ? "#7c3aed" : "#e5e7eb" }} />
+                <div key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: i < attemptsRemaining ? "#fff" : "rgba(255,255,255,0.3)" }} />
               ))}
             </div>
             <span style={font}>{attemptsRemaining} rest.</span>
@@ -669,21 +684,23 @@ export default function SimpleDemo() {
                     <h2 className="font-black text-gray-900 text-base" style={font}>Lo que nuestra comunidad ha creado</h2>
                     <p className="text-xs text-gray-400 mt-0.5" style={font}>Arte biométrico generado por miembros de Noosfera</p>
                   </div>
-                  <button className="text-sm font-semibold flex items-center gap-0.5" style={{ color: "#7c3aed", ...font }}>
+                  <button onClick={() => setActiveNav("comunidad")} className="text-sm font-semibold flex items-center gap-0.5" style={{ color: "#7c3aed", ...font }}>
                     Ver todo <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>
-                <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3">
+                <div style={{ columns: "3 120px", gap: "6px" }}>
                   {COMMUNITY_IMAGES.map((img, i) => (
                     <motion.div key={i}
-                      initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: i * 0.04 }}
+                      initial={{ opacity: 0, scale: 0.97 }} animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: i * 0.05 }}
                       className="rounded-2xl overflow-hidden cursor-pointer group relative"
+                      style={{ breakInside: "avoid", marginBottom: "6px", display: "block" }}
                       onClick={openInput}>
-                      <img src={img.src} alt={img.label} className="w-full object-cover" style={{ height: "130px" }} />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all rounded-2xl" />
-                      <div className="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/60 to-transparent">
-                        <p className="text-white text-[11px] font-bold truncate" style={font}>{img.label}</p>
+                      <img src={img.src} alt={img.label} className="w-full object-cover block"
+                        style={{ height: i % 2 === 0 ? "160px" : "130px" }} />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all" />
+                      <div className="absolute bottom-0 left-0 right-0 px-2 py-1.5 bg-gradient-to-t from-black/70 to-transparent">
+                        <p className="text-white text-[10px] font-bold truncate" style={font}>{img.label}</p>
                       </div>
                     </motion.div>
                   ))}
@@ -694,17 +711,26 @@ export default function SimpleDemo() {
 
           {/* ── COMUNIDAD VIEW ── */}
           {activeNav === "comunidad" && (
-            <div className="px-6 py-6">
-              <h2 className="font-black text-gray-900 text-xl mb-1" style={font}>Comunidad Noosfera</h2>
-              <p className="text-sm text-gray-400 mb-6" style={font}>Arte biométrico generado por nuestra comunidad global</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="px-5 py-6">
+              <div className="text-center mb-6">
+                <h2 className="font-black text-gray-900 text-xl" style={font}>Comunidad Noosfera</h2>
+                <p className="text-sm text-gray-400 mt-1" style={font}>Arte biométrico generado por nuestra comunidad global</p>
+              </div>
+              <div style={{ columns: "2 160px", gap: "8px" }}>
                 {COMMUNITY_IMAGES.map((img, i) => (
-                  <div key={i} className="rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-                    <img src={img.src} alt={img.label} className="w-full object-cover" style={{ height: "160px" }} />
-                    <div className="p-3 bg-white">
-                      <p className="font-bold text-gray-900 text-sm truncate" style={font}>{img.label}</p>
+                  <motion.div key={i}
+                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: i * 0.06 }}
+                    className="rounded-2xl overflow-hidden cursor-pointer group relative"
+                    style={{ breakInside: "avoid", marginBottom: "8px", display: "block" }}
+                    onClick={openInput}>
+                    <img src={img.src} alt={img.label} className="w-full object-cover block"
+                      style={{ height: i % 3 === 0 ? "200px" : i % 3 === 1 ? "160px" : "180px" }} />
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all" />
+                    <div className="absolute bottom-0 left-0 right-0 px-3 py-2 bg-gradient-to-t from-black/70 to-transparent">
+                      <p className="text-white text-xs font-bold text-center truncate" style={font}>{img.label}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
