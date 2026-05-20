@@ -270,38 +270,61 @@ export default function SimpleDemo() {
           <motion.div className="fixed inset-0 z-50 flex items-center justify-center p-4"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => {}} />
-            <motion.div className="relative bg-white rounded-3xl shadow-2xl max-w-sm w-full p-8 z-10"
-              initial={{ scale: 0.9, y: 16 }} animate={{ scale: 1, y: 0 }} style={font}>
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-4"
-                style={{ backgroundColor: "#f5f3ff" }}>
-                <Heart className="h-6 w-6" style={{ color: "#7c3aed" }} />
+            <motion.div
+              className="relative bg-white rounded-3xl max-w-xs w-full z-10 overflow-hidden"
+              style={{ border: "2px solid #7c3aed", ...font }}
+              initial={{ scale: 0.9, y: 16 }} animate={{ scale: 1, y: 0 }}>
+
+              {/* Hero image with title overlay */}
+              <div style={{ position: "relative", height: 88, flexShrink: 0 }}>
+                <img
+                  src="/images/hero-3.png"
+                  alt="Noosfera Demo"
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", display: "block" }}
+                />
+                <div style={{
+                  position: "absolute", inset: 0,
+                  background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(20,5,40,0.78) 100%)"
+                }} />
+                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{
+                    fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 17,
+                    color: "#fff", letterSpacing: "-0.3px", textAlign: "center",
+                    textShadow: "0 2px 20px rgba(124,58,237,0.9), 0 2px 12px rgba(0,0,0,0.6)"
+                  }}>
+                    Bienvenido al Demo
+                  </span>
+                </div>
               </div>
-              <h2 className="text-lg font-black text-gray-900 text-center mb-1" style={font}>Bienvenido al Demo</h2>
-              <p className="text-sm text-gray-500 text-center mb-4">Antes de comenzar, ten en cuenta:</p>
-              <div className="space-y-2.5 mb-6">
-                {[
-                  "Los datos del demo no son persistentes y se perderán al reiniciar el navegador.",
-                  `Dispones de ${DAILY_LIMIT} generaciones. Una vez agotadas debes crear una cuenta.`,
-                  "Las imágenes descargadas incluyen marca de agua de Noosfera.",
-                  "El uso se registra por dispositivo, incluso en modo incógnito.",
-                ].map((t, i) => (
-                  <div key={i} className="flex gap-2.5 text-sm text-gray-600">
-                    <div className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5"
-                      style={{ backgroundColor: "#f5f3ff" }}>
-                      <Check className="h-2.5 w-2.5" style={{ color: "#7c3aed" }} />
+
+              {/* Content */}
+              <div className="p-5">
+                <p className="text-xs text-gray-500 text-center mb-3">Antes de comenzar, ten en cuenta:</p>
+                <div className="space-y-2 mb-5">
+                  {[
+                    "Los datos del demo no son persistentes y se perderán al reiniciar el navegador.",
+                    `Dispones de ${DAILY_LIMIT} generaciones. Una vez agotadas debes crear una cuenta.`,
+                    "Las imágenes descargadas incluyen marca de agua de Noosfera.",
+                    "El uso se registra por dispositivo, incluso en modo incógnito.",
+                  ].map((t, i) => (
+                    <div key={i} className="flex gap-2 text-xs text-gray-600">
+                      <div className="flex-shrink-0 w-4 h-4 rounded-full flex items-center justify-center mt-0.5"
+                        style={{ backgroundColor: "#f5f3ff" }}>
+                        <Check className="h-2.5 w-2.5" style={{ color: "#7c3aed" }} />
+                      </div>
+                      {t}
                     </div>
-                    {t}
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <button onClick={acceptDisclaimer}
+                  className="w-full py-3 rounded-2xl font-black text-white text-sm tracking-wide hover:opacity-90 transition-all"
+                  style={{ backgroundColor: "#7c3aed", ...font }}>
+                  Aceptar
+                </button>
+                <p className="text-center text-xs text-gray-400 mt-2">
+                  Al continuar aceptas nuestros <a href="/terms" className="underline">términos de uso</a>
+                </p>
               </div>
-              <button onClick={acceptDisclaimer}
-                className="w-full py-3.5 rounded-2xl font-black text-white text-sm tracking-wide hover:opacity-90 transition-all"
-                style={{ backgroundColor: "#7c3aed", ...font }}>
-                Entendido — Comenzar
-              </button>
-              <p className="text-center text-xs text-gray-400 mt-2.5">
-                Al continuar aceptas nuestros <a href="/terms" className="underline">términos de uso</a>
-              </p>
             </motion.div>
           </motion.div>
         )}
