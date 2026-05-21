@@ -7,10 +7,12 @@ import OpenAI from "openai";
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-const openai = new OpenAI({
-  apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-  baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-});
+function getOpenAI() {
+  return new OpenAI({
+    apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
+    baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
+  });
+}
 
 const NOOSFERA_THEMES = [
   "a majestic dragon soaring through storm clouds with lightning",
@@ -62,7 +64,7 @@ router.post("/generate-description", async (req, res) => {
   const prompt = `Eres un analista de arte biométrico de nivel mundial. Completa la siguiente frase en español con 20-30 palabras que describan de forma precisa y profesional qué expresa visualmente esta obra y qué revela del estado interior de quien la creó: "La imagen generada representa ___". Datos clave: intensidad vital → ${intensity}; patrón de variabilidad → ${variability}; estilo visual → "${title}". El texto debe sonar como el catálogo de una galería de arte contemporáneo: concreto, evocador, sin clichés. No menciones BPM ni números. Responde SOLO con el texto que va después de "representa", sin comillas ni punto final.`
 
   try {
-    const response = await openai.chat.completions.create({
+    const response = await getOpenAI().chat.completions.create({
       model: "gpt-4o-mini",
       messages: [{ role: "user", content: prompt }],
       max_tokens: 120,
@@ -92,7 +94,7 @@ router.post("/generate-image", async (req, res) => {
   const prompt = `${artisticStyle} ${theme}, ${mood}, highly detailed, professional digital art, 8k resolution, masterpiece quality, vivid saturated colors`
 
   try {
-    const response = await openai.images.generate({
+    const response = await getOpenAI().images.generate({
       model: "gpt-image-1",
       prompt,
       size: "1024x1024",
