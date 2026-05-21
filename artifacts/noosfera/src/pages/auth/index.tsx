@@ -312,20 +312,6 @@ function AuthContent() {
                     />
                   </div>
 
-                  {/* Admin recognized banner */}
-                  <AnimatePresence>
-                    {isSuperAdmin && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -4, scale: 0.97 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -4, scale: 0.97 }}
-                        transition={{ duration: 0.2 }}
-                        style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 10px", borderRadius: 8, background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
-                        <Sparkles style={{ width: 13, height: 13, color: "#16a34a", flexShrink: 0 }} />
-                        <span style={{ fontSize: 11, fontWeight: 600, color: "#15803d" }}>Administrador reconocido — acceso directo</span>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
 
                   {/* Password — hidden when superadmin detected */}
                   <AnimatePresence>
