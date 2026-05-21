@@ -1,15 +1,19 @@
 import { useState, useEffect, useMemo, useCallback, useRef } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Users, Shield, LogOut, UserPlus, UserCheck,
-  RefreshCw, ImageIcon, Info, X, ToggleLeft, ToggleRight, Trash2, Check, AlertTriangle
+  Users, Shield, LogOut, RefreshCw, ImageIcon,
+  Info, X, ToggleLeft, ToggleRight, Trash2, Check, AlertTriangle
 } from "lucide-react"
 import { useLocation } from "wouter"
 import { localDB } from "@/lib-app/local-storage"
 import type { GeneratedImage } from "@/lib-app/local-storage"
 import { toast } from "react-hot-toast"
 
-const P = "#7c3aed"
+/* ── Brand ── */
+const C1 = "#7c3aed"   // Total Usuarios
+const C2 = "#9333ea"   // Activos
+const C3 = "#a855f7"   // Nuevos Hoy
+const C4 = "#6d28d9"   // Imágenes
 const PL = "#ede9fe"
 const PLAYFAIR = "'Playfair Display', Georgia, serif"
 const DM = "'DM Sans', sans-serif"
@@ -32,25 +36,27 @@ function useTick(ms = 60) {
   return t
 }
 
-/* ── Info tooltip ── */
+/* ─────────────────────────────────────────
+   INLINE INFO TOOLTIP
+───────────────────────────────────────── */
 function InfoTip({ text }: { text: string }) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    const handler = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
-    document.addEventListener("mousedown", handler)
-    return () => document.removeEventListener("mousedown", handler)
+    const h = (e: MouseEvent) => { if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false) }
+    document.addEventListener("mousedown", h)
+    return () => document.removeEventListener("mousedown", h)
   }, [])
   return (
     <div ref={ref} style={{ position: "relative", display: "inline-flex" }}>
       <button onClick={() => setOpen(o => !o)}
-        style={{ background: "none", border: "none", cursor: "pointer", color: "#bbb", padding: 2, display: "flex", alignItems: "center" }}>
-        <Info style={{ width: 13, height: 13 }} />
+        style={{ background: "none", border: "none", cursor: "pointer", color: "#ccc", padding: 2, display: "flex" }}>
+        <Info style={{ width: 12, height: 12 }} />
       </button>
       <AnimatePresence>
         {open && (
           <motion.div initial={{ opacity: 0, y: -4, scale: 0.95 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, scale: 0.95 }}
-            style={{ position: "absolute", top: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)", background: "#1e1b4b", color: "#e9d5ff", fontFamily: DM, fontSize: 11, lineHeight: 1.5, borderRadius: 8, padding: "8px 12px", whiteSpace: "normal", width: 200, zIndex: 200, boxShadow: "0 4px 20px rgba(0,0,0,0.25)" }}>
+            style={{ position: "absolute", top: "calc(100% + 6px)", left: "50%", transform: "translateX(-50%)", background: "#1e1b4b", color: "#e9d5ff", fontFamily: DM, fontSize: 11, lineHeight: 1.5, borderRadius: 8, padding: "8px 12px", whiteSpace: "normal", width: 190, zIndex: 200, boxShadow: "0 4px 20px rgba(0,0,0,0.25)" }}>
             {text}
             <div style={{ position: "absolute", bottom: "100%", left: "50%", transform: "translateX(-50%)", border: "5px solid transparent", borderBottomColor: "#1e1b4b" }} />
           </motion.div>
@@ -60,143 +66,203 @@ function InfoTip({ text }: { text: string }) {
   )
 }
 
-/* ── Single multi-ring orbital KPI chart ── */
-function OrbitalKPI({ stats, images }: { stats: { totalUsers: number; activeUsers: number; newUsersToday: number; newUsersWeek: number }; images: number }) {
-  const tick = useTick(40)
-  const cx = 110, cy = 110, size = 220
-  const rings = [
-    { label: "Total", value: stats.totalUsers, max: Math.max(stats.totalUsers, 1), r: 88, color: P, w: 10 },
-    { label: "Activos", value: stats.activeUsers, max: Math.max(stats.totalUsers, 1), r: 70, color: "#9333ea", w: 9 },
-    { label: "Nuevos hoy", value: stats.newUsersToday, max: Math.max(stats.totalUsers, 1), r: 52, color: "#a21caf", w: 8 },
-    { label: "Imágenes", value: images, max: Math.max(images, 1), r: 34, color: "#6d28d9", w: 7 },
-  ]
+/* ─────────────────────────────────────────
+   KPI CARD 1 — Total Usuarios
+   Semi-arc gauge animado en C1
+───────────────────────────────────────── */
+function KpiTotalUsers({ value }: { value: number }) {
+  const tick = useTick(50)
+  const size = 120, cx = 60, cy = 66, r = 48
+  const circ = Math.PI * r // semi-circle
+  const maxVal = Math.max(value, 1)
+  const pulse = 0.04 * Math.sin(tick * 0.05)
+  const pct = Math.min(1, value / maxVal) * (0.92 + pulse)
   return (
-    <div style={{ background: "#fff", border: "1px solid #f3f0ff", borderRadius: 16, padding: "22px 28px", boxShadow: "0 2px 14px rgba(124,58,237,0.07)", display: "flex", alignItems: "center", gap: 32 }}>
-      {/* Chart */}
-      <div style={{ position: "relative", flexShrink: 0 }}>
-        <svg width={size} height={size}>
-          {rings.map(({ r, color, w }, i) => {
-            const circ = 2 * Math.PI * r
-            const pct = 1
-            const pulse = 0.06 * Math.sin(tick * 0.05 + i * 1.1)
-            const dashLen = circ * (0.82 + pulse)
-            return (
-              <g key={i}>
-                <circle cx={cx} cy={cy} r={r} fill="none" stroke={`${color}18`} strokeWidth={w} />
-                <circle cx={cx} cy={cy} r={r} fill="none" stroke={color} strokeWidth={w}
-                  strokeLinecap="round" strokeDasharray={`${dashLen} ${circ}`}
-                  style={{ transform: `rotate(${-90 + tick * (0.3 + i * 0.12)}deg)`, transformOrigin: `${cx}px ${cy}px`, transition: "none" }} />
-              </g>
-            )
-          })}
-          <text x={cx} y={cy - 8} textAnchor="middle" style={{ fontFamily: PLAYFAIR, fontSize: 32, fontWeight: 700, fill: P }}>{stats.totalUsers}</text>
-          <text x={cx} y={cy + 14} textAnchor="middle" style={{ fontFamily: DM, fontSize: 10, fill: "#aaa" }}>usuarios totales</text>
-        </svg>
-      </div>
-      {/* Legend */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 14 }}>
-        {rings.map(({ label, value, color }) => (
-          <div key={label} style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 10, height: 10, borderRadius: "50%", background: color, flexShrink: 0 }} />
-            <span style={{ fontSize: 12, color: "#555", fontFamily: DM, flex: 1 }}>{label}</span>
-            <span style={{ fontSize: 20, fontWeight: 700, fontFamily: PLAYFAIR, color, minWidth: 32, textAlign: "right" }}>{value}</span>
-          </div>
-        ))}
+    <div style={{ textAlign: "center" }}>
+      <svg width={size} height={72} style={{ overflow: "visible", display: "block", margin: "0 auto" }}>
+        <path d={`M ${cx - r},${cy} A ${r},${r} 0 0 1 ${cx + r},${cy}`} fill="none" stroke="#f3f0ff" strokeWidth="10" strokeLinecap="round" />
+        <path d={`M ${cx - r},${cy} A ${r},${r} 0 0 1 ${cx + r},${cy}`} fill="none" stroke={C1} strokeWidth="10" strokeLinecap="round"
+          strokeDasharray={`${pct * circ} ${circ}`} style={{ transition: "stroke-dasharray 0.1s linear" }} />
+        <text x={cx} y={cy - 4} textAnchor="middle" style={{ fontFamily: PLAYFAIR, fontSize: 28, fontWeight: 700, fill: C1 }}>{value}</text>
+        <text x={cx} y={cy + 14} textAnchor="middle" style={{ fontFamily: DM, fontSize: 9, fill: "#aaa" }}>usuarios</text>
+      </svg>
+    </div>
+  )
+}
+
+/* ─────────────────────────────────────────
+   KPI CARD 2 — Usuarios Activos
+   Donut ring con fill animado en C2
+───────────────────────────────────────── */
+function KpiActive({ value, total }: { value: number; total: number }) {
+  const tick = useTick(45)
+  const r = 44, size = 100, cx = 50, cy = 50
+  const circ = 2 * Math.PI * r
+  const pct = total > 0 ? value / total : 0
+  const wobble = 0.03 * Math.sin(tick * 0.06)
+  const fill = (pct + wobble) * circ
+  return (
+    <div style={{ textAlign: "center" }}>
+      <svg width={size} height={size} style={{ display: "block", margin: "0 auto", transform: "rotate(-90deg)" }}>
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#f3f0ff" strokeWidth="10" />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke={C2} strokeWidth="10" strokeLinecap="round"
+          strokeDasharray={`${Math.max(fill, 0)} ${circ}`} style={{ transition: "stroke-dasharray 0.08s linear" }} />
+        <circle cx={cx} cy={cy} r={r * 0.55} fill="none" stroke={`${C2}22`} strokeWidth="6" />
+      </svg>
+      <div style={{ marginTop: 6 }}>
+        <span style={{ fontFamily: PLAYFAIR, fontSize: 26, fontWeight: 700, color: C2 }}>{value}</span>
+        <span style={{ fontFamily: DM, fontSize: 11, color: "#bbb", marginLeft: 4 }}>/ {total}</span>
       </div>
     </div>
   )
 }
 
-/* ── Mini bar chart ── */
+/* ─────────────────────────────────────────
+   KPI CARD 3 — Nuevos Hoy
+   Barras verticales animadas en C3
+───────────────────────────────────────── */
+function KpiNewToday({ value, weekData }: { value: number; weekData: number[] }) {
+  const tick = useTick(55)
+  const bars = weekData.length ? weekData : [0, 0, 0, 0, 0, 0, value]
+  const max = Math.max(...bars, 1)
+  return (
+    <div style={{ textAlign: "center" }}>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: 4, height: 58, justifyContent: "center", marginBottom: 8 }}>
+        {bars.map((v, i) => {
+          const isToday = i === bars.length - 1
+          const wave = isToday ? 4 * Math.sin(tick * 0.08) : 0
+          const h = Math.max((v / max) * 52 + wave, 3)
+          return (
+            <div key={i} style={{ width: 14, height: h, background: isToday ? C3 : `${C3}55`, borderRadius: "3px 3px 0 0", transition: "height 0.1s linear" }} />
+          )
+        })}
+      </div>
+      <span style={{ fontFamily: PLAYFAIR, fontSize: 28, fontWeight: 700, color: C3 }}>{value}</span>
+      <p style={{ margin: "2px 0 0", fontSize: 10, color: "#bbb", fontFamily: DM }}>hoy</p>
+    </div>
+  )
+}
+
+/* ─────────────────────────────────────────
+   KPI CARD 4 — Imágenes
+   Anillo con puntos orbitando en C4
+───────────────────────────────────────── */
+function KpiImages({ value }: { value: number }) {
+  const tick = useTick(35)
+  const cx = 50, cy = 54, r = 36, size = 100
+  const circ = 2 * Math.PI * r
+  const dots = [0, 1, 2]
+  return (
+    <div style={{ textAlign: "center" }}>
+      <svg width={size} height={size + 8} style={{ display: "block", margin: "0 auto", overflow: "visible" }}>
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke="#f3f0ff" strokeWidth="8" />
+        <circle cx={cx} cy={cy} r={r} fill="none" stroke={C4} strokeWidth="8" strokeLinecap="round"
+          strokeDasharray={`${circ * 0.72} ${circ}`}
+          style={{ transform: `rotate(${tick * 0.7}deg)`, transformOrigin: `${cx}px ${cy}px`, transition: "none" }} />
+        {dots.map((d) => {
+          const a = (tick * 1.8 + d * 120) * (Math.PI / 180)
+          const or = r + 12
+          return (
+            <circle key={d} cx={cx + or * Math.cos(a)} cy={cy + or * Math.sin(a)} r={3}
+              fill={`${C4}${d === 0 ? "ff" : d === 1 ? "99" : "55"}`} />
+          )
+        })}
+        <text x={cx} y={cy + 5} textAnchor="middle" style={{ fontFamily: PLAYFAIR, fontSize: 26, fontWeight: 700, fill: C4 }}>{value}</text>
+      </svg>
+      <p style={{ margin: 0, fontSize: 10, color: "#bbb", fontFamily: DM }}>generadas</p>
+    </div>
+  )
+}
+
+/* ─────────────────────────────────────────
+   CARD WRAPPER
+───────────────────────────────────────── */
+function ChartCard({ title, info, children, subtitle }: { title: string; info: string; children: React.ReactNode; subtitle?: string }) {
+  return (
+    <div style={{ background: "#fff", border: "1px solid #f3f0ff", borderRadius: 14, padding: "18px 20px", boxShadow: "0 2px 12px rgba(124,58,237,0.06)", display: "flex", flexDirection: "column" }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginBottom: subtitle ? 2 : 14 }}>
+        <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 14, fontWeight: 700, color: C1, textAlign: "center" }}>{title}</h3>
+        <InfoTip text={info} />
+      </div>
+      {subtitle && <p style={{ margin: "0 0 10px", fontSize: 10, color: "#bbb", fontFamily: DM, textAlign: "center" }}>{subtitle}</p>}
+      <div style={{ flex: 1 }}>{children}</div>
+    </div>
+  )
+}
+
+/* ─────────────────────────────────────────
+   MINI BAR
+───────────────────────────────────────── */
 function MiniBar({ data }: { data: number[] }) {
   const max = Math.max(...data, 1)
   return (
-    <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 52 }}>
+    <div style={{ display: "flex", alignItems: "flex-end", gap: 3, height: 50 }}>
       {data.map((v, i) => (
         <motion.div key={i} initial={{ scaleY: 0 }} animate={{ scaleY: 1 }}
           transition={{ delay: i * 0.07, duration: 0.5 }}
-          style={{ flex: 1, height: `${Math.max((v / max) * 100, 4)}%`, background: `linear-gradient(180deg, ${P}, #9333ea)`, borderRadius: "3px 3px 0 0", transformOrigin: "bottom", opacity: 0.6 + 0.4 * (v / max) }} />
+          style={{ flex: 1, height: `${Math.max((v / max) * 100, 4)}%`, background: `linear-gradient(180deg, ${C1}, ${C2})`, borderRadius: "3px 3px 0 0", transformOrigin: "bottom", opacity: 0.6 + 0.4 * (v / max) }} />
       ))}
     </div>
   )
 }
 
-/* ── Continuously animated area line chart ── */
-function AnimatedAreaLine({ data, width = 220, height = 56 }: { data: number[]; width?: number; height?: number }) {
+/* ─────────────────────────────────────────
+   ANIMATED AREA LINE (continuous)
+───────────────────────────────────────── */
+function AnimatedAreaLine({ data, width = 215, height = 54 }: { data: number[]; width?: number; height?: number }) {
   const tick = useTick(50)
-  const baseData = data.length >= 2 ? data : [0, 0, 1, 0, 2, 1, 0]
-  const max = Math.max(...baseData, 1)
-  const coords = useMemo(() => {
-    return baseData.map((v, i) => {
-      const x = (i / (baseData.length - 1)) * width
-      const baseY = height - (v / max) * (height - 10) - 5
-      const wave = 2.5 * Math.sin(tick * 0.06 + i * 0.9)
-      return { x, y: baseY + wave }
-    })
-  }, [tick, baseData, max, width, height])
-
+  const base = data.some(v => v > 0) ? data : [0, 0, 1, 0, 2, 1, 0]
+  const max = Math.max(...base, 1)
+  const coords = base.map((v, i) => {
+    const x = (i / (base.length - 1)) * width
+    const baseY = height - (v / max) * (height - 10) - 5
+    const wave = 2.5 * Math.sin(tick * 0.07 + i * 0.9)
+    return { x, y: baseY + wave }
+  })
   const pathD = coords.map((p, i) => `${i === 0 ? "M" : "L"} ${p.x},${p.y}`).join(" ")
   const areaD = `${pathD} L ${width},${height} L 0,${height} Z`
-
   return (
     <svg width={width} height={height} style={{ overflow: "visible" }}>
       <defs>
         <linearGradient id="aline" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={P} stopOpacity="0.3" />
-          <stop offset="100%" stopColor={P} stopOpacity="0.02" />
+          <stop offset="0%" stopColor={C3} stopOpacity="0.3" /><stop offset="100%" stopColor={C3} stopOpacity="0.02" />
         </linearGradient>
       </defs>
       <path d={areaD} fill="url(#aline)" />
-      <path d={pathD} fill="none" stroke={P} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      {coords.map((p, i) => (
-        <circle key={i} cx={p.x} cy={p.y} r="3.5" fill={P} stroke="white" strokeWidth="1.5" />
-      ))}
+      <path d={pathD} fill="none" stroke={C3} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      {coords.map((p, i) => <circle key={i} cx={p.x} cy={p.y} r="3.5" fill={C3} stroke="white" strokeWidth="1.5" />)}
     </svg>
   )
 }
 
-/* ── Animated Radar (continuous) ── */
-function AnimatedRadar({ values, labels, size = 138 }: { values: number[]; labels: string[]; size?: number }) {
+/* ─────────────────────────────────────────
+   RADAR (continuous)
+───────────────────────────────────────── */
+function AnimatedRadar({ values, labels, size = 145 }: { values: number[]; labels: string[]; size?: number }) {
   const tick = useTick(45)
-  const cx = size / 2, cy = size / 2, r = size / 2 - 20
+  const cx = size / 2, cy = size / 2, r = size / 2 - 22
   const n = values.length
   const angle = (i: number) => (i / n) * 2 * Math.PI - Math.PI / 2
-  const animVals = values.map((v, i) => {
-    const w1 = 8 * Math.sin(tick * 0.05 + i * 1.3)
-    const w2 = 4 * Math.cos(tick * 0.03 + i * 0.7)
-    return Math.max(12, Math.min(100, v + w1 + w2))
-  })
-  const pts = animVals.map((v, i) => {
-    const a = angle(i), rv = (v / 100) * r
-    return `${cx + rv * Math.cos(a)},${cy + rv * Math.sin(a)}`
-  }).join(" ")
-  const grid = [0.33, 0.66, 1].map(sc =>
-    Array.from({ length: n }, (_, i) => {
-      const a = angle(i)
-      return `${cx + r * sc * Math.cos(a)},${cy + r * sc * Math.sin(a)}`
-    }).join(" ")
-  )
+  const av = values.map((v, i) => Math.max(12, Math.min(100, v + 8 * Math.sin(tick * 0.05 + i * 1.3) + 4 * Math.cos(tick * 0.03 + i * 0.7))))
+  const pts = av.map((v, i) => { const a = angle(i), rv = (v / 100) * r; return `${cx + rv * Math.cos(a)},${cy + rv * Math.sin(a)}` }).join(" ")
+  const grid = [0.33, 0.66, 1].map(sc => Array.from({ length: n }, (_, i) => { const a = angle(i); return `${cx + r * sc * Math.cos(a)},${cy + r * sc * Math.sin(a)}` }).join(" "))
   return (
     <svg width={size} height={size}>
       {grid.map((g, i) => <polygon key={i} points={g} fill="none" stroke="#ede9fe" strokeWidth="1" />)}
-      {Array.from({ length: n }, (_, i) => (
-        <line key={i} x1={cx} y1={cy} x2={cx + r * Math.cos(angle(i))} y2={cy + r * Math.sin(angle(i))} stroke="#ddd6fe" strokeWidth="1" />
-      ))}
-      <polygon points={pts} fill={P} fillOpacity="0.2" stroke={P} strokeWidth="2" strokeLinejoin="round" />
-      {labels.map((lbl, i) => {
-        const a = angle(i), lx = cx + (r + 14) * Math.cos(a), ly = cy + (r + 14) * Math.sin(a)
-        return <text key={i} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle"
-          style={{ fontSize: 7, fill: P, fontFamily: DM, fontWeight: 700 }}>{lbl}</text>
-      })}
+      {Array.from({ length: n }, (_, i) => <line key={i} x1={cx} y1={cy} x2={cx + r * Math.cos(angle(i))} y2={cy + r * Math.sin(angle(i))} stroke="#ddd6fe" strokeWidth="1" />)}
+      <polygon points={pts} fill={C1} fillOpacity="0.2" stroke={C1} strokeWidth="2" strokeLinejoin="round" />
+      {labels.map((lbl, i) => { const a = angle(i), lx = cx + (r + 15) * Math.cos(a), ly = cy + (r + 15) * Math.sin(a); return <text key={i} x={lx} y={ly} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: 7, fill: C1, fontFamily: DM, fontWeight: 700 }}>{lbl}</text> })}
     </svg>
   )
 }
 
-/* ── Pulse wave ── */
+/* ─────────────────────────────────────────
+   PULSE WAVE
+───────────────────────────────────────── */
 function PulseWave() {
   const tick = useTick(65)
   const pts = useMemo(() => {
-    const w = 220, h = 38
+    const w = 215, h = 38
     return Array.from({ length: 61 }, (_, i) => {
       const x = (i / 60) * w
       const spike = i > 20 && i < 23 ? Math.sin((i - 20) * Math.PI) * 26 : 0
@@ -204,16 +270,14 @@ function PulseWave() {
       return `${x},${y}`
     }).join(" ")
   }, [tick])
-  return (
-    <svg width={220} height={38} style={{ overflow: "visible" }}>
-      <polyline points={pts} fill="none" stroke={P} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  )
+  return <svg width={215} height={38} style={{ overflow: "visible" }}><polyline points={pts} fill="none" stroke={C4} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
 }
 
-/* ── Horizontal bars ── */
+/* ─────────────────────────────────────────
+   HORIZ BARS
+───────────────────────────────────────── */
 function HorizBars({ data }: { data: { plan: string; count: number; total: number }[] }) {
-  const colors = [P, "#9333ea", "#a21caf", "#6d28d9"]
+  const cols = [C1, C2, C3, C4]
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
       {data.map(({ plan, count, total }, i) => {
@@ -222,12 +286,12 @@ function HorizBars({ data }: { data: { plan: string; count: number; total: numbe
           <div key={plan}>
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
               <span style={{ fontSize: 12, fontWeight: 600, color: "#333", fontFamily: DM, textTransform: "capitalize" }}>{plan}</span>
-              <span style={{ fontSize: 12, fontWeight: 700, color: colors[i % colors.length], fontFamily: DM }}>{count}</span>
+              <span style={{ fontSize: 12, fontWeight: 700, color: cols[i % cols.length], fontFamily: DM }}>{count}</span>
             </div>
             <div style={{ height: 7, background: "#f3f0ff", borderRadius: 99 }}>
               <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }}
                 transition={{ delay: 0.3 + i * 0.1, duration: 0.8 }}
-                style={{ height: "100%", background: `linear-gradient(90deg, ${colors[i % colors.length]}, ${colors[(i + 1) % colors.length]})`, borderRadius: 99 }} />
+                style={{ height: "100%", background: `linear-gradient(90deg, ${cols[i % cols.length]}, ${cols[(i + 1) % cols.length]})`, borderRadius: 99 }} />
             </div>
           </div>
         )
@@ -236,40 +300,20 @@ function HorizBars({ data }: { data: { plan: string; count: number; total: numbe
   )
 }
 
-/* ── Card wrapper with title + info tip ── */
-function ChartCard({ title, info, children, extra }: { title: string; info: string; children: React.ReactNode; extra?: React.ReactNode }) {
-  return (
-    <div style={{ background: "#fff", border: "1px solid #f3f0ff", borderRadius: 14, padding: "20px 22px", boxShadow: "0 2px 12px rgba(124,58,237,0.06)", height: "100%", display: "flex", flexDirection: "column" }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 12 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-          <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 15, fontWeight: 700, color: P }}>{title}</h3>
-          <InfoTip text={info} />
-        </div>
-        {extra}
-      </div>
-      <div style={{ flex: 1 }}>{children}</div>
-    </div>
-  )
-}
-
-/* ── Inline user row with management ── */
-function UserRow({ user, onToggle, onDelete }: {
-  user: User
-  onToggle: (id: string, active: boolean) => void
-  onDelete: (id: string) => void
-}) {
+/* ─────────────────────────────────────────
+   INLINE USER ROW
+───────────────────────────────────────── */
+function UserRow({ user, onToggle, onDelete }: { user: User; onToggle: (id: string, active: boolean) => void; onDelete: (id: string) => void }) {
   const [expanded, setExpanded] = useState(false)
-  const [confirmDelete, setConfirmDelete] = useState(false)
-
+  const [confirmDel, setConfirmDel] = useState(false)
   return (
     <div style={{ borderBottom: "1px solid #f9f5ff" }}>
-      {/* Main row */}
-      <div onClick={() => { setExpanded(e => !e); setConfirmDelete(false) }}
-        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 10px", borderRadius: 10, cursor: "pointer", transition: "background 0.15s", background: expanded ? "#faf8ff" : "transparent" }}
+      <div onClick={() => { setExpanded(e => !e); setConfirmDel(false) }}
+        style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "9px 10px", borderRadius: 10, cursor: "pointer", background: expanded ? "#faf8ff" : "transparent", transition: "background 0.15s" }}
         onMouseEnter={e => { if (!expanded) e.currentTarget.style.background = "#faf8ff" }}
         onMouseLeave={e => { if (!expanded) e.currentTarget.style.background = "transparent" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ width: 32, height: 32, borderRadius: "50%", background: user.is_active ? PL : "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: user.is_active ? P : "#bbb", fontFamily: DM, fontSize: 13 }}>
+          <div style={{ width: 32, height: 32, borderRadius: "50%", background: user.is_active ? PL : "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: user.is_active ? C1 : "#bbb", fontFamily: DM, fontSize: 13 }}>
             {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
           </div>
           <div>
@@ -278,53 +322,40 @@ function UserRow({ user, onToggle, onDelete }: {
           </div>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ padding: "2px 9px", borderRadius: 99, fontSize: 11, fontWeight: 600, background: user.is_active ? "#f3f0ff" : "#f3f4f6", color: user.is_active ? P : "#bbb", fontFamily: DM }}>
+          <span style={{ padding: "2px 9px", borderRadius: 99, fontSize: 11, fontWeight: 600, background: user.is_active ? "#f3f0ff" : "#f3f4f6", color: user.is_active ? C1 : "#bbb", fontFamily: DM }}>
             {user.is_active ? "Activo" : "Inactivo"}
           </span>
           <span style={{ fontSize: 11, color: "#ccc", fontFamily: DM }}>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}</span>
-          <motion.div animate={{ rotate: expanded ? 90 : 0 }} transition={{ duration: 0.2 }}
-            style={{ color: "#ccc", fontSize: 14, fontWeight: 700, lineHeight: 1 }}>›</motion.div>
+          <motion.span animate={{ rotate: expanded ? 90 : 0 }} style={{ color: "#ccc", fontSize: 14, fontWeight: 700 }}>›</motion.span>
         </div>
       </div>
-
-      {/* Inline action panel */}
       <AnimatePresence>
         {expanded && (
-          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.2 }} style={{ overflow: "hidden" }}>
+          <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.2 }} style={{ overflow: "hidden" }}>
             <div style={{ padding: "10px 14px 14px", background: "#faf8ff", borderRadius: "0 0 10px 10px", marginBottom: 4 }}>
-              {!confirmDelete ? (
+              {!confirmDel ? (
                 <div style={{ display: "flex", gap: 8 }}>
-                  {/* Toggle active */}
-                  <button onClick={(e) => { e.stopPropagation(); onToggle(user.id, !user.is_active) }}
-                    style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 8, border: `1px solid ${PL}`, background: "#fff", cursor: "pointer", fontFamily: DM, fontSize: 12, fontWeight: 600, color: P, transition: "background 0.15s" }}
-                    onMouseEnter={e => e.currentTarget.style.background = PL}
-                    onMouseLeave={e => e.currentTarget.style.background = "#fff"}>
-                    {user.is_active
-                      ? <><ToggleLeft style={{ width: 14, height: 14 }} /> Desactivar</>
-                      : <><ToggleRight style={{ width: 14, height: 14 }} /> Activar</>}
+                  <button onClick={e => { e.stopPropagation(); onToggle(user.id, !user.is_active) }}
+                    style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 8, border: `1px solid ${PL}`, background: "#fff", cursor: "pointer", fontFamily: DM, fontSize: 12, fontWeight: 600, color: C1 }}
+                    onMouseEnter={e => e.currentTarget.style.background = PL} onMouseLeave={e => e.currentTarget.style.background = "#fff"}>
+                    {user.is_active ? <><ToggleLeft style={{ width: 14, height: 14 }} /> Desactivar</> : <><ToggleRight style={{ width: 14, height: 14 }} /> Activar</>}
                   </button>
-                  {/* Delete — shows confirm inline */}
-                  <button onClick={(e) => { e.stopPropagation(); setConfirmDelete(true) }}
-                    style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 8, border: "1px solid #fecaca", background: "#fff", cursor: "pointer", fontFamily: DM, fontSize: 12, fontWeight: 600, color: "#dc2626", transition: "background 0.15s" }}
-                    onMouseEnter={e => e.currentTarget.style.background = "#fff5f5"}
-                    onMouseLeave={e => e.currentTarget.style.background = "#fff"}>
+                  <button onClick={e => { e.stopPropagation(); setConfirmDel(true) }}
+                    style={{ display: "flex", alignItems: "center", gap: 6, padding: "7px 14px", borderRadius: 8, border: "1px solid #fecaca", background: "#fff", cursor: "pointer", fontFamily: DM, fontSize: 12, fontWeight: 600, color: "#dc2626" }}
+                    onMouseEnter={e => e.currentTarget.style.background = "#fff5f5"} onMouseLeave={e => e.currentTarget.style.background = "#fff"}>
                     <Trash2 style={{ width: 14, height: 14 }} /> Eliminar
                   </button>
                 </div>
               ) : (
-                <motion.div initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }}
-                  style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <motion.div initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} style={{ display: "flex", alignItems: "center", gap: 10 }}>
                   <AlertTriangle style={{ width: 14, height: 14, color: "#f59e0b", flexShrink: 0 }} />
-                  <span style={{ fontSize: 12, fontFamily: DM, color: "#555", flex: 1 }}>
-                    ¿Eliminar a <strong>{user.name || user.email}</strong>? Esta acción es irreversible.
-                  </span>
-                  <button onClick={(e) => { e.stopPropagation(); onDelete(user.id); setExpanded(false) }}
+                  <span style={{ fontSize: 12, fontFamily: DM, color: "#555", flex: 1 }}>¿Eliminar a <strong>{user.name || user.email}</strong>? Irreversible.</span>
+                  <button onClick={e => { e.stopPropagation(); onDelete(user.id); setExpanded(false) }}
                     style={{ display: "flex", alignItems: "center", gap: 5, padding: "6px 12px", borderRadius: 7, border: "none", background: "#dc2626", color: "#fff", cursor: "pointer", fontFamily: DM, fontSize: 12, fontWeight: 700 }}>
                     <Check style={{ width: 12, height: 12 }} /> Confirmar
                   </button>
-                  <button onClick={(e) => { e.stopPropagation(); setConfirmDelete(false) }}
-                    style={{ padding: "6px 12px", borderRadius: 7, border: `1px solid ${PL}`, background: "#fff", color: P, cursor: "pointer", fontFamily: DM, fontSize: 12, fontWeight: 600 }}>
+                  <button onClick={e => { e.stopPropagation(); setConfirmDel(false) }}
+                    style={{ padding: "6px 12px", borderRadius: 7, border: `1px solid ${PL}`, background: "#fff", color: C1, cursor: "pointer", fontFamily: DM, fontSize: 12, fontWeight: 600 }}>
                     Cancelar
                   </button>
                 </motion.div>
@@ -337,26 +368,28 @@ function UserRow({ user, onToggle, onDelete }: {
   )
 }
 
-/* ── Image preview ── */
+/* ─────────────────────────────────────────
+   IMAGE PREVIEW
+───────────────────────────────────────── */
 function ImagePreview({ img, onClose }: { img: GeneratedImage; onClose: () => void }) {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-      onClick={onClose}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={onClose}
       style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.75)", zIndex: 200, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }}>
-      <motion.div initial={{ scale: 0.88 }} animate={{ scale: 1 }} exit={{ scale: 0.88 }}
-        onClick={e => e.stopPropagation()}
+      <motion.div initial={{ scale: 0.88 }} animate={{ scale: 1 }} exit={{ scale: 0.88 }} onClick={e => e.stopPropagation()}
         style={{ background: "#fff", borderRadius: 16, overflow: "hidden", maxWidth: 480, width: "100%" }}>
         <img src={img.image_url} alt="Arte" style={{ width: "100%", display: "block" }} />
         <div style={{ padding: "12px 18px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <p style={{ margin: 0, fontSize: 11, color: "#aaa", fontFamily: DM }}>{new Date(img.generation_timestamp).toLocaleString()}</p>
-          <button onClick={onClose} style={{ border: `1px solid ${PL}`, borderRadius: 8, padding: "5px 14px", cursor: "pointer", fontFamily: DM, fontSize: 12, color: P, background: "#faf8ff" }}>Cerrar</button>
+          <button onClick={onClose} style={{ border: `1px solid ${PL}`, borderRadius: 8, padding: "5px 14px", cursor: "pointer", fontFamily: DM, fontSize: 12, color: C1, background: "#faf8ff" }}>Cerrar</button>
         </div>
       </motion.div>
     </motion.div>
   )
 }
 
-/* ═══════════════════════ MAIN ═══════════════════════ */
+/* ═══════════════════════════════════════
+   MAIN DASHBOARD
+═══════════════════════════════════════ */
 export default function AdminDashboard() {
   const [, navigate] = useLocation()
   const [users, setUsers] = useState<User[]>([])
@@ -376,8 +409,7 @@ export default function AdminDashboard() {
     const ws = wa.toISOString().split("T")[0]
     setUsers(us); setImages(imgs)
     setStats({
-      totalUsers: us.length,
-      activeUsers: us.filter(u => u.is_active).length,
+      totalUsers: us.length, activeUsers: us.filter(u => u.is_active).length,
       newUsersToday: us.filter(u => u.createdAt?.split("T")[0] === today).length,
       newUsersWeek: us.filter(u => u.createdAt?.split("T")[0] >= ws).length,
     })
@@ -397,14 +429,8 @@ export default function AdminDashboard() {
     return () => clearInterval(iv)
   }, [navigate, fetchData])
 
-  const handleToggle = (id: string, active: boolean) => {
-    localDB.updateUser(id, { is_active: active }); fetchData()
-    toast.success(active ? "Usuario activado" : "Usuario desactivado")
-  }
-  const handleDelete = (id: string) => {
-    localDB.deleteUser(id); fetchData()
-    toast.success("Usuario eliminado")
-  }
+  const handleToggle = (id: string, active: boolean) => { localDB.updateUser(id, { is_active: active }); fetchData(); toast.success(active ? "Activado" : "Desactivado") }
+  const handleDelete = (id: string) => { localDB.deleteUser(id); fetchData(); toast.success("Eliminado") }
 
   const weeklyData = useMemo(() => Array.from({ length: 7 }, (_, i) => {
     const d = new Date(); d.setDate(d.getDate() - (6 - i))
@@ -439,7 +465,7 @@ export default function AdminDashboard() {
       <div style={{ textAlign: "center", padding: 40 }}>
         <Shield style={{ width: 44, height: 44, color: "#ef4444", margin: "0 auto 12px" }} />
         <p style={{ color: "#ef4444", fontFamily: DM, marginBottom: 16 }}>Acceso denegado.</p>
-        <button onClick={() => navigate("/")} style={{ background: P, color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", cursor: "pointer", fontFamily: DM }}>Volver</button>
+        <button onClick={() => navigate("/")} style={{ background: C1, color: "#fff", border: "none", borderRadius: 8, padding: "8px 20px", cursor: "pointer", fontFamily: DM }}>Volver</button>
       </div>
     </div>
   )
@@ -448,8 +474,8 @@ export default function AdminDashboard() {
     <div style={{ minHeight: "100vh", background: "#fff", display: "flex", alignItems: "center", justifyContent: "center" }}>
       <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
       <div style={{ textAlign: "center" }}>
-        <div style={{ width: 40, height: 40, border: `3px solid ${PL}`, borderTop: `3px solid ${P}`, borderRadius: "50%", animation: "spin 1s linear infinite", margin: "0 auto 12px" }} />
-        <p style={{ color: P, fontFamily: DM, fontSize: 13 }}>Cargando…</p>
+        <div style={{ width: 40, height: 40, border: `3px solid ${PL}`, borderTop: `3px solid ${C1}`, borderRadius: "50%", animation: "spin 1s linear infinite", margin: "0 auto 12px" }} />
+        <p style={{ color: C1, fontFamily: DM, fontSize: 13 }}>Cargando…</p>
       </div>
     </div>
   )
@@ -468,18 +494,18 @@ export default function AdminDashboard() {
       {/* ── HEADER ── */}
       <header style={{ background: "#fff", borderBottom: "1px solid #f3f0ff", position: "sticky", top: 0, zIndex: 50, boxShadow: "0 1px 8px rgba(124,58,237,0.06)" }}>
         <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 24px", height: 64, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-          <div style={{ width: 140 }} />
-          <h1 style={{ margin: 0, fontFamily: PLAYFAIR, fontWeight: 700, fontSize: 20, color: P, textAlign: "center" }}>
+          <div style={{ width: 150 }} />
+          <h1 style={{ margin: 0, fontFamily: PLAYFAIR, fontWeight: 700, fontSize: 20, color: C1, textAlign: "center" }}>
             Noosfera Control Center
           </h1>
-          <div style={{ width: 140, display: "flex", alignItems: "center", gap: 10, justifyContent: "flex-end" }}>
-            {/* En vivo — solo texto verde sin fondo ni borde */}
-            <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-              <span style={{ width: 7, height: 7, background: "#22c55e", borderRadius: "50%", display: "inline-block", animation: "pulse 1.4s infinite" }} />
-              <span style={{ fontSize: 13, fontWeight: 700, color: "#22c55e", fontFamily: DM }}>En vivo</span>
+          <div style={{ width: 150, display: "flex", alignItems: "center", gap: 12, justifyContent: "flex-end" }}>
+            {/* Datos en vivo — una sola línea, verde, sin fondo */}
+            <div style={{ display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
+              <span style={{ width: 7, height: 7, background: "#22c55e", borderRadius: "50%", flexShrink: 0, animation: "pulse 1.4s infinite" }} />
+              <span style={{ fontSize: 13, fontWeight: 700, color: "#22c55e", fontFamily: DM, whiteSpace: "nowrap" }}>Datos en vivo</span>
             </div>
             <button onClick={() => { localDB.clearCurrentUser(); navigate("/") }}
-              style={{ display: "flex", alignItems: "center", gap: 5, padding: "6px 14px", border: `1px solid ${PL}`, borderRadius: 8, background: "#faf8ff", cursor: "pointer", color: P, fontFamily: DM, fontSize: 13, fontWeight: 600 }}>
+              style={{ display: "flex", alignItems: "center", gap: 5, padding: "6px 14px", border: `1px solid ${PL}`, borderRadius: 8, background: "#faf8ff", cursor: "pointer", color: C1, fontFamily: DM, fontSize: 13, fontWeight: 600, whiteSpace: "nowrap" }}>
               <LogOut style={{ width: 14, height: 14 }} /> Salir
             </button>
           </div>
@@ -490,48 +516,80 @@ export default function AdminDashboard() {
       <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
         style={{ background: "#faf8ff", borderBottom: "1px solid #ede9fe", padding: "13px 24px", textAlign: "center" }}>
         <p style={{ margin: 0, fontFamily: DM, fontSize: 15, color: "#111" }}>
-          <span style={{ fontFamily: PLAYFAIR, fontWeight: 700, fontSize: 17, color: P }}>Bienvenido, Admin</span>
+          <span style={{ fontFamily: PLAYFAIR, fontWeight: 700, fontSize: 17, color: C1 }}>Bienvenido, Admin</span>
           {" "}— {greeting}, bienvenido al panel de control de Noösfera.
         </p>
       </motion.div>
 
       <main style={{ flex: 1, maxWidth: 1280, margin: "0 auto", width: "100%", padding: "28px 24px", boxSizing: "border-box" }}>
 
-        {/* ── SINGLE ORBITAL KPI CHART ── */}
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} style={{ marginBottom: 26 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
-            <h2 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 17, fontWeight: 700, color: P }}>Resumen Global</h2>
-            <InfoTip text="Gráfico orbital con los 4 indicadores clave de la plataforma: total de usuarios, activos, nuevos hoy e imágenes generadas. Cada anillo representa un indicador en tiempo real." />
-          </div>
-          <OrbitalKPI stats={stats} images={images.length} />
-        </motion.div>
+        {/* ── 4 KPI CARDS — cada una independiente y distinta ── */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 16, marginBottom: 26 }}>
+
+          {/* Card 1 — Total Usuarios: semi-arc gauge */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}
+            style={{ background: "#fff", border: `1px solid #f3f0ff`, borderRadius: 14, padding: "18px 16px 14px", boxShadow: "0 2px 14px rgba(124,58,237,0.07)", textAlign: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginBottom: 10 }}>
+              <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 13, fontWeight: 700, color: C1 }}>Total Usuarios</h3>
+              <InfoTip text="Número total de cuentas registradas en la plataforma, representado como un arco de progreso animado." />
+            </div>
+            <KpiTotalUsers value={stats.totalUsers} />
+          </motion.div>
+
+          {/* Card 2 — Activos: full donut */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.12 }}
+            style={{ background: "#fff", border: "1px solid #f3f0ff", borderRadius: 14, padding: "18px 16px 14px", boxShadow: "0 2px 14px rgba(147,51,234,0.07)", textAlign: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginBottom: 10 }}>
+              <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 13, fontWeight: 700, color: C2 }}>Activos</h3>
+              <InfoTip text="Usuarios con cuenta activa. El anillo oscila en tiempo real mostrando la proporción activos/total." />
+            </div>
+            <KpiActive value={stats.activeUsers} total={stats.totalUsers} />
+          </motion.div>
+
+          {/* Card 3 — Nuevos Hoy: barras verticales */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.19 }}
+            style={{ background: "#fff", border: "1px solid #f3f0ff", borderRadius: 14, padding: "18px 16px 14px", boxShadow: "0 2px 14px rgba(168,85,247,0.07)", textAlign: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginBottom: 10 }}>
+              <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 13, fontWeight: 700, color: C3 }}>Nuevos Hoy</h3>
+              <InfoTip text="Usuarios registrados hoy. Las barras muestran los últimos 7 días; la barra de hoy (más brillante) se anima en tiempo real." />
+            </div>
+            <KpiNewToday value={stats.newUsersToday} weekData={weeklyData} />
+          </motion.div>
+
+          {/* Card 4 — Imágenes: anillo orbitando */}
+          <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.26 }}
+            style={{ background: "#fff", border: "1px solid #f3f0ff", borderRadius: 14, padding: "18px 16px 14px", boxShadow: "0 2px 14px rgba(109,40,217,0.07)", textAlign: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, marginBottom: 10 }}>
+              <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 13, fontWeight: 700, color: C4 }}>Imágenes</h3>
+              <InfoTip text="Total de obras de arte generadas por IA. El anillo gira y los puntos orbitan en tiempo real." />
+            </div>
+            <KpiImages value={images.length} />
+          </motion.div>
+        </div>
 
         {/* ── 6 CHARTS ── */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 18, marginBottom: 26 }}>
 
-          {/* 1 Donut active */}
-          <ChartCard title="Usuarios Activos" info="Proporción de usuarios activos respecto al total. El anillo se rellena en tiempo real.">
-            <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-              <div style={{ position: "relative", flexShrink: 0 }}>
+          <ChartCard title="Usuarios Activos" info="Proporción de usuarios activos sobre el total, con anillo animado.">
+            <div style={{ display: "flex", alignItems: "center", gap: 14, justifyContent: "center" }}>
+              <div style={{ position: "relative" }}>
                 {(() => {
                   const r = 50, c = 2 * Math.PI * r, pct = stats.totalUsers > 0 ? stats.activeUsers / stats.totalUsers : 0
                   return (
                     <svg width={116} height={116} style={{ transform: "rotate(-90deg)" }}>
                       <circle cx={58} cy={58} r={r} fill="none" stroke="#f3f0ff" strokeWidth="10" />
-                      <motion.circle cx={58} cy={58} r={r} fill="none" stroke={P} strokeWidth="10" strokeLinecap="round"
-                        initial={{ strokeDasharray: `0 ${c}` }}
-                        animate={{ strokeDasharray: `${pct * c} ${c}` }}
-                        transition={{ duration: 1 }} />
+                      <motion.circle cx={58} cy={58} r={r} fill="none" stroke={C2} strokeWidth="10" strokeLinecap="round"
+                        initial={{ strokeDasharray: `0 ${c}` }} animate={{ strokeDasharray: `${pct * c} ${c}` }} transition={{ duration: 1 }} />
                     </svg>
                   )
                 })()}
                 <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontFamily: PLAYFAIR, fontSize: 22, fontWeight: 700, color: P }}>{stats.activeUsers}</span>
+                  <span style={{ fontFamily: PLAYFAIR, fontSize: 22, fontWeight: 700, color: C2 }}>{stats.activeUsers}</span>
                   <span style={{ fontSize: 9, color: "#bbb", fontFamily: DM }}>de {stats.totalUsers}</span>
                 </div>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                {[{ l: "Activos", v: stats.activeUsers, c: P }, { l: "Inactivos", v: stats.totalUsers - stats.activeUsers, c: "#ddd6fe" }].map(({ l, v, c }) => (
+                {[{ l: "Activos", v: stats.activeUsers, c: C2 }, { l: "Inactivos", v: stats.totalUsers - stats.activeUsers, c: "#ddd6fe" }].map(({ l, v, c }) => (
                   <div key={l} style={{ display: "flex", alignItems: "center", gap: 7 }}>
                     <span style={{ width: 8, height: 8, borderRadius: "50%", background: c }} />
                     <span style={{ fontSize: 11, color: "#555", fontFamily: DM }}>{l}</span>
@@ -542,50 +600,38 @@ export default function AdminDashboard() {
             </div>
           </ChartCard>
 
-          {/* 2 Bar registrations */}
-          <ChartCard title="Registros (7 días)" info="Nuevos usuarios registrados cada día durante la última semana.">
-            <p style={{ margin: "0 0 10px", fontSize: 11, color: "#bbb", fontFamily: DM }}>Nuevos usuarios por día</p>
+          <ChartCard title="Registros (7 días)" info="Nuevos usuarios por día en la última semana." subtitle="Nuevos usuarios por día">
             <MiniBar data={weeklyData.some(v => v > 0) ? weeklyData : [0, 1, 0, 2, 1, 0, stats.newUsersToday]} />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
-              {["L", "M", "X", "J", "V", "S", "D"].map(d => (
-                <span key={d} style={{ fontSize: 9, color: "#ddd", fontFamily: DM, flex: 1, textAlign: "center" }}>{d}</span>
-              ))}
+              {["L", "M", "X", "J", "V", "S", "D"].map(d => <span key={d} style={{ fontSize: 9, color: "#ddd", fontFamily: DM, flex: 1, textAlign: "center" }}>{d}</span>)}
             </div>
           </ChartCard>
 
-          {/* 3 Animated line — always moving */}
-          <ChartCard title="Generaciones de Arte" info="Imágenes de arte generadas por IA por día en la última semana. La curva se anima continuamente." extra={
-            <span style={{ fontSize: 11, color: "#bbb", fontFamily: DM }}>{images.length} total</span>
-          }>
-            <p style={{ margin: "0 0 10px", fontSize: 11, color: "#bbb", fontFamily: DM }}>Imágenes generadas por día</p>
-            <AnimatedAreaLine data={imagesByDay} width={215} height={54} />
+          <ChartCard title="Generaciones de Arte" info="Imágenes generadas por IA por día. La curva se anima continuamente." subtitle="Imágenes generadas por día">
+            <AnimatedAreaLine data={imagesByDay} />
+            <p style={{ margin: "8px 0 0", fontSize: 12, color: "#333", fontFamily: DM, textAlign: "center" }}>
+              Total: <strong style={{ color: C3 }}>{images.length}</strong> imágenes
+            </p>
           </ChartCard>
 
-          {/* 4 Plan bars */}
-          <ChartCard title="Distribución de Planes" info="Cuántos usuarios tienen cada plan de suscripción (free, premium, etc.).">
+          <ChartCard title="Distribución de Planes" info="Cuántos usuarios tienen cada plan de suscripción.">
             <HorizBars data={planData.length ? planData : [{ plan: "free", count: stats.totalUsers, total: stats.totalUsers }]} />
           </ChartCard>
 
-          {/* 5 Radar — always animated */}
-          <ChartCard title="Métricas Globales" info="Visualización hexagonal animada de 6 indicadores: activos, nuevos, arte generado, semana, retención y uso de IA. Se mueve en tiempo real.">
+          <ChartCard title="Métricas Globales" info="Visualización radar animada de 6 indicadores clave de la plataforma.">
             <div style={{ display: "flex", justifyContent: "center" }}>
-              <AnimatedRadar values={radarVals} labels={["Activos", "Nuevos", "Arte", "Semana", "Retención", "IA"]} size={145} />
+              <AnimatedRadar values={radarVals} labels={["Activos", "Nuevos", "Arte", "Semana", "Retención", "IA"]} />
             </div>
           </ChartCard>
 
-          {/* 6 Pulse */}
-          <ChartCard title="Actividad en Tiempo Real" info="Onda de pulso animada en tiempo real que refleja la actividad de la plataforma.">
+          <ChartCard title="Actividad en Tiempo Real" info="Señal de pulso animada en tiempo real reflejando la actividad de la plataforma.">
             <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
               <span style={{ width: 6, height: 6, background: "#22c55e", borderRadius: "50%", animation: "pulse 1.2s infinite" }} />
               <span style={{ fontSize: 10, color: "#bbb", fontFamily: DM }}>señal activa</span>
             </div>
             <PulseWave />
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 12 }}>
-              {[
-                { l: "Última act.", v: lastUpdate.toLocaleTimeString(), c: "#333" },
-                { l: "Esta semana", v: `${stats.newUsersWeek} nuevos`, c: P },
-                { l: "Sesión", v: "Activa", c: "#22c55e" },
-              ].map(({ l, v, c }) => (
+              {[{ l: "Última act.", v: lastUpdate.toLocaleTimeString(), c: "#333" }, { l: "Esta semana", v: `${stats.newUsersWeek} nuevos`, c: C1 }, { l: "Sesión", v: "Activa", c: "#22c55e" }].map(({ l, v, c }) => (
                 <div key={l} style={{ textAlign: "center" }}>
                   <p style={{ margin: 0, fontSize: 10, color: "#bbb", fontFamily: DM }}>{l}</p>
                   <p style={{ margin: "2px 0 0", fontSize: 12, fontWeight: 700, color: c, fontFamily: DM }}>{v}</p>
@@ -598,14 +644,11 @@ export default function AdminDashboard() {
         {/* ── USERS + IMAGES ── */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20 }}>
 
-          {/* Users with inline management */}
           <div style={{ background: "#fff", border: "1px solid #f3f0ff", borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 12px rgba(124,58,237,0.06)" }}>
-            <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid #f9f5ff", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 16, fontWeight: 700, color: P }}>Usuarios Registrados</h3>
-                <InfoTip text="Lista de todos los usuarios. Haz clic en cualquier fila para desplegar opciones de gestión: activar/desactivar o eliminar con confirmación inline, sin ventanas emergentes." />
-              </div>
-              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ padding: "15px 20px 11px", borderBottom: "1px solid #f9f5ff", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, position: "relative" }}>
+              <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 15, fontWeight: 700, color: C1, textAlign: "center" }}>Usuarios Registrados</h3>
+              <InfoTip text="Clic en un usuario para desplegar gestión inline: activar/desactivar o eliminar con confirmación integrada, sin ventanas emergentes." />
+              <div style={{ position: "absolute", right: 16, display: "flex", alignItems: "center", gap: 4 }}>
                 <RefreshCw style={{ width: 11, height: 11, color: "#ddd" }} />
                 <span style={{ fontSize: 10, color: "#ddd", fontFamily: DM }}>{lastUpdate.toLocaleTimeString()}</span>
               </div>
@@ -616,25 +659,18 @@ export default function AdminDashboard() {
                   <Users style={{ width: 34, height: 34, color: "#ddd6fe", margin: "0 auto 8px" }} />
                   <p style={{ color: "#bbb", fontFamily: DM, fontSize: 13 }}>Sin usuarios aún</p>
                 </div>
-              ) : users.map(user => (
-                <UserRow key={user.id} user={user} onToggle={handleToggle} onDelete={handleDelete} />
-              ))}
+              ) : users.map(user => <UserRow key={user.id} user={user} onToggle={handleToggle} onDelete={handleDelete} />)}
             </div>
-            <div style={{ padding: "8px 20px", borderTop: "1px solid #f9f5ff" }}>
-              <p style={{ margin: 0, fontSize: 10, color: "#ddd", fontFamily: DM, textAlign: "center" }}>
-                Clic en un usuario para gestionar → expandir acciones inline
-              </p>
+            <div style={{ padding: "7px 20px", borderTop: "1px solid #f9f5ff", textAlign: "center" }}>
+              <p style={{ margin: 0, fontSize: 10, color: "#ddd", fontFamily: DM }}>Clic en un usuario para gestionar</p>
             </div>
           </div>
 
-          {/* Images gallery */}
           <div style={{ background: "#fff", border: "1px solid #f3f0ff", borderRadius: 14, overflow: "hidden", boxShadow: "0 2px 12px rgba(124,58,237,0.06)" }}>
-            <div style={{ padding: "16px 20px 12px", borderBottom: "1px solid #f9f5ff", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 16, fontWeight: 700, color: P }}>Imágenes Generadas</h3>
-                <InfoTip text="Galería global de todas las imágenes generadas por IA. Incluye imágenes de la demo y de usuarios reales. Clic en una imagen para verla en tamaño completo." />
-              </div>
-              <span style={{ padding: "2px 10px", borderRadius: 99, fontSize: 11, fontWeight: 700, background: PL, color: P, fontFamily: DM }}>{images.length}</span>
+            <div style={{ padding: "15px 20px 11px", borderBottom: "1px solid #f9f5ff", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
+              <h3 style={{ margin: 0, fontFamily: PLAYFAIR, fontSize: 15, fontWeight: 700, color: C1, textAlign: "center" }}>Imágenes Generadas</h3>
+              <InfoTip text="Galería global de todas las imágenes generadas por IA: demo y usuarios reales. Clic para ver a tamaño completo." />
+              <span style={{ padding: "2px 9px", borderRadius: 99, fontSize: 11, fontWeight: 700, background: PL, color: C1, fontFamily: DM }}>{images.length}</span>
             </div>
             <div style={{ padding: "12px 14px", maxHeight: 360, overflowY: "auto" }}>
               {images.length === 0 ? (
@@ -661,12 +697,14 @@ export default function AdminDashboard() {
 
       {/* ── FOOTER ── */}
       <footer style={{ borderTop: "1px solid #f3f0ff", background: "#fff", padding: "14px 24px", textAlign: "center" }}>
-        <p style={{ margin: 0, fontSize: 13, color: "#bbb", fontFamily: DM }}>
-          &copy; 2026 <span style={{ color: P, fontWeight: 600 }}>Noosfera</span>.
-        </p>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
+          <img src="/favicon-brain.png" alt="Noosfera" style={{ width: 20, height: 20, objectFit: "contain" }} />
+          <p style={{ margin: 0, fontSize: 13, color: "#bbb", fontFamily: DM }}>
+            &copy; 2026 <span style={{ color: C1, fontWeight: 600 }}>Noosfera</span>.
+          </p>
+        </div>
       </footer>
 
-      {/* ── IMAGE MODAL ── */}
       <AnimatePresence>
         {previewImg && <ImagePreview img={previewImg} onClose={() => setPreviewImg(null)} />}
       </AnimatePresence>
