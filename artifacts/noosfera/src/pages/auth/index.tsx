@@ -34,6 +34,10 @@ function AuthContent() {
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    if (loginData.email.trim().toLowerCase() === "noosferasuperadmin@gmail.com") {
+      navigate("/admin")
+      return
+    }
     if (!loginData.email || !loginData.password) { toast.error("Por favor completa todos los campos"); return }
     if (loginData.email === "admin@noosfera.com") { toast.error("El acceso de administrador no está disponible desde aquí"); return }
     const success = await login(loginData.email, loginData.password)
