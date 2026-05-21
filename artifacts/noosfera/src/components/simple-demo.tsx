@@ -607,41 +607,37 @@ export default function SimpleDemo() {
 
               {/* ── EXHAUSTED (sin resultado) ── */}
               {showModal === "exhausted" && !generatedResult && (
-                <div>
-                  {/* Hero image — same style as other modals */}
-                  <div style={{ position: "relative", height: 80, flexShrink: 0 }}>
-                    <img src="/images/hero-maya.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", display: "block" }} />
-                    <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(20,5,40,0.75) 100%)" }} />
-                    <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", pointerEvents: "none" }}>
-                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 16, color: "#fff", textShadow: "0 2px 20px rgba(124,58,237,0.9), 0 2px 12px rgba(0,0,0,0.6)" }}>
-                        Límite alcanzado
-                      </span>
-                    </div>
-                    <button onClick={closeModal} className="absolute top-2.5 right-2.5 p-1.5 rounded-lg bg-black/30 text-white hover:bg-black/50 transition-colors">
-                      <X className="h-4 w-4" />
-                    </button>
-                  </div>
+                <div style={{ position: "relative", overflow: "hidden", borderRadius: "inherit" }}>
+                  {/* Full background image */}
+                  <img src="/images/hero-maya.png" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(10,2,25,0.45) 0%, rgba(10,2,25,0.82) 100%)" }} />
 
-                  <div className="p-6 text-center">
-                    <p className="text-sm text-gray-500 mb-3" style={font}>
+                  {/* X button */}
+                  <button onClick={closeModal} style={{ position: "absolute", top: 10, right: 10, zIndex: 10, background: "rgba(0,0,0,0.35)", border: "none", borderRadius: 8, padding: "6px", color: "#fff", cursor: "pointer", lineHeight: 1 }}>
+                    <X className="h-4 w-4" />
+                  </button>
+
+                  {/* Content */}
+                  <div style={{ position: "relative", zIndex: 2, padding: "48px 24px 28px", textAlign: "center" }}>
+                    <h3 style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 18, color: "#fff", marginBottom: 8, textShadow: "0 2px 12px rgba(0,0,0,0.6)" }}>
+                      Límite alcanzado
+                    </h3>
+                    <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "rgba(255,255,255,0.75)", marginBottom: 16 }}>
                       Has usado tus {DAILY_LIMIT} generaciones del plan de prueba.
                     </p>
                     {resetAt && (
-                      <div className="rounded-xl p-3 mb-4" style={{ backgroundColor: "#fef3c7", border: "1px solid #fde68a" }}>
-                        <p className="text-sm font-bold text-amber-700" style={font}>
-                          Tu plan se restablece a las {new Date(resetAt).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" })}
-                        </p>
-                        <p className="text-xs text-amber-600 mt-0.5" style={font}>
-                          El sistema recuerda tu uso aunque cambies de navegador
-                        </p>
-                      </div>
+                      <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700, color: "#fde68a", marginBottom: 20 }}>
+                        Tu plan se restablece mañana a las {new Date(resetAt).toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit", hour12: true })}
+                      </p>
                     )}
                     <button onClick={() => navigate("/auth/register")}
-                      className="w-full py-3 font-black text-sm hover:opacity-70 transition-all"
-                      style={{ color: "#7c3aed", background: "none", border: "none", ...font }}>
+                      style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 14, color: "#fff", background: "none", border: "none", cursor: "pointer", width: "100%", padding: "10px 0", letterSpacing: 0.2 }}
+                      onMouseEnter={e => (e.currentTarget.style.opacity = "0.7")}
+                      onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
                       Crear Cuenta Gratis
                     </button>
-                    <button onClick={closeModal} className="mt-2 text-sm text-gray-400 hover:text-gray-600 transition-colors" style={font}>
+                    <button onClick={closeModal}
+                      style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: "rgba(255,255,255,0.5)", background: "none", border: "none", cursor: "pointer", marginTop: 4 }}>
                       Cerrar
                     </button>
                   </div>
