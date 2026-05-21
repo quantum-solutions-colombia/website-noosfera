@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react"
 import { motion, useInView } from "framer-motion"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Heart, TrendingUp, DollarSign } from "lucide-react"
+import { Brain, TrendingUp, DollarSign } from "lucide-react"
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts"
 
 const creatorEarningsDataFinal = [
@@ -273,7 +273,7 @@ export function HomepageKPIs() {
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center gap-2 text-base text-gray-900">
                 <div className="p-2 rounded-lg bg-violet-100">
-                  <Heart className="h-4 w-4 text-violet-600" />
+                  <Brain className="h-4 w-4 text-violet-600" />
                 </div>
                 Potencial de Ingresos
               </CardTitle>

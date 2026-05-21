@@ -1,7 +1,7 @@
 
 
 import { motion } from "framer-motion"
-import { Heart, TrendingUp, TrendingDown, Minus } from "lucide-react"
+import { Brain, TrendingUp, TrendingDown, Minus } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { useNoosfera } from "@/contexts/noosfera-context"
 import { useEffect, useState } from "react"
@@ -25,7 +25,7 @@ export default function CardiacHealthScore() {
       <CardContent className="p-6">
         <div className="flex items-center justify-between mb-4">
           <span className="text-sm font-medium text-muted-foreground">Puntuación de Salud</span>
-          <Heart className="h-5 w-5 text-pink-500" fill="currentColor" />
+          <Brain className="h-5 w-5 text-pink-500" fill="currentColor" />
         </div>
 
         <div className="flex items-end gap-3">

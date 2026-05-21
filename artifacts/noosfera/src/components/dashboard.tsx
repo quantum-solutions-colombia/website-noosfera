@@ -26,7 +26,7 @@ import { SidebarProvider } from "@/components/ui/sidebar"
 
 import { useState, useEffect, useRef, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Zap, Moon, Sun, Power, ChevronDown, BarChart3, Home, History, LogOut, Heart, Check } from "lucide-react"
+import { Zap, Moon, Sun, Power, ChevronDown, BarChart3, Home, History, LogOut, Brain, Check } from "lucide-react"
 import { useTheme } from "next-themes"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent } from "@/components/ui/tabs"
@@ -290,7 +290,7 @@ export default function Dashboard({ isDemo = false, isDemoMode = false }: Dashbo
           <SidebarHeader>
             <div className="flex items-center gap-2 px-4 py-2">
               <motion.div whileHover={{ scale: 1.2 }} transition={{ duration: 0.3 }}>
-                <Heart className="h-6 w-6 text-emerald-500" />
+                <Brain className="h-6 w-6 text-emerald-500" />
               </motion.div>
               <h1 className="text-xl font-bold">Noösfera</h1>
               {!actualDemoMode && isAuthenticated && (
@@ -332,7 +332,7 @@ export default function Dashboard({ isDemo = false, isDemoMode = false }: Dashbo
                       isActive={activeTab === "advanced-3d"}
                       onClick={() => setActiveTab("advanced-3d")}
                     >
-                      <Heart className="h-4 w-4" />
+                      <Brain className="h-4 w-4" />
                       <span>Modelo 3D Cardíaco</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -468,7 +468,7 @@ export default function Dashboard({ isDemo = false, isDemoMode = false }: Dashbo
                               ease: "easeInOut",
                             }}
                           >
-                            <Heart className="w-64 h-64 text-emerald-500" strokeWidth={1.5} />
+                            <Brain className="w-64 h-64 text-emerald-500" strokeWidth={1.5} />
                           </motion.div>
                         </div>
                       </div>
@@ -514,7 +514,7 @@ export default function Dashboard({ isDemo = false, isDemoMode = false }: Dashbo
                             <CardHeader className="pb-0">
                               <div className="flex justify-between items-center">
                                 <CardTitle className="flex items-center gap-2">
-                                  <Heart className="h-5 w-5 text-emerald-500" />
+                                  <Brain className="h-5 w-5 text-emerald-500" />
                                   Actividad Cardíaca en Tiempo Real
                                   {actualDemoMode && (
                                     <Badge
@@ -578,7 +578,7 @@ export default function Dashboard({ isDemo = false, isDemoMode = false }: Dashbo
                                 disabled={connectionStatus !== "connected" || processingCardiac}
                                 onClick={handleCaptureWithNFT}
                               >
-                                <Heart className="h-8 w-8 mb-2" />
+                                <Brain className="h-8 w-8 mb-2" />
                                 <span>Capturar Pulso Cardíaco</span>
                               </Button>
                             </CardContent>
@@ -708,7 +708,7 @@ export default function Dashboard({ isDemo = false, isDemoMode = false }: Dashbo
         <DialogContent className="sm:max-w-[450px]">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Heart className="h-5 w-5 text-emerald-500" />
+              <Brain className="h-5 w-5 text-emerald-500" />
               Tokens Gratuitos Agotados
             </DialogTitle>
             <DialogDescription>Has utilizado todos los tokens gratuitos del demo</DialogDescription>

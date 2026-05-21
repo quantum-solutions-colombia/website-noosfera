@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronLeft, ChevronRight, Check, ArrowRight, Zap, Heart, Crown } from "lucide-react"
+import { ChevronLeft, ChevronRight, Check, ArrowRight, Zap, Brain, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -42,7 +42,7 @@ const plans: Plan[] = [
     ],
     cta: "Comenzar Ahora",
     highlighted: false,
-    icon: Heart,
+    icon: Brain,
     color: "emerald"
   },
   {

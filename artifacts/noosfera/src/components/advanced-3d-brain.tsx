@@ -6,7 +6,7 @@ import { useNoosfera } from "@/contexts/noosfera-context"
 import { Slider } from "@/components/ui/slider"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { ZoomIn, ZoomOut, RotateCw, RotateCcw, Maximize2, Minimize2, HeartIcon, Activity, Zap, TrendingUp } from 'lucide-react'
+import { ZoomIn, ZoomOut, RotateCw, RotateCcw, Maximize2, Minimize2, BrainIcon, Activity, Zap, TrendingUp } from 'lucide-react'
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib-app/utils"
 
@@ -591,7 +591,7 @@ export default function Advanced3DHeartVisualization({ className, fullscreen = f
       {connectionStatus !== "connected" ? (
         <div className="flex h-full w-full items-center justify-center">
           <div className="text-center">
-            <HeartIcon className="mx-auto h-16 w-16 text-muted-foreground/30" />
+            <BrainIcon className="mx-auto h-16 w-16 text-muted-foreground/30" />
             <p className="mt-4 text-muted-foreground">Conecta el monitor cardíaco para visualizar el modelo 3D</p>
           </div>
         </div>
@@ -633,7 +633,7 @@ export default function Advanced3DHeartVisualization({ className, fullscreen = f
               )}
               onClick={() => setViewMode("surface")}
             >
-              <HeartIcon className="mr-1 h-3 w-3" />
+              <BrainIcon className="mr-1 h-3 w-3" />
               Anatomía
             </Badge>
             <Badge variant="outline" onClick={() => setViewMode("activity")} className="hover:bg-muted">
@@ -713,7 +713,7 @@ export default function Advanced3DHeartVisualization({ className, fullscreen = f
                     animate={{ rotate: 360 }}
                     transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                   >
-                    <HeartIcon className="h-4 w-4" />
+                    <BrainIcon className="h-4 w-4" />
                   </motion.div>
                   Procesando actividad cardíaca avanzada
                 </div>

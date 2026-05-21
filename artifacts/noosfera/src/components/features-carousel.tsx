@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Heart, Zap, TrendingUp, Activity, Shield, Sparkles, ChevronLeft, ChevronRight } from "lucide-react"
+import { Brain, Zap, TrendingUp, Activity, Shield, Sparkles, ChevronLeft, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 const features = [
@@ -10,7 +10,7 @@ const features = [
     id: 1,
     title: "Captura Cardiaca Directa",
     description: "Convierte tus patrones de ritmo cardiaco en arte visual unico mediante sensores de ultima generacion",
-    icon: Heart,
+    icon: Brain,
     gradient: "from-emerald-500 to-teal-600",
     bgGradient: "from-emerald-50 to-teal-50",
     iconBg: "bg-emerald-100",

@@ -1,7 +1,7 @@
 
 
 import { motion } from "framer-motion"
-import { Heart } from "lucide-react"
+import { Brain } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { useNoosfera } from "@/contexts/noosfera-context"
 
@@ -19,7 +19,7 @@ export default function HeartRateDisplay() {
             animate={{ scale: [1, 1.2, 1] }}
             transition={{ duration: 60 / heartRate, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
           >
-            <Heart className="h-5 w-5 text-emerald-500" fill="currentColor" />
+            <Brain className="h-5 w-5 text-emerald-500" fill="currentColor" />
           </motion.div>
         </div>
 

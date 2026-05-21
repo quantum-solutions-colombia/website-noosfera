@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useMemo } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Heart,
+  Brain,
   Zap,
   Moon,
   Sun,
@@ -580,7 +580,7 @@ export default function UserDashboard() {
     {
       title: "¡Bienvenido a Noösfera!",
       content: "Te guiaremos a través del proceso de interpretación de patrones cardíacos usando tecnología avanzada.",
-      icon: <Heart className="h-8 w-8 text-emerald-500" />,
+      icon: <Brain className="h-8 w-8 text-emerald-500" />,
     },
     {
       title: "Paso 1: Registrar Pulsos",
@@ -591,7 +591,7 @@ export default function UserDashboard() {
     {
       title: "Paso 2: Procesamiento Cardíaco",
       content: "Una vez registrados los 5 pulsos, el sistema procesará automáticamente los datos cardíacos.",
-      icon: <Heart className="h-8 w-8 text-violet-500" />,
+      icon: <Brain className="h-8 w-8 text-violet-500" />,
     },
     {
       title: "Paso 3: Generación de Imagen",
@@ -653,7 +653,7 @@ export default function UserDashboard() {
           <SidebarHeader>
             <div className="flex items-center gap-2 px-4 py-2">
               <motion.div whileHover={{ scale: 1.2 }} transition={{ duration: 0.3 }}>
-                <Heart className="h-6 w-6 text-emerald-500" />
+                <Brain className="h-6 w-6 text-emerald-500" />
               </motion.div>
               <h1 className="text-xl font-bold">Noösfera</h1>
               <TooltipProvider>
@@ -1022,7 +1022,7 @@ export default function UserDashboard() {
                                 <CardHeader className="pb-0">
                                   <div className="flex justify-between items-center">
                                     <CardTitle className="flex items-center gap-2">
-                                      <Heart className="h-5 w-5 text-emerald-500" />
+                                      <Brain className="h-5 w-5 text-emerald-500" />
                                       Actividad Cardíaca en Tiempo Real
                                     </CardTitle>
                                   </div>
@@ -1078,7 +1078,7 @@ export default function UserDashboard() {
                                     }
                                     onClick={handleCapture}
                                   >
-                                    <Heart className="h-8 w-8 mb-2" />
+                                    <Brain className="h-8 w-8 mb-2" />
                                     <span>Capturar Patrón</span>
                                   </Button>
 
@@ -1303,7 +1303,7 @@ export default function UserDashboard() {
                   onClick={() => handleGenerateWithStyle("realistic")}
                   className="flex flex-col items-center p-4 border-2 border-emerald-500/30 rounded-lg hover:border-emerald-500 transition-colors"
                 >
-                  <Heart className="h-12 w-12 text-emerald-500 mb-2" />
+                  <Brain className="h-12 w-12 text-emerald-500 mb-2" />
                   <span className="font-medium">Realista</span>
                   <span className="text-sm text-gray-600 dark:text-gray-400 text-center">
                     Patrones cardíacos orgánicos

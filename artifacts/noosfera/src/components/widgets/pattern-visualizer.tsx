@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { motion } from "framer-motion"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { useNoosfera } from "@/contexts/noosfera-context"
-import { Heart } from "lucide-react"
+import { Brain } from "lucide-react"
 import { AudioWaveform as Waveform } from "lucide-react"
 
 export default function PatternVisualizer() {
@@ -136,7 +136,7 @@ export default function PatternVisualizer() {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Heart className="h-5 w-5 text-red-500" />
+            <Brain className="h-5 w-5 text-red-500" />
             Ritmo Cardíaco
           </CardTitle>
           <CardDescription>Visualización en tiempo real del ECG</CardDescription>
@@ -153,7 +153,7 @@ export default function PatternVisualizer() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 1, repeat: Number.POSITIVE_INFINITY }}>
-            <Heart className="h-5 w-5 text-red-500" />
+            <Brain className="h-5 w-5 text-red-500" />
           </motion.div>
           Monitoreo Cardíaco en Vivo
           {processingThought && (

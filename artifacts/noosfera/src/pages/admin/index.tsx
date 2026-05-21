@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react"
 import { motion } from "framer-motion"
-import { Users, Shield, LogOut, UserPlus, UserCheck, Heart, RefreshCw } from "lucide-react"
+import { Users, Shield, LogOut, UserPlus, UserCheck, Brain, RefreshCw } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -72,7 +72,6 @@ export default function AdminDashboard() {
 
     checkAdminAndFetchData()
 
-    // Real-time updates every 3 seconds
     const interval = setInterval(() => {
       if (isAdminUser) {
         fetchData()
@@ -85,7 +84,7 @@ export default function AdminDashboard() {
   const fetchData = () => {
     try {
       const usersData = localDB.getUsers()
-      
+
       const today = new Date().toISOString().split("T")[0]
       const weekAgo = new Date()
       weekAgo.setDate(weekAgo.getDate() - 7)
@@ -97,12 +96,7 @@ export default function AdminDashboard() {
       const newUsersWeek = usersData.filter((u) => u.createdAt && u.createdAt.split("T")[0] >= weekAgoStr).length
 
       setUsers(usersData)
-      setStats({
-        totalUsers,
-        activeUsers,
-        newUsersToday,
-        newUsersWeek,
-      })
+      setStats({ totalUsers, activeUsers, newUsersToday, newUsersWeek })
       setLastUpdate(new Date())
     } catch (err) {
       console.error("Error fetching data:", err)
@@ -116,7 +110,6 @@ export default function AdminDashboard() {
     navigate("/")
   }
 
-  // Circular Progress Component
   const CircularProgress = ({ value, max, label, color }: { value: number; max: number; label: string; color: string }) => {
     const percentage = max > 0 ? (value / max) * 100 : 0
     const radius = 60
@@ -127,46 +120,32 @@ export default function AdminDashboard() {
       <div className="flex flex-col items-center">
         <div className="relative w-36 h-36">
           <svg className="w-36 h-36 transform -rotate-90">
+            <circle cx="72" cy="72" r={radius} stroke="currentColor" strokeWidth="10" fill="transparent" className="text-violet-100" />
             <circle
-              cx="72"
-              cy="72"
-              r={radius}
-              stroke="currentColor"
-              strokeWidth="10"
-              fill="transparent"
-              className="text-gray-100"
-            />
-            <circle
-              cx="72"
-              cy="72"
-              r={radius}
-              stroke="currentColor"
-              strokeWidth="10"
-              fill="transparent"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              strokeLinecap="round"
-              className={color}
+              cx="72" cy="72" r={radius}
+              stroke="currentColor" strokeWidth="10" fill="transparent"
+              strokeDasharray={circumference} strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round" className={color}
               style={{ transition: "stroke-dashoffset 0.5s ease-in-out" }}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-bold text-gray-900">{value}</span>
-            <span className="text-xs text-gray-500">de {max}</span>
+            <span className="text-3xl font-bold text-violet-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{value}</span>
+            <span className="text-xs text-violet-400">de {max}</span>
           </div>
         </div>
-        <span className="mt-3 text-sm font-medium text-gray-600">{label}</span>
+        <span className="mt-3 text-sm font-medium text-violet-700">{label}</span>
       </div>
     )
   }
 
   if (!isAdminUser) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50/30 flex items-center justify-center">
-        <Card className="p-8 text-center">
+      <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 flex items-center justify-center">
+        <Card className="p-8 text-center border-violet-200">
           <Shield className="h-12 w-12 text-red-500 mx-auto mb-4" />
           <p className="text-red-500 mb-4">Acceso denegado. Solo administradores autorizados.</p>
-          <Button onClick={() => navigate("/")}>Volver al inicio</Button>
+          <Button onClick={() => navigate("/")} className="bg-violet-600 hover:bg-violet-700">Volver al inicio</Button>
         </Card>
       </div>
     )
@@ -174,33 +153,40 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-emerald-50/30 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-violet-50 to-purple-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto mb-4"></div>
-          <p className="text-gray-500">Cargando datos...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4"></div>
+          <p className="text-violet-500" style={{ fontFamily: "'DM Sans', sans-serif" }}>Cargando datos...</p>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
+    <div className="min-h-screen" style={{ background: "linear-gradient(135deg, #faf5ff 0%, #f5f3ff 50%, #ede9fe 100%)" }}>
       {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
+      <header className="bg-white/90 backdrop-blur-sm border-b border-violet-100 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="bg-emerald-100 p-2 rounded-lg">
-                <Shield className="h-6 w-6 text-emerald-600" />
+              <div className="bg-violet-100 p-2 rounded-lg">
+                <Brain className="h-6 w-6 text-violet-600" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Panel de Administración</h1>
-                <p className="text-sm text-emerald-600 font-medium">Hola, {greeting} 👋</p>
+                <h1
+                  className="text-xl font-bold text-violet-900"
+                  style={{ fontFamily: "'Playfair Display', Georgia, serif" }}
+                >
+                  Panel de Administración
+                </h1>
+                <p className="text-sm text-violet-500 font-medium" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                  Noösfera · Control Center
+                </p>
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Badge variant="outline" className="bg-emerald-50 text-emerald-600 border-emerald-200">
-                <span className="w-2 h-2 bg-emerald-500 rounded-full mr-2 animate-pulse"></span>
+              <Badge variant="outline" className="bg-violet-50 text-violet-600 border-violet-200">
+                <span className="w-2 h-2 bg-violet-500 rounded-full mr-2 animate-pulse"></span>
                 En vivo
               </Badge>
               <Button variant="outline" size="sm" onClick={handleLogout} className="text-red-600 border-red-200 hover:bg-red-50">
@@ -217,14 +203,17 @@ export default function AdminDashboard() {
         initial={{ opacity: 0, y: -12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.1 }}
-        className="bg-gradient-to-r from-emerald-50 via-white to-emerald-50 border-b border-emerald-100"
+        style={{ background: "linear-gradient(90deg, #ede9fe, #fff, #ede9fe)", borderBottom: "1px solid #ddd6fe" }}
       >
         <div className="container mx-auto px-4 py-3 flex items-center gap-3">
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-emerald-100 flex-shrink-0">
-            <Shield className="h-4 w-4 text-emerald-600" />
+          <div className="flex items-center justify-center w-9 h-9 rounded-full flex-shrink-0" style={{ background: "linear-gradient(135deg, #7c3aed, #9333ea)" }}>
+            <Brain className="h-5 w-5 text-white" />
           </div>
-          <p className="text-gray-700 font-medium text-sm">
-            <span className="text-emerald-600 font-bold">Hola Admin</span> — {greeting.replace("Admin", "").trim()}, bienvenido al panel de control de Noosfera.
+          <p className="text-violet-800 font-medium text-sm" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <span className="font-bold" style={{ fontFamily: "'Playfair Display', Georgia, serif", color: "#7c3aed" }}>
+              Bienvenido, Admin
+            </span>
+            {" "}— {greeting.replace("Admin", "").trim()}, bienvenido al panel de control de Noösfera.
           </p>
         </div>
       </motion.div>
@@ -232,120 +221,67 @@ export default function AdminDashboard() {
       <main className="container mx-auto px-4 py-8">
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-            <Card className="bg-white/80 backdrop-blur border-emerald-100">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Total Usuarios</p>
-                    <p className="text-3xl font-bold text-gray-900">{stats.totalUsers}</p>
+          {[
+            { label: "Total Usuarios", value: stats.totalUsers, icon: <Users className="h-6 w-6 text-violet-600" />, bg: "bg-violet-100", border: "border-violet-100", delay: 0.1 },
+            { label: "Activos", value: stats.activeUsers, icon: <UserCheck className="h-6 w-6 text-purple-600" />, bg: "bg-purple-100", border: "border-purple-100", delay: 0.2 },
+            { label: "Nuevos Hoy", value: stats.newUsersToday, icon: <UserPlus className="h-6 w-6 text-fuchsia-600" />, bg: "bg-fuchsia-100", border: "border-fuchsia-100", delay: 0.3 },
+            { label: "Esta Semana", value: stats.newUsersWeek, icon: <Brain className="h-6 w-6 text-indigo-600" />, bg: "bg-indigo-100", border: "border-indigo-100", delay: 0.4 },
+          ].map(({ label, value, icon, bg, border, delay }) => (
+            <motion.div key={label} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}>
+              <Card className={`bg-white/80 backdrop-blur ${border}`}>
+                <CardContent className="pt-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm text-violet-400" style={{ fontFamily: "'DM Sans', sans-serif" }}>{label}</p>
+                      <p className="text-3xl font-bold text-violet-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>{value}</p>
+                    </div>
+                    <div className={`${bg} p-3 rounded-full`}>{icon}</div>
                   </div>
-                  <div className="bg-emerald-100 p-3 rounded-full">
-                    <Users className="h-6 w-6 text-emerald-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-            <Card className="bg-white/80 backdrop-blur border-blue-100">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Activos</p>
-                    <p className="text-3xl font-bold text-gray-900">{stats.activeUsers}</p>
-                  </div>
-                  <div className="bg-blue-100 p-3 rounded-full">
-                    <UserCheck className="h-6 w-6 text-blue-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 }}>
-            <Card className="bg-white/80 backdrop-blur border-amber-100">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Nuevos Hoy</p>
-                    <p className="text-3xl font-bold text-gray-900">{stats.newUsersToday}</p>
-                  </div>
-                  <div className="bg-amber-100 p-3 rounded-full">
-                    <UserPlus className="h-6 w-6 text-amber-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}>
-            <Card className="bg-white/80 backdrop-blur border-rose-100">
-              <CardContent className="pt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-gray-500">Esta Semana</p>
-                    <p className="text-3xl font-bold text-gray-900">{stats.newUsersWeek}</p>
-                  </div>
-                  <div className="bg-rose-100 p-3 rounded-full">
-                    <Heart className="h-6 w-6 text-rose-600" />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
           {/* Circular Charts */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5 }}
             className="lg:col-span-1"
           >
-            <Card className="bg-white/80 backdrop-blur border-emerald-100 h-full">
+            <Card className="bg-white/80 backdrop-blur border-violet-100 h-full">
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                  Estadisticas
+                <CardTitle className="text-lg flex items-center gap-2 text-violet-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                  <div className="w-2 h-2 bg-violet-500 rounded-full"></div>
+                  Estadísticas
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-col items-center gap-8">
-                  <CircularProgress 
-                    value={stats.activeUsers} 
-                    max={stats.totalUsers} 
-                    label="Usuarios Activos" 
-                    color="text-emerald-500" 
-                  />
-                  <CircularProgress 
-                    value={stats.newUsersWeek} 
-                    max={stats.totalUsers} 
-                    label="Nuevos (7 dias)" 
-                    color="text-blue-500" 
-                  />
+                  <CircularProgress value={stats.activeUsers} max={stats.totalUsers} label="Usuarios Activos" color="text-violet-500" />
+                  <CircularProgress value={stats.newUsersWeek} max={stats.totalUsers} label="Nuevos (7 días)" color="text-purple-500" />
                 </div>
               </CardContent>
             </Card>
           </motion.div>
 
           {/* Users Table */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }} 
-            animate={{ opacity: 1, y: 0 }} 
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             className="lg:col-span-2"
           >
-            <Card className="bg-white/80 backdrop-blur border-emerald-100">
+            <Card className="bg-white/80 backdrop-blur border-violet-100">
               <CardHeader>
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                  <CardTitle className="text-lg flex items-center gap-2 text-violet-900" style={{ fontFamily: "'Playfair Display', Georgia, serif" }}>
+                    <div className="w-2 h-2 bg-violet-500 rounded-full animate-pulse"></div>
                     Usuarios Registrados
                   </CardTitle>
-                  <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <div className="flex items-center gap-2 text-sm text-violet-400" style={{ fontFamily: "'DM Sans', sans-serif" }}>
                     <RefreshCw className="h-4 w-4" />
                     <span>Actualizado: {lastUpdate.toLocaleTimeString()}</span>
                   </div>
@@ -359,29 +295,31 @@ export default function AdminDashboard() {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.05 }}
-                      className="flex items-center justify-between p-3 bg-gray-50/80 rounded-lg hover:bg-gray-100/80 transition-colors"
+                      className="flex items-center justify-between p-3 bg-violet-50/60 rounded-lg hover:bg-violet-100/60 transition-colors"
                     >
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10">
-                          <AvatarFallback className={user.is_active ? "bg-emerald-100 text-emerald-700" : "bg-gray-100 text-gray-500"}>
+                          <AvatarFallback className={user.is_active ? "bg-violet-100 text-violet-700" : "bg-gray-100 text-gray-500"}>
                             {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
                           </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-medium text-gray-900">{user.name || "Sin nombre"}</p>
-                          <p className="text-sm text-gray-500">{user.email}</p>
+                          <p className="font-medium text-violet-900" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+                            {user.name || "Sin nombre"}
+                          </p>
+                          <p className="text-sm text-violet-400">{user.email}</p>
                         </div>
                       </div>
                       <div className="flex items-center gap-3">
-                        <Badge 
+                        <Badge
                           variant={user.is_active ? "default" : "secondary"}
-                          className={user.is_active ? "bg-emerald-100 text-emerald-700 hover:bg-emerald-100" : ""}
+                          className={user.is_active ? "bg-violet-100 text-violet-700 hover:bg-violet-100" : ""}
                         >
                           {user.is_active ? "Activo" : "Inactivo"}
                         </Badge>
                         <div className="text-right">
-                          <p className="text-xs text-gray-500">Registro</p>
-                          <p className="text-sm font-medium text-gray-700">
+                          <p className="text-xs text-violet-400">Registro</p>
+                          <p className="text-sm font-medium text-violet-700">
                             {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "-"}
                           </p>
                         </div>
@@ -391,8 +329,8 @@ export default function AdminDashboard() {
 
                   {users.length === 0 && (
                     <div className="text-center py-8">
-                      <Users className="h-12 w-12 text-gray-300 mx-auto mb-3" />
-                      <p className="text-gray-500">No hay usuarios registrados</p>
+                      <Users className="h-12 w-12 text-violet-200 mx-auto mb-3" />
+                      <p className="text-violet-400" style={{ fontFamily: "'DM Sans', sans-serif" }}>No hay usuarios registrados</p>
                     </div>
                   )}
                 </div>

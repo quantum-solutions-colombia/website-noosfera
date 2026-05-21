@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Heart, Sparkles, LogOut, User, RefreshCw, Download, X, Check, ImageIcon, Crown } from "lucide-react"
+import { Brain, Sparkles, LogOut, User, RefreshCw, Download, X, Check, ImageIcon, Crown } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -384,7 +384,7 @@ export default function UserDashboardNew() {
         <div className="container mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Heart className="h-7 w-7 text-emerald-500" />
+              <Brain className="h-7 w-7 text-emerald-500" />
               <span className="text-xl font-bold bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">
                 Noosfera
               </span>
@@ -452,7 +452,7 @@ export default function UserDashboardNew() {
               <span className="font-bold text-emerald-600">{totalGenerations}</span>
             </div>
             <div className="flex items-center gap-2">
-              <Heart className="h-4 w-4 text-emerald-600" />
+              <Brain className="h-4 w-4 text-emerald-600" />
               <span className="text-gray-600">En galeria:</span>
               <span className="font-bold text-emerald-600">{gallery.length}</span>
             </div>
@@ -496,7 +496,7 @@ export default function UserDashboardNew() {
               <Card className="bg-white/90 backdrop-blur shadow-xl border-emerald-100">
                 <CardHeader className="text-center pb-4">
                   <div className="mx-auto w-14 h-14 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mb-3">
-                    <Heart className="h-7 w-7 text-white" />
+                    <Brain className="h-7 w-7 text-white" />
                   </div>
                   <CardTitle className="text-xl">Ingresa tus Pulsos</CardTitle>
                   <CardDescription>Escribe un valor y presiona Enter o coma</CardDescription>
@@ -615,7 +615,7 @@ export default function UserDashboardNew() {
                     transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 mb-6"
                   >
-                    <Heart className="h-10 w-10 text-white" />
+                    <Brain className="h-10 w-10 text-white" />
                   </motion.div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">Generando tu arte...</h3>
                   <p className="text-gray-500 mb-6">Interpretando tus patrones cardiacos</p>
@@ -758,7 +758,7 @@ export default function UserDashboardNew() {
               {gallery.length === 0 ? (
                 <Card className="bg-white/90 backdrop-blur border-emerald-100">
                   <CardContent className="py-12 text-center">
-                    <Heart className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                    <Brain className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                     <h3 className="text-lg font-medium text-gray-900 mb-2">Tu galeria esta vacia</h3>
                     <p className="text-gray-500 mb-4">Crea tu primera obra de arte cardiaco</p>
                     <Button onClick={() => setStep("input")} className="bg-emerald-600 hover:bg-emerald-700">

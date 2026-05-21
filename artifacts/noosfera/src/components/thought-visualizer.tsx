@@ -9,7 +9,7 @@ import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { toast } from "@/components/ui/use-toast"
-import { Download, ZoomIn, ZoomOut, RotateCw, Maximize2, Minimize2, Heart, Zap, Activity, Eye, Layers } from 'lucide-react'
+import { Download, ZoomIn, ZoomOut, RotateCw, Maximize2, Minimize2, Brain, Zap, Activity, Eye, Layers } from 'lucide-react'
 // Importar el nuevo hook
 import { useResizeObserver } from "@/hooks/use-resize-observer"
 import NFTDownloadModal from "@/components/nft-download-modal"
@@ -508,7 +508,7 @@ export default function ThoughtVisualizer({ fullscreen = false, isDemo = false }
           >
             {visualizerMode === "cardiac" && (
               <>
-                <Heart className="h-4 w-4 mr-1" /> Patrón Cardíaco
+                <Brain className="h-4 w-4 mr-1" /> Patrón Cardíaco
               </>
             )}
             {visualizerMode === "heartrate" && (
@@ -698,7 +698,7 @@ export default function ThoughtVisualizer({ fullscreen = false, isDemo = false }
                   animate={{ rotate: 360 }}
                   transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                 >
-                  <Heart className="h-4 w-4" />
+                  <Brain className="h-4 w-4" />
                 </motion.div>
                 Procesando pulsos cardíacos avanzados
               </div>

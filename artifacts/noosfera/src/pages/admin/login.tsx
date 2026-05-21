@@ -3,7 +3,7 @@ import type React from "react"
 
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Shield, Eye, EyeOff, ArrowLeft, CheckCircle2, Sparkles } from "lucide-react"
+import { Shield, Eye, EyeOff, ArrowLeft, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useLocation } from "wouter"
 import { localDB, simpleHash } from "@/lib-app/local-storage"
@@ -124,23 +124,6 @@ export default function AdminLoginPage() {
                   )}
                 </div>
 
-                {/* Admin recognized banner */}
-                <AnimatePresence>
-                  {isSuperAdmin && (
-                    <motion.div
-                      initial={{ opacity: 0, y: -6, scale: 0.97 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: -6, scale: 0.97 }}
-                      transition={{ duration: 0.25 }}
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-emerald-500/10 border border-emerald-500/30"
-                    >
-                      <Sparkles className="h-4 w-4 text-emerald-400 flex-shrink-0" />
-                      <p className="text-emerald-300 text-sm font-medium">
-                        Administrador reconocido — acceso directo habilitado
-                      </p>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
 
               {/* Password field — only shown for non-super-admin */}

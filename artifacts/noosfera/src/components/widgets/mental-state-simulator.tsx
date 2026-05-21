@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
 import { Label } from "@/components/ui/label"
 import { useNoosfera } from "@/contexts/noosfera-context"
-import { Brain, Sparkles, Lightbulb, Waves, Loader2, Heart, Focus, Smile } from "lucide-react"
+import { Brain, Sparkles, Lightbulb, Waves, Loader2, Focus, Smile } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -124,7 +124,7 @@ export default function MentalStateSimulator() {
       id: "relaxation",
       name: "Relajación",
       description: "Estado de descanso con predominancia de ondas Alpha",
-      icon: <Heart className="h-5 w-5 text-pink-500" />,
+      icon: <Brain className="h-5 w-5 text-pink-500" />,
       color: "#ec4899",
       wavePatterns: {
         alpha: 85,

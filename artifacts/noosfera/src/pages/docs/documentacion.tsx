@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import {
-  Heart,
+  Brain,
   ArrowLeft,
   CheckCircle,
   Circle,
@@ -30,7 +30,6 @@ import {
   Globe,
   Wallet,
   TrendingUp,
-  Brain,
 } from "lucide-react"
 import { useLocation } from "wouter"
 
@@ -240,7 +239,7 @@ export default function DocumentacionPage() {
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div className="flex items-center gap-2">
-              <Heart className="h-8 w-8 text-emerald-500" />
+              <Brain className="h-8 w-8 text-emerald-500" />
               <h1 className="text-2xl font-bold text-foreground">Documentación Técnica</h1>
             </div>
           </div>
@@ -282,7 +281,7 @@ export default function DocumentacionPage() {
                   Planes de Monetización Activos
                 </Badge>
                 <Badge variant="outline" className="bg-purple-500/10 text-purple-500 border-purple-500/20">
-                  <Heart className="h-3 w-3 mr-1" />
+                  <Brain className="h-3 w-3 mr-1" />
                   Contexto Cardíaco Completo
                 </Badge>
               </div>

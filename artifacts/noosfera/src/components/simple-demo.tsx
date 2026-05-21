@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Heart, Sparkles, ArrowLeft, RefreshCw, X, Check,
+  Brain, Sparkles, ArrowLeft, RefreshCw, X, Check,
   Home, Users, ChevronLeft, ChevronRight, Download,
 } from "lucide-react"
 import { useLocation } from "wouter"
@@ -759,7 +759,7 @@ export default function SimpleDemo() {
             style={{ minHeight: "100vh" }}>
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
               <div className="flex items-center gap-2">
-                <Heart className="h-5 w-5 flex-shrink-0" style={{ color: "#7c3aed" }} />
+                <Brain className="h-5 w-5 flex-shrink-0" style={{ color: "#7c3aed" }} />
                 <span className="font-black text-gray-900 text-base tracking-tight" style={font}>Noosfera Demo</span>
               </div>
               <button onClick={() => setSidebarOpen(false)} className="p-1 rounded hover:bg-gray-100 text-gray-400 transition-colors">
@@ -820,7 +820,7 @@ export default function SimpleDemo() {
                   <ChevronRight className="h-4 w-4" />
                 </button>
                 <div className="flex items-center gap-2">
-                  <Heart className="h-5 w-5" style={{ color: "#7c3aed" }} />
+                  <Brain className="h-5 w-5" style={{ color: "#7c3aed" }} />
                   <span className="font-black text-gray-900 text-sm" style={font}>Noosfera Demo</span>
                 </div>
               </>
