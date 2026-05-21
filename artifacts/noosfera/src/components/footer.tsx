@@ -72,7 +72,7 @@ export function Footer({ waveBg = "#7c3aed" }: { waveBg?: string } = {}) {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }} viewport={{ once: true }}>
             <div className="flex items-center gap-2">
-              <img src="/favicon-brain.png" alt="Noosfera" style={{ width: 28, height: 28, objectFit: "contain" }} />
+              <img src="/favicon-brain.png" alt="Noosfera" style={{ width: 44, height: 44, objectFit: "contain" }} />
               <span className="text-2xl font-black text-white"
                 style={{ fontFamily: "'DM Sans', sans-serif" }}>
                 Noosfera

@@ -656,7 +656,7 @@ export default function AdminDashboard() {
       {/* ── FOOTER ── */}
       <footer style={{ borderTop: "1px solid #000", background: "#fff", padding: "14px 24px", textAlign: "center" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>
-          <img src="/favicon-brain.png" alt="Noosfera" style={{ width: 20, height: 20, objectFit: "contain" }} />
+          <img src="/favicon-brain.png" alt="Noosfera" style={{ width: 36, height: 36, objectFit: "contain" }} />
           <p style={{ margin: 0, fontSize: 13, color: "#555", fontFamily: DM }}>
             &copy; 2026 <span style={{ color: C1, fontWeight: 600 }}>Noosfera</span>.
           </p>

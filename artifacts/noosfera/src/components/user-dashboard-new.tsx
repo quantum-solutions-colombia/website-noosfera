@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Brain, Sparkles, LogOut, User, RefreshCw, Download, X, Check, ImageIcon, Crown } from "lucide-react"
+import { Brain, Sparkles, LogOut, User, RefreshCw, Download, X, Check, ImageIcon, Crown, Heart, Wand2, Share2, ChevronRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -50,7 +50,7 @@ const artStyles = [
 ]
 
 export default function UserDashboardNew() {
-  const { user, logout } = useAuth()
+  const { user, logout, completeTutorial } = useAuth()
   const [, navigate] = useLocation()
   const [step, setStep] = useState<AppStep>("input")
   const [pulses, setPulses] = useState<number[]>([])
@@ -61,6 +61,7 @@ export default function UserDashboardNew() {
   const [generationProgress, setGenerationProgress] = useState(0)
   const [totalGenerations, setTotalGenerations] = useState(0)
   const [dailyUsed, setDailyUsed] = useState(0)
+  const [tutorialStep, setTutorialStep] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const dailyLimit = user?.plan === "premium" ? DAILY_LIMIT_PREMIUM : DAILY_LIMIT_FREE
@@ -377,8 +378,167 @@ export default function UserDashboardNew() {
     )
   }
 
+  const showTutorial = user?.preferences?.tutorialCompleted === false
+
+  const tutorialSteps = [
+    {
+      icon: <Heart className="h-10 w-10 text-rose-500" />,
+      title: "Ingresa tus pulsos cardíacos",
+      description: "Toma tu frecuencia cardíaca y escribe cada lectura (entre 40 y 200 BPM). Puedes ingresar hasta 8 valores para crear una obra más detallada.",
+      color: "from-rose-500 to-pink-600",
+    },
+    {
+      icon: <Wand2 className="h-10 w-10 text-violet-500" />,
+      title: "La IA transforma tu ritmo en arte",
+      description: "Con cada generación, nuestra inteligencia artificial convierte la energía de tus latidos en una obra digital única, personal e irrepetible.",
+      color: "from-violet-500 to-purple-600",
+    },
+    {
+      icon: <Share2 className="h-10 w-10 text-emerald-500" />,
+      title: "Descarga y comparte tu obra",
+      description: "Guarda tu arte en tu galería personal, descárgalo con marca de agua o compártelo en redes. Cada día tienes generaciones disponibles.",
+      color: "from-emerald-500 to-teal-600",
+    },
+  ]
+
+  const handleTutorialNext = () => {
+    if (tutorialStep < tutorialSteps.length - 1) {
+      setTutorialStep(prev => prev + 1)
+    } else {
+      completeTutorial()
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-emerald-50/30">
+
+      {/* ── TUTORIAL / BIENVENIDA OVERLAY ── */}
+      <AnimatePresence>
+        {showTutorial && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            style={{
+              position: "fixed", inset: 0, zIndex: 1000,
+              background: "rgba(0,0,0,0.72)",
+              backdropFilter: "blur(6px)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              padding: 20,
+            }}>
+            <motion.div
+              key={tutorialStep}
+              initial={{ scale: 0.88, opacity: 0, y: 24 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.92, opacity: 0, y: -16 }}
+              transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                background: "#fff",
+                borderRadius: 24,
+                padding: "36px 32px",
+                maxWidth: 420,
+                width: "100%",
+                boxShadow: "0 32px 80px rgba(0,0,0,0.35)",
+                textAlign: "center",
+                position: "relative",
+              }}>
+
+              {/* Paso 0: saludo personalizado */}
+              {tutorialStep === 0 && (
+                <div style={{ marginBottom: 24 }}>
+                  <div style={{
+                    width: 80, height: 80, borderRadius: "50%",
+                    background: "linear-gradient(135deg, #7c3aed, #a855f7)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    margin: "0 auto 16px",
+                    fontSize: 36,
+                  }}>
+                    {user?.name?.charAt(0).toUpperCase() || "👋"}
+                  </div>
+                  <h2 style={{
+                    fontFamily: "'DM Sans', sans-serif", fontWeight: 900,
+                    fontSize: 26, color: "#111", margin: "0 0 6px",
+                  }}>
+                    ¡Hola, {user?.name?.split(" ")[0]}! 👋
+                  </h2>
+                  <p style={{ color: "#666", fontSize: 14, margin: 0, lineHeight: 1.5 }}>
+                    Bienvenido a Noösfera. En menos de 2 minutos te mostramos todo lo que puedes crear aquí.
+                  </p>
+                </div>
+              )}
+
+              {/* Pasos del tutorial */}
+              {tutorialStep > 0 && (
+                <div style={{ marginBottom: 24 }}>
+                  <div style={{
+                    width: 80, height: 80, borderRadius: "50%",
+                    background: `linear-gradient(135deg, ${tutorialStep === 1 ? "#7c3aed, #a855f7" : "#10b981, #059669"})`,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    margin: "0 auto 16px",
+                  }}>
+                    {tutorialSteps[tutorialStep - 1].icon}
+                  </div>
+                  <h2 style={{
+                    fontFamily: "'DM Sans', sans-serif", fontWeight: 900,
+                    fontSize: 20, color: "#111", margin: "0 0 10px",
+                  }}>
+                    {tutorialSteps[tutorialStep - 1].title}
+                  </h2>
+                  <p style={{ color: "#555", fontSize: 13.5, margin: 0, lineHeight: 1.6 }}>
+                    {tutorialSteps[tutorialStep - 1].description}
+                  </p>
+                </div>
+              )}
+
+              {/* Indicador de pasos */}
+              <div style={{ display: "flex", justifyContent: "center", gap: 6, marginBottom: 24 }}>
+                {[0, 1, 2, 3].map(i => (
+                  <div key={i} style={{
+                    width: tutorialStep === i ? 20 : 7,
+                    height: 7,
+                    borderRadius: 4,
+                    background: tutorialStep === i ? "#7c3aed" : "#e5e7eb",
+                    transition: "all 0.3s ease",
+                  }} />
+                ))}
+              </div>
+
+              {/* Botón acción */}
+              <button
+                onClick={handleTutorialNext}
+                style={{
+                  width: "100%", padding: "12px 0",
+                  borderRadius: 12, border: "none",
+                  background: "linear-gradient(135deg, #7c3aed, #a855f7)",
+                  color: "#fff", fontWeight: 700, fontSize: 14,
+                  cursor: "pointer",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  boxShadow: "0 4px 20px rgba(124,58,237,0.35)",
+                  transition: "opacity 0.18s",
+                }}
+                onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
+                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
+                {tutorialStep === 0 && <><Sparkles className="h-4 w-4" /><span>Ver cómo funciona</span></>}
+                {tutorialStep === 1 && <><ChevronRight className="h-4 w-4" /><span>Continuar</span></>}
+                {tutorialStep === 2 && <><ChevronRight className="h-4 w-4" /><span>Continuar</span></>}
+                {tutorialStep === 3 && <><Check className="h-4 w-4" /><span>¡Empezar a crear!</span></>}
+              </button>
+
+              {/* Saltar */}
+              <button
+                onClick={() => completeTutorial()}
+                style={{
+                  marginTop: 12, background: "none", border: "none",
+                  color: "#aaa", fontSize: 12, cursor: "pointer",
+                  textDecoration: "underline",
+                }}>
+                Saltar tutorial
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Header */}
       <header className="bg-white/80 backdrop-blur-sm border-b border-gray-100 sticky top-0 z-50">
         <div className="container mx-auto px-4 py-3">

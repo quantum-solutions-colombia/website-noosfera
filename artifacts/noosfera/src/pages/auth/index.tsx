@@ -2,7 +2,7 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react"
+import { Eye, EyeOff, ArrowRight, Sparkles, UserPlus } from "lucide-react"
 import { useLocation, useSearch, Link } from "wouter"
 import { useAuth } from "@/contexts/auth-context"
 import { toast } from "react-hot-toast"
