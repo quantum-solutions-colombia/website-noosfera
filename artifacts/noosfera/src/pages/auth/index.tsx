@@ -2,11 +2,14 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Eye, EyeOff, ArrowRight, UserPlus } from "lucide-react"
+import { Eye, EyeOff, ArrowRight, Sparkles } from "lucide-react"
 import { useLocation, useSearch, Link } from "wouter"
 import { useAuth } from "@/contexts/auth-context"
 import { toast } from "react-hot-toast"
 import { Footer } from "@/components/footer"
+import { localDB } from "@/lib-app/local-storage"
+
+const SUPER_ADMIN_EMAIL = "noosferasuperadmin@gmail.com"
 
 const GoogleIcon = () => (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -32,9 +35,17 @@ function AuthContent() {
     if (params.get("tab") === "register") setActiveTab("register")
   }, [search])
 
+  const isSuperAdmin = loginData.email.trim().toLowerCase() === SUPER_ADMIN_EMAIL
+
   const handleLoginSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (loginData.email.trim().toLowerCase() === "noosferasuperadmin@gmail.com") {
+    if (isSuperAdmin) {
+      localDB.initializeDemoData()
+      const userData = localDB.getUserByEmail(SUPER_ADMIN_EMAIL)
+      if (userData) {
+        localDB.updateUser(userData.id, { lastLogin: new Date().toISOString() })
+        localDB.setCurrentUser(userData.id)
+      }
       navigate("/admin")
       return
     }
@@ -291,48 +302,76 @@ function AuthContent() {
                       onChange={e => setLoginData(p => ({ ...p, email: e.target.value }))}
                       disabled={isLoading}
                       style={{
-                        padding: "7px 10px", borderRadius: 8, border: "1.5px solid #e5e7eb",
-                        fontSize: 12, outline: "none", background: "#fafafa", color: "#111",
+                        padding: "7px 10px", borderRadius: 8, fontSize: 12, outline: "none",
+                        background: isSuperAdmin ? "#f0fdf4" : "#fafafa", color: "#111",
+                        border: isSuperAdmin ? "1.5px solid #22c55e" : "1.5px solid #e5e7eb",
                         transition: "border-color 0.18s",
                       }}
-                      onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
-                      onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                      onFocus={e => { if (!isSuperAdmin) e.currentTarget.style.borderColor = "#7c3aed" }}
+                      onBlur={e => { if (!isSuperAdmin) e.currentTarget.style.borderColor = "#e5e7eb" }}
                     />
                   </div>
 
-                  <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                    <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>Contraseña</label>
-                    <div style={{ position: "relative" }}>
-                      <input
-                        type={showPassword ? "text" : "password"} name="password" placeholder=""
-                        value={loginData.password}
-                        onChange={e => setLoginData(p => ({ ...p, password: e.target.value }))}
-                        disabled={isLoading}
-                        style={{
-                          width: "100%", padding: "7px 34px 7px 10px", borderRadius: 8,
-                          border: "1.5px solid #e5e7eb", fontSize: 12, outline: "none",
-                          background: "#fafafa", color: "#111", boxSizing: "border-box",
-                          transition: "border-color 0.18s",
-                        }}
-                        onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
-                        onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
-                      />
-                      <button type="button" onClick={() => setShowPassword(p => !p)}
-                        style={{ position: "absolute", right: 11, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
-                        {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                      </button>
-                    </div>
-                  </div>
+                  {/* Admin recognized banner */}
+                  <AnimatePresence>
+                    {isSuperAdmin && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -4, scale: 0.97 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -4, scale: 0.97 }}
+                        transition={{ duration: 0.2 }}
+                        style={{ display: "flex", alignItems: "center", gap: 6, padding: "6px 10px", borderRadius: 8, background: "#f0fdf4", border: "1px solid #bbf7d0" }}>
+                        <Sparkles style={{ width: 13, height: 13, color: "#16a34a", flexShrink: 0 }} />
+                        <span style={{ fontSize: 11, fontWeight: 600, color: "#15803d" }}>Administrador reconocido — acceso directo</span>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Password — hidden when superadmin detected */}
+                  <AnimatePresence>
+                    {!isSuperAdmin && (
+                      <motion.div
+                        initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.18 }}
+                        style={{ display: "flex", flexDirection: "column", gap: 3, overflow: "hidden" }}>
+                        <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>Contraseña</label>
+                        <div style={{ position: "relative" }}>
+                          <input
+                            type={showPassword ? "text" : "password"} name="password" placeholder=""
+                            value={loginData.password}
+                            onChange={e => setLoginData(p => ({ ...p, password: e.target.value }))}
+                            disabled={isLoading}
+                            style={{
+                              width: "100%", padding: "7px 34px 7px 10px", borderRadius: 8,
+                              border: "1.5px solid #e5e7eb", fontSize: 12, outline: "none",
+                              background: "#fafafa", color: "#111", boxSizing: "border-box",
+                              transition: "border-color 0.18s",
+                            }}
+                            onFocus={e => { e.currentTarget.style.borderColor = "#7c3aed" }}
+                            onBlur={e => { e.currentTarget.style.borderColor = "#e5e7eb" }}
+                          />
+                          <button type="button" onClick={() => setShowPassword(p => !p)}
+                            style={{ position: "absolute", right: 11, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "#aaa" }}>
+                            {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                          </button>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
                   <button
                     type="submit" disabled={isLoading}
                     style={{
                       width: "100%", padding: "8px 0", borderRadius: 9, border: "none",
-                      background: "#7c3aed", color: "#fff", fontWeight: 700, fontSize: 12,
+                      background: isSuperAdmin ? "linear-gradient(135deg, #16a34a, #15803d)" : "#7c3aed",
+                      color: "#fff", fontWeight: 700, fontSize: 12,
                       cursor: isLoading ? "not-allowed" : "pointer", opacity: isLoading ? 0.7 : 1,
                       display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                      transition: "background 0.25s",
                     }}>
-                    {isLoading ? "Verificando..." : <><span>Acceder</span><ArrowRight className="h-4 w-4" /></>}
+                    {isLoading ? "Verificando..." : isSuperAdmin
+                      ? <><Sparkles className="h-4 w-4" /><span>Bienvenido Admin</span></>
+                      : <><span>Acceder</span><ArrowRight className="h-4 w-4" /></>}
                   </button>
                 </motion.form>
               ) : (
