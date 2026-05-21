@@ -318,7 +318,7 @@ function downloadPDF() {
     const pg = doc.getNumberOfPages()
     doc.setFontSize(8)
     doc.setTextColor(...lightGray)
-    doc.text("Noosfera Platform — Documentación Técnica v2.0", margin, pageH - 10)
+    doc.text("Noosfera IA — Documentación Técnica v2.0", margin, pageH - 10)
     doc.text(`Página ${pg}`, pageW - margin, pageH - 10, { align: "right" })
   }
 
@@ -800,7 +800,7 @@ export default function DocsPage() {
             </p>
             <h2 className="text-3xl md:text-4xl font-black text-white leading-tight"
               style={{ fontFamily: "'DM Sans', sans-serif" }}>
-              Noosfera Platform
+              Noosfera IA
             </h2>
             <p className="text-purple-200 text-base leading-relaxed"
               style={{ fontFamily: "'DM Sans', sans-serif" }}>

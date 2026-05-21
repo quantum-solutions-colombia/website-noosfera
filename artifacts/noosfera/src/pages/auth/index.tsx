@@ -62,7 +62,7 @@ function AuthContent() {
           <nav className="hidden md:flex items-center gap-8">
             {[
               { href: "/", label: "Inicio" },
-              { href: "/company", label: "Quiénes Somos" },
+              { href: "/company", label: "Acerca de" },
               { href: "/pricing", label: "Planes" },
               { href: "/docs", label: "Documentación" },
             ].map(({ href, label }) => (
@@ -282,7 +282,7 @@ function AuthContent() {
                   <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
                     <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>Correo Electrónico</label>
                     <input
-                      type="email" name="email" placeholder="correo@gmail.com"
+                      type="email" name="email" placeholder=""
                       value={loginData.email}
                       onChange={e => setLoginData(p => ({ ...p, email: e.target.value }))}
                       disabled={isLoading}
@@ -300,7 +300,7 @@ function AuthContent() {
                     <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>Contraseña</label>
                     <div style={{ position: "relative" }}>
                       <input
-                        type={showPassword ? "text" : "password"} name="password" placeholder="Tu contraseña"
+                        type={showPassword ? "text" : "password"} name="password" placeholder=""
                         value={loginData.password}
                         onChange={e => setLoginData(p => ({ ...p, password: e.target.value }))}
                         disabled={isLoading}
@@ -340,8 +340,8 @@ function AuthContent() {
                   style={{ display: "flex", flexDirection: "column", gap: 8 }}>
 
                   {[
-                    { label: "Tu Nombre", name: "name", type: "text", placeholder: "Juan García", value: registerData.name },
-                    { label: "Correo Electrónico", name: "email", type: "email", placeholder: "correo@gmail.com", value: registerData.email },
+                    { label: "Tu Nombre", name: "name", type: "text", placeholder: "", value: registerData.name },
+                    { label: "Correo Electrónico", name: "email", type: "email", placeholder: "", value: registerData.email },
                   ].map(field => (
                     <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
                       <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>{field.label}</label>
@@ -362,8 +362,8 @@ function AuthContent() {
                   ))}
 
                   {[
-                    { label: "Contraseña", name: "password", placeholder: "Mínimo 6 caracteres", show: showPassword, toggle: () => setShowPassword(p => !p), value: registerData.password },
-                    { label: "Confirmar Contraseña", name: "confirmPassword", placeholder: "Repite tu contraseña", show: showConfirmPassword, toggle: () => setShowConfirmPassword(p => !p), value: registerData.confirmPassword },
+                    { label: "Contraseña", name: "password", placeholder: "", show: showPassword, toggle: () => setShowPassword(p => !p), value: registerData.password },
+                    { label: "Confirmar Contraseña", name: "confirmPassword", placeholder: "", show: showConfirmPassword, toggle: () => setShowConfirmPassword(p => !p), value: registerData.confirmPassword },
                   ].map(field => (
                     <div key={field.name} style={{ display: "flex", flexDirection: "column", gap: 3 }}>
                       <label style={{ fontSize: 10.5, fontWeight: 600, color: "#444" }}>{field.label}</label>

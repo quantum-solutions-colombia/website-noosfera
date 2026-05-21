@@ -22,7 +22,7 @@ export default function AdminLoginPage() {
   const [, navigate] = useLocation()
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState(SUPER_ADMIN_EMAIL)
   const [password, setPassword] = useState("")
   const isSuperAdmin = email.trim().toLowerCase() === SUPER_ADMIN_EMAIL
 
