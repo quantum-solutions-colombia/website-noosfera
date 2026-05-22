@@ -100,7 +100,7 @@ router.post("/generate-image", async (req, res) => {
       size: "1024x1024",
     })
 
-    const b64 = response.data[0]?.b64_json
+    const b64 = response.data?.[0]?.b64_json
     if (b64) {
       res.json({ imageUrl: `data:image/png;base64,${b64}`, theme, prompt })
     } else {
