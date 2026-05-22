@@ -423,19 +423,19 @@ export default function SimpleDemo() {
   const tutorialSteps = [
     {
       icon: "Pulsos",
-      image: "/images/nft-1.png",
+      image: "/images/tutorial-ships.png",
       title: "Ingresa tus pulsos cardíacos",
       description: "Escribe cada lectura de tu frecuencia cardíaca (40-200 BPM). Puedes agregar hasta 9 valores para crear una obra más detallada.",
     },
     {
       icon: "Arte IA",
-      image: "/images/nft-castle-ai.png",
+      image: "/images/tutorial-battle.png",
       title: "La IA transforma tu ritmo en arte",
       description: "Nuestra inteligencia artificial convierte la energía única de tus latidos en una obra digital irrepetible.",
     },
     {
       icon: "Galería",
-      image: "/images/nft-2.png",
+      image: "/images/tutorial-art.png",
       title: "Descarga y comparte tu obra",
       description: "Guarda tu arte en tu galería, descárgalo y compártelo. Tienes generaciones diarias disponibles según tu plan.",
     },
@@ -460,29 +460,29 @@ export default function SimpleDemo() {
               className="bg-white rounded-3xl w-full max-w-xs overflow-hidden"
               style={{ border: "2px solid #7c3aed", ...font }}>
 
-              {/* Hero image */}
-              <div style={{ position: "relative", height: 160, flexShrink: 0 }}>
+              {/* Hero image — horizontal crop */}
+              <div style={{ position: "relative", height: 148, flexShrink: 0, overflow: "hidden" }}>
                 <img
-                  src={tutorialStep === 0 ? "/images/viking-warrior.png" : tutorialSteps[tutorialStep - 1]?.image}
+                  src={tutorialStep === 0 ? "/images/tutorial-city.png" : tutorialSteps[tutorialStep - 1]?.image}
                   alt=""
-                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 40%", display: "block" }}
                 />
-                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.05) 0%, rgba(20,5,40,0.85) 100%)" }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.0) 0%, rgba(10,3,30,0.82) 100%)" }} />
                 <div style={{ position: "absolute", bottom: 12, left: 0, right: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 16, color: "#fff", textShadow: "0 2px 12px rgba(0,0,0,0.8)", textAlign: "center", padding: "0 16px" }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 15, color: "#fff", textShadow: "0 2px 10px rgba(0,0,0,0.9)", textAlign: "center", padding: "0 16px" }}>
                     {tutorialStep === 0 ? `Hola, ${user?.name?.split(" ")[0]}` : tutorialSteps[tutorialStep - 1]?.title}
                   </span>
                 </div>
               </div>
 
-              <div className="p-5">
+              <div className="px-5 pt-4 pb-5">
                 {tutorialStep === 0 ? (
                   <>
-                    <p className="text-sm font-bold text-gray-900 text-center mb-2" style={font}>Bienvenido a Noösfera</p>
+                    <p className="text-sm font-bold text-gray-900 text-center mb-1" style={font}>Bienvenido a Noösfera</p>
                     <p className="text-xs text-gray-500 text-center mb-4" style={font}>En menos de un minuto te mostramos todo lo que puedes crear aquí.</p>
                   </>
                 ) : (
-                  <p className="text-xs text-gray-600 text-center mb-4" style={font}>{tutorialSteps[tutorialStep - 1]?.description}</p>
+                  <p className="text-xs text-gray-500 text-center mb-4" style={font}>{tutorialSteps[tutorialStep - 1]?.description}</p>
                 )}
 
                 {/* Step dots */}
@@ -497,12 +497,12 @@ export default function SimpleDemo() {
                 </div>
 
                 <button onClick={handleTutorialNext}
-                  className="w-full py-3 rounded-2xl font-black text-white text-sm tracking-wide hover:opacity-90 transition-all"
-                  style={{ backgroundColor: "#7c3aed", border: "none", ...font }}>
+                  className="w-full py-2.5 font-black text-sm tracking-wide hover:opacity-70 transition-all"
+                  style={{ background: "none", border: "none", color: "#7c3aed", cursor: "pointer", ...font }}>
                   {tutorialStep === 0 ? "Ver cómo funciona" : tutorialStep < 3 ? "Continuar" : "Empezar a crear"}
                 </button>
                 <button onClick={() => completeTutorial()}
-                  className="w-full mt-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                  className="w-full text-xs text-gray-300 hover:text-gray-500 transition-colors"
                   style={{ background: "none", border: "none", cursor: "pointer" }}>
                   Saltar tutorial
                 </button>
@@ -1207,14 +1207,14 @@ export default function SimpleDemo() {
 
           {/* ── AJUSTES VIEW ── */}
           {activeNav === "ajustes" && (
-            <div className="px-6 py-6 w-full">
-              <h2 className="font-black text-gray-900 text-2xl mb-1" style={font}>Ajustes</h2>
-              <p className="text-sm text-gray-400 mb-6" style={font}>Personaliza tu experiencia en Noosfera</p>
+            <div className="py-6 w-full px-6 max-w-2xl mx-auto">
+              <h2 className="font-black text-gray-900 text-xl mb-0.5 text-center" style={font}>Ajustes</h2>
+              <p className="text-sm text-gray-400 mb-6 text-center" style={font}>Personaliza tu experiencia en Noosfera</p>
 
               {isRealUser ? (
                 <>
                   {/* Tabs */}
-                  <div className="flex gap-1 p-1 rounded-xl mb-6 max-w-md" style={{ backgroundColor: "#f3f4f6" }}>
+                  <div className="flex gap-1 p-1 rounded-xl mb-6" style={{ backgroundColor: "#f3f4f6" }}>
                     {([
                       { id: "cuenta", label: "Cuenta" },
                       { id: "notificaciones", label: "Avisos" },
@@ -1232,37 +1232,45 @@ export default function SimpleDemo() {
                   {/* ── TAB: CUENTA ── */}
                   {settingsTab === "cuenta" && (
                     <>
-                      <div className="rounded-2xl p-5 border border-gray-100 shadow-sm mb-4 bg-white">
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-xl flex-shrink-0"
-                            style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
-                            {user?.name?.charAt(0) || "U"}
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-black text-gray-900 text-sm" style={font}>{user?.name}</p>
-                            <p className="text-xs text-gray-400 mb-2" style={font}>{user?.email}</p>
-                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full w-fit text-xs font-bold"
-                              style={{ backgroundColor: user?.plan === "premium" ? "#fef3c7" : "#f5f3ff", color: user?.plan === "premium" ? "#92400e" : "#7c3aed" }}>
-                              {user?.plan === "premium" && <Crown className="h-3 w-3" />}
-                              Plan {user?.plan === "premium" ? "Premium" : "Gratuito"}
+                      <div className="rounded-2xl border border-gray-100 shadow-sm mb-4 bg-white overflow-hidden">
+                        <div className="flex items-stretch">
+                          {/* Left: identity */}
+                          <div className="flex items-center gap-3 p-5 flex-shrink-0">
+                            <div className="w-12 h-12 rounded-full flex items-center justify-center font-black text-white text-lg flex-shrink-0"
+                              style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                              {user?.name?.charAt(0) || "U"}
+                            </div>
+                            <div>
+                              <p className="font-black text-gray-900 text-sm" style={font}>{user?.name}</p>
+                              <p className="text-xs text-gray-400 mb-1.5" style={font}>{user?.email}</p>
+                              <div className="flex items-center gap-1 px-2 py-0.5 rounded-full w-fit text-xs font-bold"
+                                style={{ backgroundColor: user?.plan === "premium" ? "#fef3c7" : "#f5f3ff", color: user?.plan === "premium" ? "#92400e" : "#7c3aed" }}>
+                                {user?.plan === "premium" && <Crown className="h-3 w-3" />}
+                                Plan {user?.plan === "premium" ? "Premium" : "Gratuito"}
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="space-y-3 pt-3 border-t border-gray-50">
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs text-gray-500" style={font}>Imágenes disponibles hoy</span>
-                            <span className="text-xs font-black" style={{ color: attemptsRemaining > 3 ? "#059669" : "#dc2626", ...font }}>{attemptsRemaining} / {effectiveLimit}</span>
-                          </div>
-                          <div className="w-full bg-gray-100 rounded-full h-1.5">
-                            <div className="h-1.5 rounded-full transition-all" style={{ width: `${(attemptsRemaining / effectiveLimit) * 100}%`, backgroundColor: attemptsRemaining > 3 ? "#059669" : "#dc2626" }} />
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs text-gray-500" style={font}>Marca de agua</span>
-                            <span className="text-xs font-bold text-gray-900" style={font}>{user?.plan === "premium" ? "Sin marca de agua" : "Incluida en descargas"}</span>
-                          </div>
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs text-gray-500" style={font}>Total de obras creadas</span>
-                            <span className="text-xs font-bold text-gray-900" style={font}>{myCreations.length} obras</span>
+                          {/* Divider */}
+                          <div className="w-px bg-gray-100 self-stretch" />
+                          {/* Right: stats */}
+                          <div className="flex-1 p-5 space-y-2.5">
+                            <div>
+                              <div className="flex justify-between items-center mb-1">
+                                <span className="text-xs text-gray-500" style={font}>Imágenes hoy</span>
+                                <span className="text-xs font-black" style={{ color: attemptsRemaining > 3 ? "#059669" : "#dc2626", ...font }}>{attemptsRemaining} / {effectiveLimit}</span>
+                              </div>
+                              <div className="w-full bg-gray-100 rounded-full h-1.5">
+                                <div className="h-1.5 rounded-full transition-all" style={{ width: `${(attemptsRemaining / effectiveLimit) * 100}%`, backgroundColor: attemptsRemaining > 3 ? "#059669" : "#dc2626" }} />
+                              </div>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-gray-500" style={font}>Marca de agua</span>
+                              <span className="text-xs font-bold text-gray-900" style={font}>{user?.plan === "premium" ? "Sin marca" : "Incluida"}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-gray-500" style={font}>Obras creadas</span>
+                              <span className="text-xs font-bold text-gray-900" style={font}>{myCreations.length}</span>
+                            </div>
                           </div>
                         </div>
                       </div>
