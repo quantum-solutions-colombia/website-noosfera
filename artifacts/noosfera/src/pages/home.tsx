@@ -1,7 +1,6 @@
 import { useEffect } from "react"
 import { useLocation } from "wouter"
 import { useAuth } from "@/contexts/auth-context"
-import { CookiesConsent } from "@/components/cookies-consent"
 import { RecentCreations } from "@/components/recent-creations"
 import { HeroCarousel } from "@/components/hero-carousel"
 import { Footer } from "@/components/footer"
@@ -62,7 +61,6 @@ export default function LandingPage() {
       </section>
 
       <Footer />
-      <CookiesConsent />
     </div>
   )
 }
