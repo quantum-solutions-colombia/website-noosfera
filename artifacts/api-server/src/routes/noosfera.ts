@@ -8,10 +8,10 @@ const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 function getOpenAI() {
-  return new OpenAI({
-    apiKey: process.env.AI_INTEGRATIONS_OPENAI_API_KEY,
-    baseURL: process.env.AI_INTEGRATIONS_OPENAI_BASE_URL,
-  });
+  const apiKey = process.env.AI_INTEGRATIONS_OPENAI_API_KEY || process.env.OPENAI_API_KEY;
+  const baseURL = process.env.AI_INTEGRATIONS_OPENAI_BASE_URL;
+  if (!apiKey) throw new Error("No OpenAI API key configured. Set OPENAI_API_KEY in Replit Secrets.");
+  return new OpenAI({ apiKey, ...(baseURL ? { baseURL } : {}) });
 }
 
 const NOOSFERA_THEMES = [

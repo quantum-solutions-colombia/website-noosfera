@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import {
-  Brain, Sparkles, ArrowLeft, RefreshCw, X, Check,
+  Brain, Sparkles, RefreshCw, X, Check,
   Home, Users, ChevronLeft, ChevronRight, Download,
-  ImageIcon, Settings, Upload, Crown, Share2,
+  ImageIcon, Settings, Crown, Share2, Heart, MessageCircle,
+  CreditCard, Bell, Lock, Globe, Palette, Eye, EyeOff,
 } from "lucide-react"
 import { useLocation } from "wouter"
 import { useAuth } from "@/contexts/auth-context"
@@ -55,14 +56,14 @@ const artStyles = [
 
 /* ── Hero side images — portrait 3:4 ── */
 const HERO_IMAGES = [
-  "/images/hero-1.png",
-  "/images/hero-2.png",
-  "/images/hero-3.png",
-  "/images/hero-4.png",
-  "/images/hero-inca.png",
-  "/images/hero-6.png",
+  "/images/viking-warrior.png",
   "/images/hero-dragon.png",
+  "/images/community-roman-city.png",
+  "/images/pipeline-forest.png",
   "/images/hero-gorilla.png",
+  "/images/nft-ghost.png",
+  "/images/hero-maya.png",
+  "/images/hero-inca.png",
 ]
 
 /* ── Community gallery ── */
@@ -224,6 +225,17 @@ export default function SimpleDemo() {
   const [showTokenModal, setShowTokenModal] = useState(false)
   const [resetAt, setResetAt] = useState<number | null>(null)
   const [communityUploads, setCommunityUploads] = useState<GeneratedResult[]>([])
+  const [communityLikes, setCommunityLikes] = useState<Record<string, number>>({})
+  const [likedImages, setLikedImages] = useState<Set<string>>(new Set())
+  const [communityDetail, setCommunityDetail] = useState<{ src: string; label: string; likes: number } | null>(null)
+  const [showPlanModal, setShowPlanModal] = useState(false)
+  const [selectedPlanId, setSelectedPlanId] = useState<"standard" | "premium">("premium")
+  const [cardData, setCardData] = useState({ name: "", number: "", expiry: "", cvv: "" })
+  const [showCvv, setShowCvv] = useState(false)
+  const [paymentSuccess, setPaymentSuccess] = useState(false)
+  const [settingsTab, setSettingsTab] = useState<"cuenta" | "notificaciones" | "privacidad" | "seguridad">("cuenta")
+  const [notifSettings, setNotifSettings] = useState({ email: true, push: false, weekly: true })
+  const [privacySettings, setPrivacySettings] = useState({ publicProfile: true, showInCommunity: true })
   const inputRef = useRef<HTMLInputElement>(null)
 
   const getTimeGreeting = () => {
@@ -962,12 +974,6 @@ export default function SimpleDemo() {
                   <Settings className="h-4 w-4 flex-shrink-0" />
                   Ajustes
                 </button>
-                <button onClick={() => navigate("/")}
-                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all"
-                  style={font}>
-                  <ArrowLeft className="h-4 w-4 flex-shrink-0" />
-                  Volver al Inicio
-                </button>
               </div>
             </nav>
             <div className="px-3 pb-4">
@@ -1145,9 +1151,6 @@ export default function SimpleDemo() {
 
               {myCreations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-center">
-                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ backgroundColor: "#f5f3ff" }}>
-                    <ImageIcon className="h-8 w-8" style={{ color: "#7c3aed" }} />
-                  </div>
                   <h3 className="font-black text-gray-900 text-base mb-2" style={font}>Tu galería está vacía</h3>
                   <p className="text-sm text-gray-400 mb-5 max-w-xs" style={font}>Crea tu primera obra de arte a partir de tus latidos</p>
                   <button onClick={openInput}
@@ -1203,72 +1206,240 @@ export default function SimpleDemo() {
           {/* ── AJUSTES VIEW ── */}
           {activeNav === "ajustes" && (
             <div className="px-5 py-6 max-w-lg mx-auto">
-              <h2 className="font-black text-gray-900 text-xl mb-6" style={font}>Ajustes</h2>
+              <h2 className="font-black text-gray-900 text-xl mb-1" style={font}>Ajustes</h2>
+              <p className="text-sm text-gray-400 mb-5" style={font}>Personaliza tu experiencia en Noosfera</p>
 
-              {/* Profile card */}
               {isRealUser ? (
                 <>
-                  <div className="rounded-2xl p-5 border border-gray-100 shadow-sm mb-4 bg-white">
-                    <h3 className="font-black text-sm text-gray-700 mb-3" style={font}>Perfil</h3>
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-full flex items-center justify-center font-black text-white text-lg flex-shrink-0"
-                        style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
-                        {user?.name?.charAt(0) || "U"}
-                      </div>
-                      <div>
-                        <p className="font-black text-gray-900 text-sm" style={font}>{user?.name}</p>
-                        <p className="text-xs text-gray-400" style={font}>{user?.email}</p>
-                      </div>
-                    </div>
+                  {/* Tabs */}
+                  <div className="flex gap-1 p-1 rounded-xl mb-5" style={{ backgroundColor: "#f3f4f6" }}>
+                    {([
+                      { id: "cuenta", label: "Cuenta" },
+                      { id: "notificaciones", label: "Avisos" },
+                      { id: "privacidad", label: "Privacidad" },
+                      { id: "seguridad", label: "Seguridad" },
+                    ] as const).map(tab => (
+                      <button key={tab.id} onClick={() => setSettingsTab(tab.id)}
+                        className="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all"
+                        style={{ backgroundColor: settingsTab === tab.id ? "#fff" : "transparent", color: settingsTab === tab.id ? "#7c3aed" : "#6b7280", boxShadow: settingsTab === tab.id ? "0 1px 4px rgba(0,0,0,0.08)" : "none", ...font }}>
+                        {tab.label}
+                      </button>
+                    ))}
                   </div>
 
-                  {/* Plan card */}
-                  <div className="rounded-2xl p-5 border border-gray-100 shadow-sm mb-4 bg-white">
-                    <div className="flex items-center justify-between mb-3">
-                      <h3 className="font-black text-sm text-gray-700" style={font}>Plan actual</h3>
-                      <div className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
-                        style={{ backgroundColor: user?.plan === "premium" ? "#fef3c7" : "#f5f3ff", color: user?.plan === "premium" ? "#92400e" : "#7c3aed" }}>
-                        {user?.plan === "premium" && <Crown className="h-3 w-3" />}
-                        {user?.plan === "premium" ? "Premium" : "Gratuito"}
+                  {/* ── TAB: CUENTA ── */}
+                  {settingsTab === "cuenta" && (
+                    <>
+                      <div className="rounded-2xl p-5 border border-gray-100 shadow-sm mb-4 bg-white">
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="w-14 h-14 rounded-full flex items-center justify-center font-black text-white text-xl flex-shrink-0"
+                            style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                            {user?.name?.charAt(0) || "U"}
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-black text-gray-900 text-sm" style={font}>{user?.name}</p>
+                            <p className="text-xs text-gray-400 mb-2" style={font}>{user?.email}</p>
+                            <div className="flex items-center gap-1 px-2 py-0.5 rounded-full w-fit text-xs font-bold"
+                              style={{ backgroundColor: user?.plan === "premium" ? "#fef3c7" : "#f5f3ff", color: user?.plan === "premium" ? "#92400e" : "#7c3aed" }}>
+                              {user?.plan === "premium" && <Crown className="h-3 w-3" />}
+                              Plan {user?.plan === "premium" ? "Premium" : "Gratuito"}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="space-y-3 pt-3 border-t border-gray-50">
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-500" style={font}>Imágenes disponibles hoy</span>
+                            <span className="text-xs font-black" style={{ color: attemptsRemaining > 3 ? "#059669" : "#dc2626", ...font }}>{attemptsRemaining} / {effectiveLimit}</span>
+                          </div>
+                          <div className="w-full bg-gray-100 rounded-full h-1.5">
+                            <div className="h-1.5 rounded-full transition-all" style={{ width: `${(attemptsRemaining / effectiveLimit) * 100}%`, backgroundColor: attemptsRemaining > 3 ? "#059669" : "#dc2626" }} />
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-500" style={font}>Marca de agua</span>
+                            <span className="text-xs font-bold text-gray-900" style={font}>{user?.plan === "premium" ? "Sin marca de agua" : "Incluida en descargas"}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-gray-500" style={font}>Total de obras creadas</span>
+                            <span className="text-xs font-bold text-gray-900" style={font}>{myCreations.length} obras</span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="space-y-2 mb-4">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-500" style={font}>Imágenes diarias</span>
-                        <span className="font-bold text-gray-900" style={font}>{effectiveLimit} / día</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-500" style={font}>Restantes hoy</span>
-                        <span className="font-bold" style={{ color: attemptsRemaining > 0 ? "#059669" : "#dc2626", ...font }}>{attemptsRemaining}/{effectiveLimit}</span>
-                      </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-gray-500" style={font}>Marca de agua</span>
-                        <span className="font-bold text-gray-900" style={font}>{user?.plan === "premium" ? "Sin marca" : "Incluida"}</span>
-                      </div>
-                    </div>
-                    {user?.plan !== "premium" && (
-                      <div className="rounded-xl p-4 text-white" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
-                        <p className="font-black text-sm mb-1" style={font}>Actualiza a Premium</p>
-                        <p className="text-xs text-purple-200 mb-3" style={font}>100 imágenes al día · Sin marca de agua · Prioridad de generación</p>
-                        <button
-                          className="w-full py-2 rounded-xl text-xs font-black text-purple-700 hover:opacity-90 transition-all"
-                          style={{ backgroundColor: "#fff", ...font }}>
-                          <Crown className="h-3 w-3 inline mr-1" />
-                          Ver Planes Premium
+
+                      {user?.plan !== "premium" && (
+                        <div className="rounded-2xl overflow-hidden mb-4" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                          <div className="p-5">
+                            <div className="flex items-center gap-2 mb-2">
+                              <Crown className="h-5 w-5 text-amber-300" />
+                              <p className="font-black text-white text-base" style={font}>Actualiza tu plan</p>
+                            </div>
+                            <p className="text-xs text-purple-200 mb-4" style={font}>Desbloquea 100 imágenes diarias, sin marca de agua y generación prioritaria</p>
+                            <div className="grid grid-cols-2 gap-3 mb-4">
+                              {[
+                                { name: "Estándar", price: "$39.900", period: "/mes", features: ["50 imgs/día", "Sin marca de agua", "Alta resolución"] },
+                                { name: "Premium", price: "$89.900", period: "/mes", features: ["100 imgs/día", "Ultra 4K", "API de integración"], highlight: true },
+                              ].map(plan => (
+                                <button key={plan.name}
+                                  onClick={() => { setSelectedPlanId(plan.name.toLowerCase() as "standard" | "premium"); setShowPlanModal(true) }}
+                                  className="rounded-xl p-3 text-left transition-all hover:scale-105"
+                                  style={{ backgroundColor: (plan as any).highlight ? "#fff" : "rgba(255,255,255,0.15)", border: (plan as any).highlight ? "2px solid #fbbf24" : "1.5px solid rgba(255,255,255,0.3)" }}>
+                                  {(plan as any).highlight && <div className="text-[9px] font-black text-amber-600 mb-1" style={font}>⭐ MÁS POPULAR</div>}
+                                  <p className="font-black text-sm mb-0.5" style={{ color: (plan as any).highlight ? "#7c3aed" : "#fff", ...font }}>{plan.name}</p>
+                                  <p className="font-black text-lg leading-none" style={{ color: (plan as any).highlight ? "#7c3aed" : "#fff", ...font }}>{plan.price}<span className="text-[10px] font-normal opacity-70">{plan.period}</span></p>
+                                  <div className="mt-2 space-y-0.5">
+                                    {plan.features.map(f => (
+                                      <div key={f} className="flex items-center gap-1">
+                                        <Check className="h-2.5 w-2.5 flex-shrink-0" style={{ color: (plan as any).highlight ? "#059669" : "rgba(255,255,255,0.7)" }} />
+                                        <span className="text-[10px]" style={{ color: (plan as any).highlight ? "#374151" : "rgba(255,255,255,0.85)", ...font }}>{f}</span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="rounded-2xl p-5 border border-gray-100 shadow-sm bg-white">
+                        <h3 className="font-black text-sm text-gray-700 mb-3" style={font}>Sesión</h3>
+                        <button onClick={logout}
+                          className="w-full py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-80"
+                          style={{ backgroundColor: "#fef2f2", color: "#dc2626", ...font }}>
+                          Cerrar Sesión
                         </button>
                       </div>
-                    )}
-                  </div>
+                    </>
+                  )}
 
-                  {/* Logout */}
-                  <div className="rounded-2xl p-5 border border-gray-100 shadow-sm bg-white">
-                    <h3 className="font-black text-sm text-gray-700 mb-3" style={font}>Sesión</h3>
-                    <button onClick={logout}
-                      className="w-full py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-80"
-                      style={{ backgroundColor: "#fef2f2", color: "#dc2626", ...font }}>
-                      Cerrar Sesión
-                    </button>
-                  </div>
+                  {/* ── TAB: NOTIFICACIONES ── */}
+                  {settingsTab === "notificaciones" && (
+                    <div className="space-y-4">
+                      <div className="rounded-2xl p-5 border border-gray-100 shadow-sm bg-white">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Bell className="h-4 w-4" style={{ color: "#7c3aed" }} />
+                          <h3 className="font-black text-sm text-gray-700" style={font}>Notificaciones</h3>
+                        </div>
+                        <div className="space-y-4">
+                          {([
+                            { key: "email", label: "Notificaciones por email", desc: "Recibe avisos sobre tu cuenta y nuevas funciones" },
+                            { key: "push", label: "Notificaciones push", desc: "Avisos en tiempo real en el navegador" },
+                            { key: "weekly", label: "Resumen semanal", desc: "Recibe un resumen de tu actividad cada semana" },
+                          ] as const).map(item => (
+                            <div key={item.key} className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <p className="text-sm font-bold text-gray-800" style={font}>{item.label}</p>
+                                <p className="text-xs text-gray-400 mt-0.5" style={font}>{item.desc}</p>
+                              </div>
+                              <button onClick={() => setNotifSettings(prev => ({ ...prev, [item.key]: !prev[item.key] }))}
+                                className="flex-shrink-0 w-11 h-6 rounded-full transition-all relative"
+                                style={{ backgroundColor: notifSettings[item.key] ? "#7c3aed" : "#e5e7eb" }}>
+                                <div className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all"
+                                  style={{ left: notifSettings[item.key] ? "calc(100% - 22px)" : "2px" }} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="rounded-2xl p-4 border border-purple-100 bg-purple-50">
+                        <p className="text-xs text-purple-700 font-semibold text-center" style={font}>
+                          💡 Las notificaciones te avisan cuando tu límite diario se renueva
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── TAB: PRIVACIDAD ── */}
+                  {settingsTab === "privacidad" && (
+                    <div className="space-y-4">
+                      <div className="rounded-2xl p-5 border border-gray-100 shadow-sm bg-white">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Globe className="h-4 w-4" style={{ color: "#7c3aed" }} />
+                          <h3 className="font-black text-sm text-gray-700" style={font}>Visibilidad</h3>
+                        </div>
+                        <div className="space-y-4">
+                          {([
+                            { key: "publicProfile", label: "Perfil público", desc: "Otros usuarios pueden ver tu perfil y estadísticas" },
+                            { key: "showInCommunity", label: "Aparecer en la comunidad", desc: "Tus obras publicadas aparecen en el feed de la comunidad" },
+                          ] as const).map(item => (
+                            <div key={item.key} className="flex items-start justify-between gap-4">
+                              <div className="flex-1">
+                                <p className="text-sm font-bold text-gray-800" style={font}>{item.label}</p>
+                                <p className="text-xs text-gray-400 mt-0.5" style={font}>{item.desc}</p>
+                              </div>
+                              <button onClick={() => setPrivacySettings(prev => ({ ...prev, [item.key]: !prev[item.key] }))}
+                                className="flex-shrink-0 w-11 h-6 rounded-full transition-all relative"
+                                style={{ backgroundColor: privacySettings[item.key] ? "#7c3aed" : "#e5e7eb" }}>
+                                <div className="absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all"
+                                  style={{ left: privacySettings[item.key] ? "calc(100% - 22px)" : "2px" }} />
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="rounded-2xl p-5 border border-gray-100 shadow-sm bg-white">
+                        <div className="flex items-center gap-2 mb-3">
+                          <Palette className="h-4 w-4" style={{ color: "#7c3aed" }} />
+                          <h3 className="font-black text-sm text-gray-700" style={font}>Datos y privacidad</h3>
+                        </div>
+                        <p className="text-xs text-gray-500 mb-3" style={font}>
+                          Tus datos biométricos son procesados localmente y nunca se almacenan en nuestros servidores sin tu consentimiento explícito.
+                        </p>
+                        <button className="w-full py-2 rounded-xl text-xs font-bold border transition-all hover:bg-gray-50"
+                          style={{ borderColor: "#e5e7eb", color: "#dc2626", ...font }}>
+                          Solicitar eliminación de datos
+                        </button>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── TAB: SEGURIDAD ── */}
+                  {settingsTab === "seguridad" && (
+                    <div className="space-y-4">
+                      <div className="rounded-2xl p-5 border border-gray-100 shadow-sm bg-white">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Lock className="h-4 w-4" style={{ color: "#7c3aed" }} />
+                          <h3 className="font-black text-sm text-gray-700" style={font}>Contraseña</h3>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <label className="text-xs font-bold text-gray-600 mb-1 block" style={font}>Contraseña actual</label>
+                            <input type="password" placeholder="••••••••"
+                              className="w-full px-3 py-2 rounded-xl border text-sm outline-none focus:ring-2"
+                              style={{ borderColor: "#e5e7eb", fontFamily: "'DM Sans', sans-serif" }} />
+                          </div>
+                          <div>
+                            <label className="text-xs font-bold text-gray-600 mb-1 block" style={font}>Nueva contraseña</label>
+                            <input type="password" placeholder="••••••••"
+                              className="w-full px-3 py-2 rounded-xl border text-sm outline-none focus:ring-2"
+                              style={{ borderColor: "#e5e7eb", fontFamily: "'DM Sans', sans-serif" }} />
+                          </div>
+                          <div>
+                            <label className="text-xs font-bold text-gray-600 mb-1 block" style={font}>Confirmar nueva contraseña</label>
+                            <input type="password" placeholder="••••••••"
+                              className="w-full px-3 py-2 rounded-xl border text-sm outline-none focus:ring-2"
+                              style={{ borderColor: "#e5e7eb", fontFamily: "'DM Sans', sans-serif" }} />
+                          </div>
+                          <button className="w-full py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:opacity-90"
+                            style={{ backgroundColor: "#7c3aed", ...font }}>
+                            Actualizar Contraseña
+                          </button>
+                        </div>
+                      </div>
+                      <div className="rounded-2xl p-5 border border-gray-100 shadow-sm bg-white">
+                        <h3 className="font-black text-sm text-gray-700 mb-3" style={font}>Sesiones activas</h3>
+                        <div className="flex items-center gap-3 p-3 rounded-xl" style={{ backgroundColor: "#f9fafb" }}>
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: "#f5f3ff" }}>
+                            <Globe className="h-4 w-4" style={{ color: "#7c3aed" }} />
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-xs font-bold text-gray-800" style={font}>Sesión actual · Navegador web</p>
+                            <p className="text-[10px] text-gray-400" style={font}>Activa ahora · Esta sesión</p>
+                          </div>
+                          <div className="w-2 h-2 rounded-full bg-green-400" />
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </>
               ) : (
                 <div className="flex flex-col items-center justify-center py-16 text-center">
@@ -1290,46 +1461,356 @@ export default function SimpleDemo() {
           {/* ── COMUNIDAD VIEW ── */}
           {activeNav === "comunidad" && (
             <div className="px-5 py-6">
-              <div className="text-center mb-6">
-                <h2 className="font-black text-gray-900 text-xl" style={font}>Comunidad Noosfera</h2>
-                <p className="text-sm text-gray-400 mt-1" style={font}>Arte biométrico generado por nuestra comunidad global</p>
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h2 className="font-black text-gray-900 text-xl" style={font}>Comunidad Noosfera</h2>
+                  <p className="text-sm text-gray-400 mt-0.5" style={font}>Arte biométrico generado por nuestra comunidad global</p>
+                </div>
+                {isRealUser && (
+                  <button onClick={openInput}
+                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl font-bold text-xs text-white hover:opacity-90 transition-all"
+                    style={{ backgroundColor: "#7c3aed", ...font }}>
+                    <Sparkles className="h-3.5 w-3.5" />
+                    Publicar Arte
+                  </button>
+                )}
               </div>
+
               {communityUploads.length > 0 && (
                 <div className="mb-5">
                   <h3 className="font-black text-gray-800 text-sm mb-3 px-1" style={font}>Mis publicaciones</h3>
                   <div className="flex gap-3 overflow-x-auto pb-2">
                     {communityUploads.map((art, i) => (
-                      <div key={i} className="flex-shrink-0 rounded-xl overflow-hidden border-2 shadow-sm relative"
-                        style={{ borderColor: "#7c3aed" }}>
+                      <div key={i} className="flex-shrink-0 rounded-xl overflow-hidden border-2 shadow-sm relative cursor-pointer"
+                        style={{ borderColor: "#7c3aed" }}
+                        onClick={() => { setGeneratedResult(art); setShowModal("result") }}>
                         <img src={art.imageUrl} alt={art.title} className="w-24 h-24 object-cover block" />
                         <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 bg-gradient-to-t from-black/70 to-transparent">
                           <p className="text-white text-[9px] font-bold truncate" style={font}>{art.title}</p>
                         </div>
+                        <div className="absolute top-1.5 right-1.5 px-1.5 py-0.5 rounded-full text-[9px] font-bold"
+                          style={{ backgroundColor: "#7c3aed", color: "#fff" }}>Tuyo</div>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
+
               <div style={{ columns: "2 160px", gap: "8px" }}>
-                {COMMUNITY_IMAGES.map((img, i) => (
-                  <motion.div key={i}
-                    initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: i * 0.06 }}
-                    className="rounded-2xl overflow-hidden cursor-pointer group relative"
-                    style={{ breakInside: "avoid", marginBottom: "8px", display: "block" }}
-                    onClick={openInput}>
-                    <img src={img.src} alt={img.label} className="w-full object-cover block"
-                      style={{ height: i % 3 === 0 ? "200px" : i % 3 === 1 ? "160px" : "180px" }} />
-                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/25 transition-all" />
-                    <div className="absolute bottom-0 left-0 right-0 px-3 py-2 bg-gradient-to-t from-black/70 to-transparent">
-                      <p className="text-white text-xs font-bold text-center truncate" style={font}>{img.label}</p>
-                    </div>
-                  </motion.div>
-                ))}
+                {COMMUNITY_IMAGES.map((img, i) => {
+                  const imgKey = img.src
+                  const likes = communityLikes[imgKey] ?? Math.floor(10 + i * 7 + 3)
+                  const isLiked = likedImages.has(imgKey)
+                  return (
+                    <motion.div key={i}
+                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: i * 0.06 }}
+                      className="rounded-2xl overflow-hidden cursor-pointer group relative"
+                      style={{ breakInside: "avoid", marginBottom: "8px", display: "block" }}
+                      onClick={() => setCommunityDetail({ src: img.src, label: img.label, likes })}>
+                      <img src={img.src} alt={img.label} className="w-full object-cover block"
+                        style={{ height: i % 3 === 0 ? "200px" : i % 3 === 1 ? "160px" : "180px" }} />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all" />
+                      <div className="absolute bottom-0 left-0 right-0 px-3 py-2 bg-gradient-to-t from-black/80 to-transparent">
+                        <p className="text-white text-[11px] font-bold truncate mb-1" style={font}>{img.label}</p>
+                        <div className="flex items-center justify-between">
+                          <button
+                            onClick={e => {
+                              e.stopPropagation()
+                              const newLiked = new Set(likedImages)
+                              if (isLiked) {
+                                newLiked.delete(imgKey)
+                                setCommunityLikes(prev => ({ ...prev, [imgKey]: (prev[imgKey] ?? likes) - 1 }))
+                              } else {
+                                newLiked.add(imgKey)
+                                setCommunityLikes(prev => ({ ...prev, [imgKey]: (prev[imgKey] ?? likes) + 1 }))
+                              }
+                              setLikedImages(newLiked)
+                            }}
+                            className="flex items-center gap-1 transition-all hover:scale-110"
+                            style={{ background: "none", border: "none", cursor: "pointer", color: isLiked ? "#f43f5e" : "rgba(255,255,255,0.8)", ...font }}>
+                            <Heart className={`h-3.5 w-3.5 ${isLiked ? "fill-current" : ""}`} />
+                            <span className="text-[10px] font-bold">{communityLikes[imgKey] ?? likes}</span>
+                          </button>
+                          <button
+                            onClick={e => { e.stopPropagation(); setCommunityDetail({ src: img.src, label: img.label, likes }) }}
+                            className="flex items-center gap-1 transition-all hover:scale-110"
+                            style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.8)", ...font }}>
+                            <MessageCircle className="h-3.5 w-3.5" />
+                            <span className="text-[10px] font-bold">{3 + i}</span>
+                          </button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )
+                })}
               </div>
+
+              {!isRealUser && (
+                <div className="mt-6 rounded-2xl p-5 text-center" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                  <p className="font-black text-white text-sm mb-1" style={font}>¿Quieres publicar tu arte?</p>
+                  <p className="text-xs text-purple-200 mb-3" style={font}>Crea una cuenta gratuita para compartir tus obras con la comunidad</p>
+                  <button onClick={() => navigate("/auth/register")}
+                    className="px-5 py-2 rounded-xl text-xs font-bold hover:opacity-90 transition-all"
+                    style={{ backgroundColor: "#fff", color: "#7c3aed", ...font }}>
+                    Crear Cuenta Gratis
+                  </button>
+                </div>
+              )}
             </div>
           )}
         </main>
+
+        {/* ── COMMUNITY DETAIL MODAL ── */}
+        <AnimatePresence>
+          {communityDetail && (
+            <motion.div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setCommunityDetail(null)} />
+              <motion.div className="relative w-full max-w-sm rounded-t-3xl sm:rounded-3xl overflow-hidden bg-white shadow-2xl"
+                initial={{ y: 60, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 60, opacity: 0 }}>
+                <div className="relative">
+                  <img src={communityDetail.src} alt={communityDetail.label} className="w-full h-64 object-cover block" />
+                  <button onClick={() => setCommunityDetail(null)}
+                    className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+                    <X className="h-4 w-4 text-white" />
+                  </button>
+                </div>
+                <div className="p-5">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-black text-gray-900 text-base" style={font}>{communityDetail.label}</h3>
+                      <p className="text-xs text-gray-400 mt-0.5" style={font}>Arte biométrico · Noosfera</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => {
+                          const imgKey = communityDetail.src
+                          const isLiked = likedImages.has(imgKey)
+                          const newLiked = new Set(likedImages)
+                          if (isLiked) {
+                            newLiked.delete(imgKey)
+                            setCommunityLikes(prev => ({ ...prev, [imgKey]: (prev[imgKey] ?? communityDetail.likes) - 1 }))
+                          } else {
+                            newLiked.add(imgKey)
+                            setCommunityLikes(prev => ({ ...prev, [imgKey]: (prev[imgKey] ?? communityDetail.likes) + 1 }))
+                          }
+                          setLikedImages(newLiked)
+                        }}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs transition-all hover:scale-105"
+                        style={{ backgroundColor: likedImages.has(communityDetail.src) ? "#fef2f2" : "#f5f3ff", color: likedImages.has(communityDetail.src) ? "#f43f5e" : "#7c3aed", ...font }}>
+                        <Heart className={`h-3.5 w-3.5 ${likedImages.has(communityDetail.src) ? "fill-current" : ""}`} />
+                        {communityLikes[communityDetail.src] ?? communityDetail.likes}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="space-y-3 mb-4">
+                    <p className="text-xs text-gray-500 font-semibold uppercase tracking-wide" style={font}>Comentarios</p>
+                    {[
+                      { name: "Valentina M.", comment: "¡Increíble obra! Los colores son fascinantes 🎨" },
+                      { name: "Carlos R.", comment: "Arte biométrico en su máxima expresión" },
+                      { name: "Ana L.", comment: "Me encanta cómo los latidos generan esto ❤️" },
+                    ].map((c, i) => (
+                      <div key={i} className="flex gap-2">
+                        <div className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center font-black text-xs text-white"
+                          style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                          {c.name.charAt(0)}
+                        </div>
+                        <div className="flex-1 px-3 py-2 rounded-xl" style={{ backgroundColor: "#f9fafb" }}>
+                          <p className="text-[10px] font-black text-gray-700 mb-0.5" style={font}>{c.name}</p>
+                          <p className="text-xs text-gray-600" style={font}>{c.comment}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  {isRealUser ? (
+                    <div className="flex gap-2">
+                      <input placeholder="Escribe un comentario…"
+                        className="flex-1 px-3 py-2 rounded-xl border text-xs outline-none focus:ring-2"
+                        style={{ borderColor: "#e5e7eb", fontFamily: "'DM Sans', sans-serif" }} />
+                      <button className="px-4 py-2 rounded-xl text-xs font-bold text-white hover:opacity-90 transition-all"
+                        style={{ backgroundColor: "#7c3aed", ...font }}>
+                        <MessageCircle className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <button onClick={() => { setCommunityDetail(null); navigate("/auth/register") }}
+                      className="w-full py-2.5 rounded-xl text-xs font-bold text-white hover:opacity-90 transition-all"
+                      style={{ backgroundColor: "#7c3aed", ...font }}>
+                      Crea una cuenta para comentar
+                    </button>
+                  )}
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── PLAN UPGRADE MODAL ── */}
+        <AnimatePresence>
+          {showPlanModal && (
+            <motion.div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+              <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => { setShowPlanModal(false); setPaymentSuccess(false) }} />
+              <motion.div className="relative w-full max-w-sm rounded-t-3xl sm:rounded-3xl bg-white shadow-2xl overflow-hidden"
+                initial={{ y: 80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 80, opacity: 0 }}>
+                <button onClick={() => { setShowPlanModal(false); setPaymentSuccess(false) }}
+                  className="absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center z-10"
+                  style={{ backgroundColor: "#f3f4f6" }}>
+                  <X className="h-4 w-4 text-gray-600" />
+                </button>
+
+                {paymentSuccess ? (
+                  <div className="p-8 text-center">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                      style={{ background: "linear-gradient(135deg, #059669 0%, #047857 100%)" }}>
+                      <Check className="h-8 w-8 text-white" />
+                    </div>
+                    <h3 className="font-black text-gray-900 text-xl mb-2" style={font}>¡Bienvenido a Premium!</h3>
+                    <p className="text-sm text-gray-500 mb-6" style={font}>Tu plan ha sido activado. Ya puedes disfrutar de todas las funciones premium.</p>
+                    <button onClick={() => { setShowPlanModal(false); setPaymentSuccess(false) }}
+                      className="w-full py-3 rounded-xl font-black text-white hover:opacity-90 transition-all"
+                      style={{ backgroundColor: "#7c3aed", ...font }}>
+                      Comenzar a Crear
+                    </button>
+                  </div>
+                ) : (
+                  <div className="overflow-y-auto max-h-[85vh]">
+                    {/* Header */}
+                    <div className="px-5 pt-6 pb-4" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                      <div className="flex items-center gap-2 mb-1">
+                        <Crown className="h-5 w-5 text-amber-300" />
+                        <h3 className="font-black text-white text-lg" style={font}>Actualizar Plan</h3>
+                      </div>
+                      <p className="text-xs text-purple-200" style={font}>Elige el plan que mejor se adapta a ti</p>
+                    </div>
+
+                    <div className="p-5">
+                      {/* Plan selector */}
+                      <div className="grid grid-cols-2 gap-3 mb-5">
+                        {([
+                          { id: "standard", name: "Estándar", price: "$39.900", period: "/mes", desc: "Para creadores frecuentes", features: ["50 imágenes/día", "Sin marca de agua", "Alta resolución (2048px)", "Galería ilimitada", "Soporte prioritario"] },
+                          { id: "premium", name: "Premium", price: "$89.900", period: "/mes", desc: "Para profesionales", features: ["100 imágenes/día", "Ultra resolución 4K", "API de integración", "Galería NFT", "Soporte 24/7", "Acceso anticipado"] },
+                        ] as const).map(plan => (
+                          <button key={plan.id} onClick={() => setSelectedPlanId(plan.id)}
+                            className="rounded-2xl p-4 text-left transition-all"
+                            style={{ border: selectedPlanId === plan.id ? "2px solid #7c3aed" : "2px solid #e5e7eb", backgroundColor: selectedPlanId === plan.id ? "#faf5ff" : "#fff" }}>
+                            {plan.id === "premium" && <div className="text-[9px] font-black mb-1" style={{ color: "#7c3aed", ...font }}>⭐ RECOMENDADO</div>}
+                            <p className="font-black text-gray-900 text-sm" style={font}>{plan.name}</p>
+                            <p className="text-[10px] text-gray-400 mb-2" style={font}>{plan.desc}</p>
+                            <p className="font-black text-xl leading-none mb-3" style={{ color: "#7c3aed", ...font }}>
+                              {plan.price}<span className="text-xs font-normal text-gray-400">{plan.period}</span>
+                            </p>
+                            <div className="space-y-1">
+                              {plan.features.map(f => (
+                                <div key={f} className="flex items-start gap-1.5">
+                                  <Check className="h-3 w-3 mt-0.5 flex-shrink-0" style={{ color: "#059669" }} />
+                                  <span className="text-[10px] text-gray-600" style={font}>{f}</span>
+                                </div>
+                              ))}
+                            </div>
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* Card payment form */}
+                      <div className="rounded-2xl p-4 border mb-4" style={{ borderColor: "#e5e7eb" }}>
+                        <div className="flex items-center gap-2 mb-4">
+                          <CreditCard className="h-4 w-4" style={{ color: "#7c3aed" }} />
+                          <p className="font-black text-sm text-gray-700" style={font}>Información de pago</p>
+                          <div className="ml-auto flex gap-1.5">
+                            {["VISA", "MC", "AMEX"].map(b => (
+                              <div key={b} className="px-1.5 py-0.5 rounded text-[8px] font-black border"
+                                style={{ borderColor: "#e5e7eb", color: "#6b7280" }}>{b}</div>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="space-y-3">
+                          <div>
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1 block" style={font}>Nombre en la tarjeta</label>
+                            <input value={cardData.name} onChange={e => setCardData(p => ({ ...p, name: e.target.value }))}
+                              placeholder="Juan García"
+                              className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none focus:ring-2 focus:ring-purple-300"
+                              style={{ borderColor: "#e5e7eb", fontFamily: "'DM Sans', sans-serif" }} />
+                          </div>
+                          <div>
+                            <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1 block" style={font}>Número de tarjeta</label>
+                            <input value={cardData.number}
+                              onChange={e => {
+                                const v = e.target.value.replace(/\D/g, "").slice(0, 16)
+                                const formatted = v.replace(/(.{4})/g, "$1 ").trim()
+                                setCardData(p => ({ ...p, number: formatted }))
+                              }}
+                              placeholder="1234 5678 9012 3456" maxLength={19}
+                              className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none focus:ring-2 focus:ring-purple-300 font-mono"
+                              style={{ borderColor: "#e5e7eb", fontFamily: "monospace" }} />
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1 block" style={font}>Vencimiento</label>
+                              <input value={cardData.expiry}
+                                onChange={e => {
+                                  let v = e.target.value.replace(/\D/g, "").slice(0, 4)
+                                  if (v.length >= 3) v = v.slice(0, 2) + "/" + v.slice(2)
+                                  setCardData(p => ({ ...p, expiry: v }))
+                                }}
+                                placeholder="MM/AA" maxLength={5}
+                                className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none focus:ring-2 focus:ring-purple-300"
+                                style={{ borderColor: "#e5e7eb", fontFamily: "'DM Sans', sans-serif" }} />
+                            </div>
+                            <div>
+                              <label className="text-[10px] font-bold text-gray-500 uppercase tracking-wide mb-1 block" style={font}>CVV</label>
+                              <div className="relative">
+                                <input value={cardData.cvv} onChange={e => setCardData(p => ({ ...p, cvv: e.target.value.replace(/\D/g, "").slice(0, 4) }))}
+                                  type={showCvv ? "text" : "password"} placeholder="123" maxLength={4}
+                                  className="w-full px-3 py-2.5 rounded-xl border text-sm outline-none focus:ring-2 focus:ring-purple-300 pr-9"
+                                  style={{ borderColor: "#e5e7eb", fontFamily: "'DM Sans', sans-serif" }} />
+                                <button type="button" onClick={() => setShowCvv(p => !p)}
+                                  className="absolute right-2.5 top-1/2 -translate-y-1/2"
+                                  style={{ background: "none", border: "none", cursor: "pointer", color: "#9ca3af" }}>
+                                  {showCvv ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Summary */}
+                      <div className="rounded-xl p-3 mb-4" style={{ backgroundColor: "#f9fafb" }}>
+                        <div className="flex justify-between items-center text-sm">
+                          <span className="text-gray-600 font-semibold" style={font}>Plan {selectedPlanId === "premium" ? "Premium" : "Estándar"}</span>
+                          <span className="font-black text-gray-900" style={font}>{selectedPlanId === "premium" ? "$89.900" : "$39.900"}/mes</span>
+                        </div>
+                        <div className="flex justify-between items-center text-xs text-gray-400 mt-1">
+                          <span style={font}>IVA incluido</span>
+                          <span style={font}>Se renueva automáticamente</span>
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          if (!cardData.name || !cardData.number || !cardData.expiry || !cardData.cvv) return
+                          setTimeout(() => setPaymentSuccess(true), 800)
+                        }}
+                        disabled={!cardData.name || !cardData.number || !cardData.expiry || !cardData.cvv}
+                        className="w-full py-3.5 rounded-xl font-black text-sm text-white transition-all hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{ backgroundColor: "#7c3aed", ...font }}>
+                        <CreditCard className="h-4 w-4 inline mr-2" />
+                        Pagar {selectedPlanId === "premium" ? "$89.900" : "$39.900"}
+                      </button>
+                      <p className="text-center text-[10px] text-gray-400 mt-2" style={font}>
+                        🔒 Pago seguro · Cancela cuando quieras
+                      </p>
+                    </div>
+                  </div>
+                )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </div>
     </div>
   )
