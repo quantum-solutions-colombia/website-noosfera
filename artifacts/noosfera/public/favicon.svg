@@ -1,3 +1,46 @@
-<svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-<rect width="180" height="180" rx="36" fill="#FF3C00"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- White circle background -->
+  <circle cx="256" cy="256" r="256" fill="#ffffff"/>
+  <!-- Brain: two hemispheres with gyri folds, purple outline on white -->
+  <g fill="none" stroke="#7c3aed" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Central divider line -->
+    <line x1="256" y1="155" x2="256" y2="390"/>
+
+    <!-- LEFT hemisphere -->
+    <!-- Top lobe -->
+    <path d="M256,158 C240,142 216,134 196,138 C170,143 150,162 144,188 C138,212 148,236 164,250"/>
+    <!-- Middle-left bump (parietal) -->
+    <path d="M144,210 C128,218 118,236 120,256 C122,272 132,286 148,294"/>
+    <!-- Lower-left lobe -->
+    <path d="M148,294 C134,306 126,324 130,342 C134,360 150,374 170,378 C188,382 208,376 220,364"/>
+    <!-- Front bump (frontal) -->
+    <path d="M164,250 C150,258 140,274 142,292 C143,298 146,304 150,308"/>
+    <!-- Frontal top fold -->
+    <path d="M196,138 C186,128 172,122 158,126 C148,130 140,140 138,152 C136,162 140,172 148,180"/>
+
+    <!-- RIGHT hemisphere -->
+    <!-- Top lobe -->
+    <path d="M256,158 C272,142 296,134 316,138 C342,143 362,162 368,188 C374,212 364,236 348,250"/>
+    <!-- Middle-right bump (parietal) -->
+    <path d="M368,210 C384,218 394,236 392,256 C390,272 380,286 364,294"/>
+    <!-- Lower-right lobe -->
+    <path d="M364,294 C378,306 386,324 382,342 C378,360 362,374 342,378 C324,382 304,376 292,364"/>
+    <!-- Front bump (frontal) -->
+    <path d="M348,250 C362,258 372,274 370,292 C369,298 366,304 362,308"/>
+    <!-- Frontal top fold -->
+    <path d="M316,138 C326,128 340,122 354,126 C364,130 372,140 374,152 C376,162 372,172 364,180"/>
+
+    <!-- Inner folds left -->
+    <path d="M192,200 C184,212 182,228 188,242"/>
+    <path d="M172,280 C168,294 170,310 178,322"/>
+
+    <!-- Inner folds right -->
+    <path d="M320,200 C328,212 330,228 324,242"/>
+    <path d="M340,280 C344,294 342,310 334,322"/>
+
+    <!-- Bottom left lobe bumps -->
+    <path d="M220,364 C216,376 220,390 232,396 C244,400 254,394 256,384"/>
+    <!-- Bottom right lobe bumps -->
+    <path d="M292,364 C296,376 292,390 280,396 C268,400 258,394 256,384"/>
+  </g>
 </svg>
