@@ -200,7 +200,11 @@ function HeroSidePanel({ side }: { side: "left" | "right" }) {
 
 export default function SimpleDemo() {
   const [, navigate] = useLocation()
-  const [attemptsRemaining, setAttemptsRemaining] = useState(DAILY_LIMIT)
+  const { user, logout, completeTutorial } = useAuth()
+  const isRealUser = !!(user && user.email !== "demo@noosfera.com")
+  const effectiveLimit = isRealUser ? (user?.plan === "premium" ? 100 : 15) : DAILY_LIMIT
+  const [attemptsRemaining, setAttemptsRemaining] = useState(effectiveLimit)
+  const [tutorialStep, setTutorialStep] = useState(0)
   const [generatedResult, setGeneratedResult] = useState<GeneratedResult | null>(null)
   const [isLoaded, setIsLoaded] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
@@ -221,18 +225,45 @@ export default function SimpleDemo() {
   const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    const fp = generateFingerprint(); setFingerprint(fp)
-    const localReset = localResetAt(fp)
-    if (localReset) setResetAt(localReset)
-    checkUsage(fp).then(r => {
-      setAttemptsRemaining(r.remaining)
-      if (r.resetAt) setResetAt(r.resetAt)
-      else if (localReset) setResetAt(localReset)
-      if (r.remaining <= 0) setShowModal("exhausted")
+    if (isRealUser && user) {
+      // Real authenticated user: use user-ID based daily tracking
+      const today = new Date().toDateString()
+      const storageKey = `noosfera_daily_${user.id}`
+      const stored = localStorage.getItem(storageKey)
+      if (stored) {
+        try {
+          const data = JSON.parse(stored)
+          if (data.date === today) {
+            const remaining = Math.max(0, effectiveLimit - data.used)
+            setAttemptsRemaining(remaining)
+            if (remaining <= 0) setShowModal("exhausted")
+          } else {
+            localStorage.setItem(storageKey, JSON.stringify({ date: today, used: 0 }))
+            setAttemptsRemaining(effectiveLimit)
+          }
+        } catch {
+          localStorage.setItem(storageKey, JSON.stringify({ date: today, used: 0 }))
+          setAttemptsRemaining(effectiveLimit)
+        }
+      } else {
+        localStorage.setItem(storageKey, JSON.stringify({ date: today, used: 0 }))
+        setAttemptsRemaining(effectiveLimit)
+      }
       setIsLoaded(true)
-    })
-    if (!localStorage.getItem("noosfera_demo_disclaimer")) setShowDisclaimer(true)
-  }, [])
+    } else {
+      const fp = generateFingerprint(); setFingerprint(fp)
+      const localReset = localResetAt(fp)
+      if (localReset) setResetAt(localReset)
+      checkUsage(fp).then(r => {
+        setAttemptsRemaining(r.remaining)
+        if (r.resetAt) setResetAt(r.resetAt)
+        else if (localReset) setResetAt(localReset)
+        if (r.remaining <= 0) setShowModal("exhausted")
+        setIsLoaded(true)
+      })
+      if (!localStorage.getItem("noosfera_demo_disclaimer")) setShowDisclaimer(true)
+    }
+  }, [isRealUser, user?.id])
 
   const acceptDisclaimer = () => { localStorage.setItem("noosfera_demo_disclaimer", "1"); setShowDisclaimer(false) }
 
@@ -259,12 +290,36 @@ export default function SimpleDemo() {
     setTimeout(() => inputRef.current?.focus(), 100)
   }
 
+  const consumeRealUserUsage = () => {
+    if (!user) return { remaining: 0, blocked: true }
+    const today = new Date().toDateString()
+    const storageKey = `noosfera_daily_${user.id}`
+    const stored = localStorage.getItem(storageKey)
+    let used = 0
+    if (stored) {
+      try { const d = JSON.parse(stored); if (d.date === today) used = d.used } catch {}
+    }
+    const newUsed = used + 1
+    localStorage.setItem(storageKey, JSON.stringify({ date: today, used: newUsed }))
+    const remaining = Math.max(0, effectiveLimit - newUsed)
+    return { remaining, blocked: newUsed > effectiveLimit }
+  }
+
   const generateImage = async () => {
     if (pulses.length === 0 || attemptsRemaining <= 0) return
-    const usage = await consumeUsage(fingerprint)
-    if (usage.resetAt) setResetAt(usage.resetAt)
-    if (usage.blocked) { setAttemptsRemaining(0); setShowModal("exhausted"); return }
-    setAttemptsRemaining(usage.remaining)
+
+    let newRemaining: number
+    if (isRealUser) {
+      const usage = consumeRealUserUsage()
+      if (usage.blocked) { setAttemptsRemaining(0); setShowModal("exhausted"); return }
+      newRemaining = usage.remaining
+    } else {
+      const usage = await consumeUsage(fingerprint)
+      if (usage.resetAt) setResetAt(usage.resetAt)
+      if (usage.blocked) { setAttemptsRemaining(0); setShowModal("exhausted"); return }
+      newRemaining = usage.remaining
+    }
+    setAttemptsRemaining(newRemaining)
     setShowModal("generating"); setGenerationProgress(0)
     const iv = setInterval(() => setGenerationProgress(p => p >= 95 ? p : p + 1.8), 90)
     const style = artStyles[Math.floor(Math.random() * artStyles.length)]
@@ -303,7 +358,7 @@ export default function SimpleDemo() {
     }
     setGeneratedResult(result); setMyCreations(p => [result, ...p.slice(0, 7)])
     setTokenFirstView(true); setCopiedToken(false)
-    setShowModal(usage.remaining <= 0 ? "exhausted" : "result")
+    setShowModal(newRemaining <= 0 ? "exhausted" : "result")
   }
 
   const handleDownload = async () => {
@@ -326,8 +381,100 @@ export default function SimpleDemo() {
   /* ── font ── */
   const font = { fontFamily: "'DM Sans', sans-serif" }
 
+  const showTutorial = isRealUser && user?.preferences?.tutorialCompleted === false
+
+  const handleTutorialNext = () => {
+    if (tutorialStep < 3) {
+      setTutorialStep(prev => prev + 1)
+    } else {
+      completeTutorial()
+    }
+  }
+
+  const tutorialSteps = [
+    {
+      icon: "❤️",
+      title: "Ingresa tus pulsos cardíacos",
+      description: "Escribe cada lectura de tu frecuencia cardíaca (40–200 BPM). Puedes agregar hasta 9 valores para crear una obra más detallada.",
+    },
+    {
+      icon: "✨",
+      title: "La IA transforma tu ritmo en arte",
+      description: "Nuestra inteligencia artificial convierte la energía única de tus latidos en una obra digital irrepetible.",
+    },
+    {
+      icon: "🖼️",
+      title: "Descarga y comparte tu obra",
+      description: "Guarda tu arte en tu galería, descárgalo y compártelo. Tienes generaciones diarias disponibles según tu plan.",
+    },
+  ]
+
   return (
     <div className="flex h-screen overflow-hidden bg-white" style={font}>
+
+      {/* ── TUTORIAL BIENVENIDA (solo usuarios reales nuevos) ── */}
+      <AnimatePresence>
+        {showTutorial && (
+          <motion.div
+            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+            style={{ background: "rgba(0,0,0,0.72)", backdropFilter: "blur(6px)" }}>
+            <motion.div
+              key={tutorialStep}
+              initial={{ scale: 0.88, opacity: 0, y: 24 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.92, opacity: 0, y: -16 }}
+              transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
+              className="bg-white rounded-3xl w-full max-w-xs overflow-hidden"
+              style={{ border: "2px solid #7c3aed", ...font }}>
+
+              {/* Hero image */}
+              <div style={{ position: "relative", height: 88, flexShrink: 0 }}>
+                <img src="/images/hero-3.png" alt="" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 30%", display: "block" }} />
+                <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(20,5,40,0.78) 100%)" }} />
+                <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <span style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: 900, fontSize: 17, color: "#fff", textShadow: "0 2px 20px rgba(124,58,237,0.9), 0 2px 12px rgba(0,0,0,0.6)" }}>
+                    {tutorialStep === 0 ? `¡Hola, ${user?.name?.split(" ")[0]}! 👋` : tutorialSteps[tutorialStep - 1]?.icon + " " + tutorialSteps[tutorialStep - 1]?.title}
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-5">
+                {tutorialStep === 0 ? (
+                  <>
+                    <p className="text-sm font-bold text-gray-900 text-center mb-2" style={font}>Bienvenido a Noösfera</p>
+                    <p className="text-xs text-gray-500 text-center mb-4" style={font}>En menos de un minuto te mostramos todo lo que puedes crear aquí.</p>
+                  </>
+                ) : (
+                  <p className="text-xs text-gray-600 text-center mb-4" style={font}>{tutorialSteps[tutorialStep - 1]?.description}</p>
+                )}
+
+                {/* Step dots */}
+                <div className="flex justify-center gap-1.5 mb-4">
+                  {[0, 1, 2, 3].map(i => (
+                    <div key={i} style={{
+                      width: tutorialStep === i ? 18 : 6, height: 6, borderRadius: 3,
+                      background: tutorialStep === i ? "#7c3aed" : "#e5e7eb",
+                      transition: "all 0.3s ease",
+                    }} />
+                  ))}
+                </div>
+
+                <button onClick={handleTutorialNext}
+                  className="w-full py-3 rounded-2xl font-black text-white text-sm tracking-wide hover:opacity-90 transition-all"
+                  style={{ backgroundColor: "#7c3aed", ...font }}>
+                  {tutorialStep === 0 ? "Ver cómo funciona →" : tutorialStep < 3 ? "Continuar →" : "¡Empezar a crear!"}
+                </button>
+                <button onClick={() => completeTutorial()}
+                  className="w-full mt-2 text-xs text-gray-400 hover:text-gray-600 transition-colors"
+                  style={{ background: "none", border: "none", cursor: "pointer", textDecoration: "underline" }}>
+                  Saltar tutorial
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── DISCLAIMER ── */}
       <AnimatePresence>
@@ -760,7 +907,9 @@ export default function SimpleDemo() {
             <div className="flex items-center justify-between px-4 py-4 border-b border-gray-100">
               <div className="flex items-center gap-2">
                 <Brain className="h-5 w-5 flex-shrink-0" style={{ color: "#7c3aed" }} />
-                <span className="font-black text-gray-900 text-base tracking-tight" style={font}>Noosfera Demo</span>
+                <span className="font-black text-gray-900 text-base tracking-tight" style={font}>
+                  {isRealUser ? (user?.name?.split(" ")[0] || "Noosfera") : "Noosfera Demo"}
+                </span>
               </div>
               <button onClick={() => setSidebarOpen(false)} className="p-1 rounded hover:bg-gray-100 text-gray-400 transition-colors">
                 <ChevronLeft className="h-4 w-4" />
@@ -789,21 +938,36 @@ export default function SimpleDemo() {
               </div>
             </nav>
             <div className="px-3 pb-4">
-              <div className="rounded-2xl p-4 text-white" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-purple-200 mb-1" style={font}>Plan de prueba</p>
-                <p className="font-black text-sm mb-1" style={font}>Crea Tu Cuenta</p>
-                <p className="text-xs text-purple-200 mb-3" style={font}>Desbloquea acceso completo</p>
-                {["Uso Gratuito", "Derechos Comerciales", "Sin Marca de Agua"].map(f => (
-                  <div key={f} className="flex items-center gap-1.5 text-xs text-purple-100 mb-1" style={font}>
-                    <Check className="h-3 w-3 flex-shrink-0" /> {f}
-                  </div>
-                ))}
-                <button onClick={() => navigate("/auth/register")}
-                  className="w-full mt-3 py-2 rounded-xl text-xs font-bold hover:opacity-90 transition-all"
-                  style={{ backgroundColor: "#ffffff", color: "#7c3aed", ...font }}>
-                  Comenzar Gratis
-                </button>
-              </div>
+              {isRealUser ? (
+                <div className="rounded-2xl p-4 text-white" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-purple-200 mb-1" style={font}>
+                    {user?.plan === "premium" ? "Plan Premium" : "Plan Gratuito"}
+                  </p>
+                  <p className="font-black text-sm mb-1" style={font}>{user?.name}</p>
+                  <p className="text-xs text-purple-200 mb-3" style={font}>{user?.email}</p>
+                  <button onClick={logout}
+                    className="w-full py-2 rounded-xl text-xs font-bold hover:opacity-90 transition-all"
+                    style={{ backgroundColor: "rgba(255,255,255,0.18)", color: "#fff", border: "1px solid rgba(255,255,255,0.3)", ...font }}>
+                    Cerrar Sesión
+                  </button>
+                </div>
+              ) : (
+                <div className="rounded-2xl p-4 text-white" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-purple-200 mb-1" style={font}>Plan de prueba</p>
+                  <p className="font-black text-sm mb-1" style={font}>Crea Tu Cuenta</p>
+                  <p className="text-xs text-purple-200 mb-3" style={font}>Desbloquea acceso completo</p>
+                  {["Uso Gratuito", "Derechos Comerciales", "Sin Marca de Agua"].map(f => (
+                    <div key={f} className="flex items-center gap-1.5 text-xs text-purple-100 mb-1" style={font}>
+                      <Check className="h-3 w-3 flex-shrink-0" /> {f}
+                    </div>
+                  ))}
+                  <button onClick={() => navigate("/auth/register")}
+                    className="w-full mt-3 py-2 rounded-xl text-xs font-bold hover:opacity-90 transition-all"
+                    style={{ backgroundColor: "#ffffff", color: "#7c3aed", ...font }}>
+                    Comenzar Gratis
+                  </button>
+                </div>
+              )}
             </div>
           </motion.aside>
         )}
@@ -821,17 +985,21 @@ export default function SimpleDemo() {
                 </button>
                 <div className="flex items-center gap-2">
                   <Brain className="h-5 w-5" style={{ color: "#7c3aed" }} />
-                  <span className="font-black text-gray-900 text-sm" style={font}>Noosfera Demo</span>
+                  <span className="font-black text-gray-900 text-sm" style={font}>
+                  {isRealUser ? (user?.name?.split(" ")[0] || "Noosfera") : "Noosfera Demo"}
+                </span>
                 </div>
               </>
             )}
           </div>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full text-xs text-white"
             style={{ backgroundColor: attemptsRemaining > 0 ? "#7c3aed" : "#991b1b" }}>
-            <span className="font-bold" style={font}>Plan de prueba</span>
+            <span className="font-bold" style={font}>
+              {isRealUser ? (user?.plan === "premium" ? "Premium" : "Plan Free") : "Plan de prueba"}
+            </span>
             <div className="flex gap-1">
-              {[...Array(DAILY_LIMIT)].map((_, i) => (
-                <div key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: i < attemptsRemaining ? "#fff" : "rgba(255,255,255,0.3)" }} />
+              {[...Array(Math.min(effectiveLimit, 15))].map((_, i) => (
+                <div key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: i < Math.min(attemptsRemaining, 15) ? "#fff" : "rgba(255,255,255,0.3)" }} />
               ))}
             </div>
             <span style={font}>{attemptsRemaining} rest.</span>

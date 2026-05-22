@@ -40,7 +40,7 @@ export default function DashboardPage() {
   }
 
   if (isDemoMode) return <SimpleDemo />
-  if (isAuthenticated) return <UserDashboardNew />
+  if (isAuthenticated) return <SimpleDemo />
 
   navigate("/auth/login")
   return null
