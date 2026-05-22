@@ -3,11 +3,12 @@ import { motion, AnimatePresence } from "framer-motion"
 import {
   Brain, Sparkles, ArrowLeft, RefreshCw, X, Check,
   Home, Users, ChevronLeft, ChevronRight, Download,
+  ImageIcon, Settings, Upload, Crown, Share2,
 } from "lucide-react"
 import { useLocation } from "wouter"
 import { useAuth } from "@/contexts/auth-context"
 
-type NavItem = "inicio" | "comunidad"
+type NavItem = "inicio" | "comunidad" | "galeria" | "ajustes"
 
 interface GeneratedResult {
   imageUrl: string
@@ -222,7 +223,23 @@ export default function SimpleDemo() {
   const [showMintModal, setShowMintModal] = useState(false)
   const [showTokenModal, setShowTokenModal] = useState(false)
   const [resetAt, setResetAt] = useState<number | null>(null)
+  const [communityUploads, setCommunityUploads] = useState<GeneratedResult[]>([])
   const inputRef = useRef<HTMLInputElement>(null)
+
+  const getTimeGreeting = () => {
+    const h = new Date().getHours()
+    if (h < 12) return "Buenos días"
+    if (h < 19) return "Buenas tardes"
+    return "Buenas noches"
+  }
+
+  const uploadToCommunity = (result: GeneratedResult) => {
+    setCommunityUploads(prev => {
+      const alreadyUploaded = prev.some(r => r.tokenId === result.tokenId)
+      if (alreadyUploaded) return prev
+      return [result, ...prev]
+    })
+  }
 
   useEffect(() => {
     if (isRealUser && user) {
@@ -714,7 +731,7 @@ export default function SimpleDemo() {
                     )}
 
                     {/* 3 buttons — text only, no background */}
-                    <div className="grid grid-cols-3 gap-1 pt-1">
+                    <div className="grid grid-cols-4 gap-1 pt-1">
                       <button onClick={openInput}
                         className="flex flex-col items-center justify-center gap-1.5 py-3 font-bold text-xs transition-all hover:opacity-70"
                         style={{ color: "#7c3aed", background: "none", border: "none", ...font }}>
@@ -727,6 +744,14 @@ export default function SimpleDemo() {
                         <Download className="h-4 w-4" />
                         Descargar
                       </button>
+                      {isRealUser && generatedResult && (
+                        <button onClick={() => { uploadToCommunity(generatedResult); closeModal() }}
+                          className="flex flex-col items-center justify-center gap-1.5 py-3 font-bold text-xs transition-all hover:opacity-70"
+                          style={{ color: communityUploads.some(r => r.tokenId === generatedResult.tokenId) ? "#059669" : "#7c3aed", background: "none", border: "none", ...font }}>
+                          <Share2 className="h-4 w-4" />
+                          {communityUploads.some(r => r.tokenId === generatedResult.tokenId) ? "Publicado" : "Comunidad"}
+                        </button>
+                      )}
                       <button onClick={() => setShowMintModal(true)}
                         className="flex flex-col items-center justify-center gap-1.5 py-3 font-bold text-xs transition-all hover:opacity-70"
                         style={{ color: "#7c3aed", background: "none", border: "none", ...font }}>
@@ -908,7 +933,7 @@ export default function SimpleDemo() {
               <div className="flex items-center gap-2">
                 <Brain className="h-5 w-5 flex-shrink-0" style={{ color: "#7c3aed" }} />
                 <span className="font-black text-gray-900 text-base tracking-tight" style={font}>
-                  {isRealUser ? (user?.name?.split(" ")[0] || "Noosfera") : "Noosfera Demo"}
+                  {isRealUser ? `Hola, ${user?.name?.split(" ")[0]}` : "Noosfera Demo"}
                 </span>
               </div>
               <button onClick={() => setSidebarOpen(false)} className="p-1 rounded hover:bg-gray-100 text-gray-400 transition-colors">
@@ -916,9 +941,10 @@ export default function SimpleDemo() {
               </button>
             </div>
             <nav className="flex-1 px-3 py-4 space-y-0.5">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 px-2 mb-2" style={font}>Navegar</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 px-2 mb-2" style={font}>Principal</p>
               {([
                 { id: "inicio" as NavItem, icon: Home, label: "Inicio" },
+                { id: "galeria" as NavItem, icon: ImageIcon, label: "Galería" },
                 { id: "comunidad" as NavItem, icon: Users, label: "Comunidad" },
               ] as const).map(item => (
                 <button key={item.id} onClick={() => setActiveNav(item.id)}
@@ -928,7 +954,14 @@ export default function SimpleDemo() {
                   {item.label}
                 </button>
               ))}
-              <div className="pt-1">
+              <div className="pt-2">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 px-2 mb-2" style={font}>Cuenta</p>
+                <button onClick={() => setActiveNav("ajustes")}
+                  className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
+                  style={{ ...(activeNav === "ajustes" ? { backgroundColor: "#f5f3ff", color: "#7c3aed" } : { color: "#6b7280" }), ...font }}>
+                  <Settings className="h-4 w-4 flex-shrink-0" />
+                  Ajustes
+                </button>
                 <button onClick={() => navigate("/")}
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-50 transition-all"
                   style={font}>
@@ -940,14 +973,23 @@ export default function SimpleDemo() {
             <div className="px-3 pb-4">
               {isRealUser ? (
                 <div className="rounded-2xl p-4 text-white" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-purple-200 mb-1" style={font}>
-                    {user?.plan === "premium" ? "Plan Premium" : "Plan Gratuito"}
-                  </p>
-                  <p className="font-black text-sm mb-1" style={font}>{user?.name}</p>
+                  <div className="flex items-center gap-1.5 mb-1">
+                    {user?.plan === "premium" && <Crown className="h-3 w-3 text-amber-300" />}
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-purple-200" style={font}>
+                      {user?.plan === "premium" ? "Plan Premium" : "Plan Gratuito"}
+                    </p>
+                  </div>
                   <p className="text-xs text-purple-200 mb-3" style={font}>{user?.email}</p>
+                  {user?.plan !== "premium" && (
+                    <button onClick={() => setActiveNav("ajustes")}
+                      className="w-full mb-2 py-1.5 rounded-xl text-xs font-bold hover:opacity-90 transition-all"
+                      style={{ backgroundColor: "rgba(255,255,255,0.22)", color: "#fff", border: "1px solid rgba(255,255,255,0.3)", ...font }}>
+                      ✦ Actualizar a Premium
+                    </button>
+                  )}
                   <button onClick={logout}
-                    className="w-full py-2 rounded-xl text-xs font-bold hover:opacity-90 transition-all"
-                    style={{ backgroundColor: "rgba(255,255,255,0.18)", color: "#fff", border: "1px solid rgba(255,255,255,0.3)", ...font }}>
+                    className="w-full py-1.5 rounded-xl text-xs font-bold hover:opacity-90 transition-all"
+                    style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.8)", border: "1px solid rgba(255,255,255,0.2)", ...font }}>
                     Cerrar Sesión
                   </button>
                 </div>
@@ -985,9 +1027,7 @@ export default function SimpleDemo() {
                 </button>
                 <div className="flex items-center gap-2">
                   <Brain className="h-5 w-5" style={{ color: "#7c3aed" }} />
-                  <span className="font-black text-gray-900 text-sm" style={font}>
-                  {isRealUser ? (user?.name?.split(" ")[0] || "Noosfera") : "Noosfera Demo"}
-                </span>
+                  <span className="font-black text-gray-900 text-sm" style={font}>Noösfera</span>
                 </div>
               </>
             )}
@@ -997,12 +1037,9 @@ export default function SimpleDemo() {
             <span className="font-bold" style={font}>
               {isRealUser ? (user?.plan === "premium" ? "Premium" : "Plan Free") : "Plan de prueba"}
             </span>
-            <div className="flex gap-1">
-              {[...Array(Math.min(effectiveLimit, 15))].map((_, i) => (
-                <div key={i} className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: i < Math.min(attemptsRemaining, 15) ? "#fff" : "rgba(255,255,255,0.3)" }} />
-              ))}
-            </div>
-            <span style={font}>{attemptsRemaining} rest.</span>
+            <span className="font-mono font-bold tabular-nums" style={font}>
+              {attemptsRemaining}/{effectiveLimit}
+            </span>
           </div>
         </header>
 
@@ -1015,12 +1052,26 @@ export default function SimpleDemo() {
                 <HeroSidePanel side="left" />
                 <HeroSidePanel side="right" />
                 <div className="relative z-10 flex flex-col items-center justify-center text-center py-14 px-56">
-                  <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-3 leading-tight" style={font}>
-                    Transforma tus <span style={{ color: "#7c3aed" }}>latidos</span> en arte
-                  </h1>
-                  <p className="text-sm text-gray-500 mb-6 max-w-xs" style={font}>
-                    Ingresa tus pulsos cardíacos y nuestra IA los convierte en una obra digital única
-                  </p>
+                  {isRealUser ? (
+                    <>
+                      <p className="text-sm font-semibold mb-1" style={{ color: "#7c3aed", ...font }}>{getTimeGreeting()}, {user?.name?.split(" ")[0]}</p>
+                      <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-2 leading-tight" style={font}>
+                        ¡Qué genial tenerte de nuevo!
+                      </h1>
+                      <p className="text-sm text-gray-500 mb-6 max-w-xs" style={font}>
+                        ¿Qué arte deseas hacer hoy?
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <h1 className="text-3xl md:text-4xl font-black text-gray-900 mb-3 leading-tight" style={font}>
+                        Transforma tus <span style={{ color: "#7c3aed" }}>latidos</span> en arte
+                      </h1>
+                      <p className="text-sm text-gray-500 mb-6 max-w-xs" style={font}>
+                        Ingresa tus pulsos cardíacos y nuestra IA los convierte en una obra digital única
+                      </p>
+                    </>
+                  )}
                   <button onClick={openInput}
                     className="px-8 py-3.5 rounded-2xl font-bold text-sm text-white hover:opacity-90 transition-all shadow-md"
                     style={{ backgroundColor: "#7c3aed", ...font }}>
@@ -1076,6 +1127,166 @@ export default function SimpleDemo() {
             </div>
           )}
 
+          {/* ── GALERÍA VIEW ── */}
+          {activeNav === "galeria" && (
+            <div className="px-5 py-6">
+              <div className="flex items-center justify-between mb-5">
+                <div>
+                  <h2 className="font-black text-gray-900 text-xl" style={font}>Mi Galería</h2>
+                  <p className="text-sm text-gray-400 mt-0.5" style={font}>{myCreations.length} obra{myCreations.length !== 1 ? "s" : ""} creada{myCreations.length !== 1 ? "s" : ""}</p>
+                </div>
+                <button onClick={openInput}
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-xl font-bold text-sm text-white hover:opacity-90 transition-all"
+                  style={{ backgroundColor: "#7c3aed", ...font }}>
+                  <Sparkles className="h-4 w-4" />
+                  Crear Nueva
+                </button>
+              </div>
+
+              {myCreations.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ backgroundColor: "#f5f3ff" }}>
+                    <ImageIcon className="h-8 w-8" style={{ color: "#7c3aed" }} />
+                  </div>
+                  <h3 className="font-black text-gray-900 text-base mb-2" style={font}>Tu galería está vacía</h3>
+                  <p className="text-sm text-gray-400 mb-5 max-w-xs" style={font}>Crea tu primera obra de arte a partir de tus latidos</p>
+                  <button onClick={openInput}
+                    className="px-6 py-2.5 rounded-xl font-bold text-sm text-white hover:opacity-90 transition-all"
+                    style={{ backgroundColor: "#7c3aed", ...font }}>
+                    Ingresar Pulsos
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {myCreations.map((art, i) => {
+                    const isUploaded = communityUploads.some(r => r.tokenId === art.tokenId)
+                    return (
+                      <motion.div key={art.tokenId || i}
+                        initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: i * 0.05 }}
+                        className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm group relative"
+                        style={{ backgroundColor: "#fff" }}>
+                        <div className="relative cursor-pointer" onClick={() => { setGeneratedResult(art); setShowModal("result") }}>
+                          <img src={art.imageUrl} alt={art.title} className="w-full object-cover block" style={{ height: "160px" }} />
+                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all" />
+                        </div>
+                        <div className="p-3">
+                          <p className="font-black text-gray-900 text-xs truncate mb-0.5" style={font}>{art.title}</p>
+                          <p className="text-[10px] text-gray-400 truncate mb-2" style={font}>{art.pulses.join(", ")} BPM</p>
+                          <div className="flex gap-1.5">
+                            <button
+                              onClick={() => { setGeneratedResult(art); handleDownload() }}
+                              className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[10px] font-bold transition-all hover:opacity-80"
+                              style={{ backgroundColor: "#f5f3ff", color: "#7c3aed", ...font }}>
+                              <Download className="h-3 w-3" />
+                              Descargar
+                            </button>
+                            {isRealUser && (
+                              <button
+                                onClick={() => uploadToCommunity(art)}
+                                className="flex-1 flex items-center justify-center gap-1 py-1.5 rounded-lg text-[10px] font-bold transition-all hover:opacity-80"
+                                style={{ backgroundColor: isUploaded ? "#d1fae5" : "#f5f3ff", color: isUploaded ? "#059669" : "#7c3aed", ...font }}>
+                                <Share2 className="h-3 w-3" />
+                                {isUploaded ? "Publicado" : "Comunidad"}
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      </motion.div>
+                    )
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* ── AJUSTES VIEW ── */}
+          {activeNav === "ajustes" && (
+            <div className="px-5 py-6 max-w-lg mx-auto">
+              <h2 className="font-black text-gray-900 text-xl mb-6" style={font}>Ajustes</h2>
+
+              {/* Profile card */}
+              {isRealUser ? (
+                <>
+                  <div className="rounded-2xl p-5 border border-gray-100 shadow-sm mb-4 bg-white">
+                    <h3 className="font-black text-sm text-gray-700 mb-3" style={font}>Perfil</h3>
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center font-black text-white text-lg flex-shrink-0"
+                        style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                        {user?.name?.charAt(0) || "U"}
+                      </div>
+                      <div>
+                        <p className="font-black text-gray-900 text-sm" style={font}>{user?.name}</p>
+                        <p className="text-xs text-gray-400" style={font}>{user?.email}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Plan card */}
+                  <div className="rounded-2xl p-5 border border-gray-100 shadow-sm mb-4 bg-white">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="font-black text-sm text-gray-700" style={font}>Plan actual</h3>
+                      <div className="flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold"
+                        style={{ backgroundColor: user?.plan === "premium" ? "#fef3c7" : "#f5f3ff", color: user?.plan === "premium" ? "#92400e" : "#7c3aed" }}>
+                        {user?.plan === "premium" && <Crown className="h-3 w-3" />}
+                        {user?.plan === "premium" ? "Premium" : "Gratuito"}
+                      </div>
+                    </div>
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500" style={font}>Imágenes diarias</span>
+                        <span className="font-bold text-gray-900" style={font}>{effectiveLimit} / día</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500" style={font}>Restantes hoy</span>
+                        <span className="font-bold" style={{ color: attemptsRemaining > 0 ? "#059669" : "#dc2626", ...font }}>{attemptsRemaining}/{effectiveLimit}</span>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-500" style={font}>Marca de agua</span>
+                        <span className="font-bold text-gray-900" style={font}>{user?.plan === "premium" ? "Sin marca" : "Incluida"}</span>
+                      </div>
+                    </div>
+                    {user?.plan !== "premium" && (
+                      <div className="rounded-xl p-4 text-white" style={{ background: "linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%)" }}>
+                        <p className="font-black text-sm mb-1" style={font}>Actualiza a Premium</p>
+                        <p className="text-xs text-purple-200 mb-3" style={font}>100 imágenes al día · Sin marca de agua · Prioridad de generación</p>
+                        <button
+                          className="w-full py-2 rounded-xl text-xs font-black text-purple-700 hover:opacity-90 transition-all"
+                          style={{ backgroundColor: "#fff", ...font }}>
+                          <Crown className="h-3 w-3 inline mr-1" />
+                          Ver Planes Premium
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Logout */}
+                  <div className="rounded-2xl p-5 border border-gray-100 shadow-sm bg-white">
+                    <h3 className="font-black text-sm text-gray-700 mb-3" style={font}>Sesión</h3>
+                    <button onClick={logout}
+                      className="w-full py-2.5 rounded-xl text-sm font-bold transition-all hover:opacity-80"
+                      style={{ backgroundColor: "#fef2f2", color: "#dc2626", ...font }}>
+                      Cerrar Sesión
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-16 text-center">
+                  <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-4" style={{ backgroundColor: "#f5f3ff" }}>
+                    <Settings className="h-8 w-8" style={{ color: "#7c3aed" }} />
+                  </div>
+                  <h3 className="font-black text-gray-900 text-base mb-2" style={font}>Crea una cuenta</h3>
+                  <p className="text-sm text-gray-400 mb-5 max-w-xs" style={font}>Regístrate para acceder a ajustes y opciones de plan</p>
+                  <button onClick={() => navigate("/auth/register")}
+                    className="px-6 py-2.5 rounded-xl font-bold text-sm text-white hover:opacity-90 transition-all"
+                    style={{ backgroundColor: "#7c3aed", ...font }}>
+                    Registrarse Gratis
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
           {/* ── COMUNIDAD VIEW ── */}
           {activeNav === "comunidad" && (
             <div className="px-5 py-6">
@@ -1083,6 +1294,22 @@ export default function SimpleDemo() {
                 <h2 className="font-black text-gray-900 text-xl" style={font}>Comunidad Noosfera</h2>
                 <p className="text-sm text-gray-400 mt-1" style={font}>Arte biométrico generado por nuestra comunidad global</p>
               </div>
+              {communityUploads.length > 0 && (
+                <div className="mb-5">
+                  <h3 className="font-black text-gray-800 text-sm mb-3 px-1" style={font}>Mis publicaciones</h3>
+                  <div className="flex gap-3 overflow-x-auto pb-2">
+                    {communityUploads.map((art, i) => (
+                      <div key={i} className="flex-shrink-0 rounded-xl overflow-hidden border-2 shadow-sm relative"
+                        style={{ borderColor: "#7c3aed" }}>
+                        <img src={art.imageUrl} alt={art.title} className="w-24 h-24 object-cover block" />
+                        <div className="absolute bottom-0 left-0 right-0 px-1.5 py-1 bg-gradient-to-t from-black/70 to-transparent">
+                          <p className="text-white text-[9px] font-bold truncate" style={font}>{art.title}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
               <div style={{ columns: "2 160px", gap: "8px" }}>
                 {COMMUNITY_IMAGES.map((img, i) => (
                   <motion.div key={i}
