@@ -1,0 +1,148 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="800" height="300">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1008"/>
+      <stop offset="50%" stop-color="#2d1f0a"/>
+      <stop offset="100%" stop-color="#3d2b0f"/>
+    </linearGradient>
+    <linearGradient id="mist" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9b7d5a" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#9b7d5a" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="river" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1e2d1a"/>
+      <stop offset="100%" stop-color="#0d1a0a"/>
+    </linearGradient>
+    <filter id="blur1">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <filter id="blur2">
+      <feGaussianBlur stdDeviation="2"/>
+    </filter>
+    <filter id="blur3">
+      <feGaussianBlur stdDeviation="1"/>
+    </filter>
+  </defs>
+
+  <!-- Sky -->
+  <rect width="800" height="300" fill="url(#sky)"/>
+
+  <!-- Moon glow -->
+  <circle cx="650" cy="55" r="45" fill="#f5e6c0" opacity="0.06" filter="url(#blur1)"/>
+  <circle cx="650" cy="55" r="22" fill="#f5e6c0" opacity="0.12" filter="url(#blur2)"/>
+  <circle cx="650" cy="55" r="14" fill="#f5e6c0" opacity="0.25"/>
+
+  <!-- Stars -->
+  <circle cx="80" cy="30" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="150" cy="20" r="1.5" fill="#fff" opacity="0.6"/>
+  <circle cx="230" cy="45" r="1" fill="#fff" opacity="0.4"/>
+  <circle cx="320" cy="15" r="1" fill="#fff" opacity="0.55"/>
+  <circle cx="410" cy="35" r="1.5" fill="#fff" opacity="0.45"/>
+  <circle cx="500" cy="22" r="1" fill="#fff" opacity="0.5"/>
+  <circle cx="700" cy="30" r="1" fill="#fff" opacity="0.4"/>
+  <circle cx="760" cy="55" r="1" fill="#fff" opacity="0.5"/>
+
+  <!-- Background mountains/hills (blurry) -->
+  <path d="M 0 180 Q 100 140 200 165 Q 300 185 400 145 Q 500 110 600 145 Q 700 175 800 155 L 800 300 L 0 300 Z" fill="#1d1508" opacity="0.9" filter="url(#blur2)"/>
+
+  <!-- Dense forest silhouettes far -->
+  <path d="M -10 175 Q 10 155 30 165 Q 50 155 70 165 Q 90 150 110 162 Q 130 152 150 165 Q 170 150 190 163 Q 210 153 230 165 L 240 300 L -10 300 Z" fill="#0f1a09" opacity="0.8" filter="url(#blur2)"/>
+  <path d="M 560 170 Q 580 152 600 163 Q 620 150 640 163 Q 660 152 680 165 Q 700 155 720 168 Q 740 155 760 168 Q 780 155 810 165 L 810 300 L 560 300 Z" fill="#0f1a09" opacity="0.8" filter="url(#blur2)"/>
+
+  <!-- Mist layer -->
+  <rect x="0" y="155" width="800" height="60" fill="url(#mist)" filter="url(#blur1)"/>
+  <ellipse cx="400" cy="175" rx="500" ry="25" fill="#b8a07a" opacity="0.08" filter="url(#blur1)"/>
+
+  <!-- River -->
+  <rect x="0" y="238" width="800" height="62" fill="url(#river)"/>
+  <!-- River reflections -->
+  <line x1="300" y1="240" x2="280" y2="300" stroke="#9b7d5a" stroke-width="1" opacity="0.12"/>
+  <line x1="400" y1="240" x2="405" y2="300" stroke="#9b7d5a" stroke-width="1.5" opacity="0.1"/>
+  <line x1="500" y1="240" x2="520" y2="300" stroke="#9b7d5a" stroke-width="1" opacity="0.12"/>
+  <path d="M 0 248 Q 200 244 400 250 Q 600 256 800 248" fill="none" stroke="#2a3d20" stroke-width="1.5" opacity="0.5"/>
+  <path d="M 0 262 Q 150 258 300 265 Q 500 272 700 260 Q 760 257 800 264" fill="none" stroke="#2a3d20" stroke-width="1" opacity="0.4"/>
+
+  <!-- Bridge piers -->
+  <rect x="270" y="180" width="28" height="120" fill="#2a2015" opacity="0.95"/>
+  <rect x="502" y="180" width="28" height="120" fill="#2a2015" opacity="0.95"/>
+  <!-- Pier bases -->
+  <rect x="262" y="230" width="44" height="10" fill="#1e1810" opacity="0.9"/>
+  <rect x="494" y="230" width="44" height="10" fill="#1e1810" opacity="0.9"/>
+
+  <!-- Main bridge deck (cracked/worn) -->
+  <rect x="160" y="175" width="480" height="14" fill="#2a2015" opacity="0.95"/>
+  <!-- Crack details -->
+  <path d="M 250 175 L 255 189" stroke="#1a1008" stroke-width="1.5" opacity="0.8"/>
+  <path d="M 380 175 L 375 189" stroke="#1a1008" stroke-width="1" opacity="0.7"/>
+  <path d="M 530 178 L 536 189" stroke="#1a1008" stroke-width="1.5" opacity="0.8"/>
+  <!-- Moss/weathering on bridge -->
+  <rect x="260" y="175" width="15" height="3" fill="#1d3015" opacity="0.5"/>
+  <rect x="400" y="180" width="20" height="4" fill="#1d3015" opacity="0.4"/>
+  <rect x="520" y="176" width="12" height="3" fill="#1d3015" opacity="0.5"/>
+
+  <!-- Bridge railings (broken) -->
+  <!-- Left section -->
+  <line x1="160" y1="172" x2="270" y2="172" stroke="#3d3020" stroke-width="2.5" opacity="0.9"/>
+  <line x1="160" y1="165" x2="270" y2="165" stroke="#3d3020" stroke-width="1.5" opacity="0.8"/>
+  <!-- Vertical railing posts -->
+  <line x1="180" y1="165" x2="180" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.85"/>
+  <line x1="200" y1="165" x2="200" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.85"/>
+  <line x1="220" y1="165" x2="222" y2="178" stroke="#3d3020" stroke-width="2" opacity="0.7"/>
+  <line x1="240" y1="165" x2="240" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.85"/>
+  <line x1="256" y1="168" x2="260" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.8"/>
+
+  <!-- Mid section (broken gap) -->
+  <line x1="298" y1="165" x2="360" y2="167" stroke="#3d3020" stroke-width="1.5" opacity="0.7"/>
+  <line x1="305" y1="172" x2="365" y2="172" stroke="#3d3020" stroke-width="2" opacity="0.75"/>
+  <line x1="310" y1="165" x2="310" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.8"/>
+  <line x1="330" y1="166" x2="330" y2="185" stroke="#3d3020" stroke-width="2" opacity="0.7"/>
+  <line x1="350" y1="165" x2="352" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.8"/>
+  <!-- Broken railing hanging -->
+  <path d="M 370 165 Q 380 175 388 180" stroke="#3d3020" stroke-width="2" fill="none" opacity="0.65"/>
+
+  <!-- Right section -->
+  <line x1="530" y1="172" x2="640" y2="172" stroke="#3d3020" stroke-width="2.5" opacity="0.9"/>
+  <line x1="530" y1="165" x2="640" y2="165" stroke="#3d3020" stroke-width="1.5" opacity="0.8"/>
+  <line x1="540" y1="165" x2="540" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.85"/>
+  <line x1="560" y1="165" x2="560" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.85"/>
+  <line x1="580" y1="165" x2="580" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.8"/>
+  <line x1="600" y1="167" x2="600" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.85"/>
+  <line x1="620" y1="165" x2="620" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.85"/>
+  <line x1="638" y1="165" x2="638" y2="189" stroke="#3d3020" stroke-width="2" opacity="0.8"/>
+
+  <!-- Bridge arch cables (suspension style hints) -->
+  <path d="M 240 90 Q 360 165 480 90" fill="none" stroke="#4a3820" stroke-width="2.5" opacity="0.7"/>
+  <path d="M 310 90 Q 360 145 410 90" fill="none" stroke="#4a3820" stroke-width="2" opacity="0.5"/>
+  <!-- Cable towers -->
+  <rect x="232" y="60" width="16" height="115" fill="#3a2c1a" opacity="0.9"/>
+  <rect x="552" y="60" width="16" height="115" fill="#3a2c1a" opacity="0.9"/>
+  <path d="M 560 90 Q 440 165 320 90" fill="none" stroke="#4a3820" stroke-width="2.5" opacity="0.7"/>
+
+  <!-- Hanging cable drops -->
+  <line x1="288" y1="110" x2="288" y2="172" stroke="#4a3820" stroke-width="1" opacity="0.5"/>
+  <line x1="316" y1="103" x2="316" y2="172" stroke="#4a3820" stroke-width="1" opacity="0.45"/>
+  <line x1="344" y1="101" x2="344" y2="172" stroke="#4a3820" stroke-width="1" opacity="0.5"/>
+  <line x1="372" y1="103" x2="372" y2="172" stroke="#4a3820" stroke-width="1" opacity="0.45"/>
+  <line x1="400" y1="107" x2="400" y2="172" stroke="#4a3820" stroke-width="1" opacity="0.5"/>
+  <line x1="428" y1="101" x2="428" y2="172" stroke="#4a3820" stroke-width="1" opacity="0.45"/>
+  <line x1="456" y1="103" x2="456" y2="172" stroke="#4a3820" stroke-width="1" opacity="0.5"/>
+  <line x1="484" y1="110" x2="484" y2="172" stroke="#4a3820" stroke-width="1" opacity="0.45"/>
+  <line x1="512" y1="120" x2="512" y2="172" stroke="#4a3820" stroke-width="1" opacity="0.4"/>
+
+  <!-- Vegetation on bridge (overgrown) -->
+  <path d="M 295 165 Q 300 150 308 160 Q 315 148 320 165" fill="#1a3010" opacity="0.7"/>
+  <path d="M 410 162 Q 416 148 422 158 Q 428 145 433 162" fill="#1a3010" opacity="0.6"/>
+  <path d="M 472 164 Q 477 152 483 162 Q 488 150 494 164" fill="#1a3010" opacity="0.65"/>
+
+  <!-- Ivy hanging from bridge -->
+  <path d="M 350 189 Q 355 210 348 230" stroke="#1a3010" stroke-width="2" fill="none" opacity="0.6"/>
+  <path d="M 450 189 Q 445 215 452 235" stroke="#1a3010" stroke-width="2" fill="none" opacity="0.55"/>
+
+  <!-- Moonlight shimmer on water -->
+  <path d="M 620 245 L 680 285" stroke="#f5e6c0" stroke-width="12" opacity="0.03" filter="url(#blur2)"/>
+  <path d="M 640 248 L 665 275" stroke="#f5e6c0" stroke-width="6" opacity="0.05"/>
+
+  <!-- Fog on water surface -->
+  <ellipse cx="200" cy="242" rx="150" ry="10" fill="#9b7d5a" opacity="0.06" filter="url(#blur1)"/>
+  <ellipse cx="600" cy="245" rx="130" ry="8" fill="#9b7d5a" opacity="0.05" filter="url(#blur1)"/>
+</svg>

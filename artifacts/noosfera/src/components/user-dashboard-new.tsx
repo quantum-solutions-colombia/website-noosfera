@@ -382,22 +382,19 @@ export default function UserDashboardNew() {
 
   const tutorialSteps = [
     {
-      icon: <Heart className="h-10 w-10 text-rose-500" />,
+      image: "/tutorial/ciudad-sumergida.svg",
       title: "Ingresa tus pulsos cardíacos",
-      description: "Toma tu frecuencia cardíaca y escribe cada lectura (entre 40 y 200 BPM). Puedes ingresar hasta 8 valores para crear una obra más detallada.",
-      color: "from-rose-500 to-pink-600",
+      description: "Escribe cada lectura de tu frecuencia cardíaca (40–200 BPM). Puedes agregar hasta 9 valores para crear una obra más detallada.",
     },
     {
-      icon: <Wand2 className="h-10 w-10 text-violet-500" />,
+      image: "/tutorial/puente-abandonado.svg",
       title: "La IA transforma tu ritmo en arte",
-      description: "Con cada generación, nuestra inteligencia artificial convierte la energía de tus latidos en una obra digital única, personal e irrepetible.",
-      color: "from-violet-500 to-purple-600",
+      description: "Nuestra inteligencia artificial convierte la energía única de tus latidos en una obra digital irrepetible.",
     },
     {
-      icon: <Share2 className="h-10 w-10 text-emerald-500" />,
+      image: "/tutorial/bosque-abandonado.svg",
       title: "Descarga y comparte tu obra",
-      description: "Guarda tu arte en tu galería personal, descárgalo con marca de agua o compártelo en redes. Cada día tienes generaciones disponibles.",
-      color: "from-emerald-500 to-teal-600",
+      description: "Guarda tu arte en tu galería, descárgalo y compártelo. Tienes generaciones diarias disponibles según tu plan.",
     },
   ]
 
@@ -451,18 +448,19 @@ export default function UserDashboardNew() {
                     background: "linear-gradient(135deg, #7c3aed, #a855f7)",
                     display: "flex", alignItems: "center", justifyContent: "center",
                     margin: "0 auto 16px",
-                    fontSize: 36,
+                    fontSize: 32, fontWeight: 900, color: "#fff",
+                    fontFamily: "'DM Sans', sans-serif",
                   }}>
-                    {user?.name?.charAt(0).toUpperCase() || "👋"}
+                    {user?.name?.charAt(0).toUpperCase() || "N"}
                   </div>
                   <h2 style={{
                     fontFamily: "'DM Sans', sans-serif", fontWeight: 900,
                     fontSize: 26, color: "#111", margin: "0 0 6px",
                   }}>
-                    ¡Hola, {user?.name?.split(" ")[0]}! 👋
+                    ¡Hola, {user?.name?.split(" ")[0]}! Bienvenido
                   </h2>
                   <p style={{ color: "#666", fontSize: 14, margin: 0, lineHeight: 1.5 }}>
-                    Bienvenido a Noösfera. En menos de 2 minutos te mostramos todo lo que puedes crear aquí.
+                    En menos de un minuto te mostramos todo lo que puedes crear aquí.
                   </p>
                 </div>
               )}
@@ -471,13 +469,12 @@ export default function UserDashboardNew() {
               {tutorialStep > 0 && (
                 <div style={{ marginBottom: 24 }}>
                   <div style={{
-                    width: 80, height: 80, borderRadius: "50%",
-                    background: `linear-gradient(135deg, ${tutorialStep === 1 ? "#7c3aed, #a855f7" : "#10b981, #059669"})`,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    margin: "0 auto 16px",
-                  }}>
-                    {tutorialSteps[tutorialStep - 1].icon}
-                  </div>
+                    width: "100%", height: 150, borderRadius: 14,
+                    backgroundImage: `url(${tutorialSteps[tutorialStep - 1].image})`,
+                    backgroundSize: "cover", backgroundPosition: "center",
+                    margin: "0 0 18px",
+                    overflow: "hidden",
+                  }} />
                   <h2 style={{
                     fontFamily: "'DM Sans', sans-serif", fontWeight: 900,
                     fontSize: 20, color: "#111", margin: "0 0 10px",
@@ -503,32 +500,30 @@ export default function UserDashboardNew() {
                 ))}
               </div>
 
-              {/* Botón acción */}
+              {/* Botón acción (solo texto) */}
               <button
                 onClick={handleTutorialNext}
                 style={{
-                  width: "100%", padding: "12px 0",
-                  borderRadius: 12, border: "none",
-                  background: "linear-gradient(135deg, #7c3aed, #a855f7)",
-                  color: "#fff", fontWeight: 700, fontSize: 14,
+                  width: "100%", padding: "10px 0",
+                  background: "none", border: "none",
+                  color: "#7c3aed", fontWeight: 700, fontSize: 15,
                   cursor: "pointer",
-                  display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
-                  boxShadow: "0 4px 20px rgba(124,58,237,0.35)",
-                  transition: "opacity 0.18s",
+                  display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                  transition: "color 0.18s",
                 }}
-                onMouseEnter={e => (e.currentTarget.style.opacity = "0.9")}
-                onMouseLeave={e => (e.currentTarget.style.opacity = "1")}>
-                {tutorialStep === 0 && <><Sparkles className="h-4 w-4" /><span>Ver cómo funciona</span></>}
-                {tutorialStep === 1 && <><ChevronRight className="h-4 w-4" /><span>Continuar</span></>}
-                {tutorialStep === 2 && <><ChevronRight className="h-4 w-4" /><span>Continuar</span></>}
-                {tutorialStep === 3 && <><Check className="h-4 w-4" /><span>¡Empezar a crear!</span></>}
+                onMouseEnter={e => (e.currentTarget.style.color = "#6d28d9")}
+                onMouseLeave={e => (e.currentTarget.style.color = "#7c3aed")}>
+                {tutorialStep === 0 && <><span>Ver cómo funciona</span><ChevronRight className="h-4 w-4" /></>}
+                {tutorialStep === 1 && <><span>Continuar</span><ChevronRight className="h-4 w-4" /></>}
+                {tutorialStep === 2 && <><span>Continuar</span><ChevronRight className="h-4 w-4" /></>}
+                {tutorialStep === 3 && <><span>¡Empezar a crear!</span><Check className="h-4 w-4" /></>}
               </button>
 
               {/* Saltar */}
               <button
                 onClick={() => completeTutorial()}
                 style={{
-                  marginTop: 12, background: "none", border: "none",
+                  marginTop: 8, background: "none", border: "none",
                   color: "#aaa", fontSize: 12, cursor: "pointer",
                   textDecoration: "underline",
                 }}>
