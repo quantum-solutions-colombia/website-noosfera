@@ -69,7 +69,7 @@ export default function ContentGenerator() {
   >("complementary")
   const previewCanvasRef = useRef<HTMLCanvasElement>(null)
 
-  const { connectionStatus, processingThought, currentThoughtPattern, generateContent, config } = useNoosfera()
+  const { connectionStatus, processingCardiac, currentCardiacPattern, generateContent, config } = useNoosfera()
 
   const connected = connectionStatus === "connected"
 
@@ -140,9 +140,9 @@ export default function ContentGenerator() {
   }, [generationType])
 
   useEffect(() => {
-    if (!currentThoughtPattern || !connected) return
+    if (!currentCardiacPattern || !connected) return
 
-    // Generate preview for text
+    // Generate preview for text only - images use Pollinations.AI on demand
     if (generationType === "text") {
       const previewTexts = [
         "Los pensamientos fluyen como ríos de información neuronal, creando patrones complejos que definen nuestra experiencia consciente...",
@@ -154,21 +154,17 @@ export default function ContentGenerator() {
 
       const index = Math.floor((complexity + creativity) / 40) % previewTexts.length
       setPreviewContent(previewTexts[index])
-    } else if (generationType === "image" && previewCanvasRef.current) {
-      generateAdvancedImagePreview()
+    } else if (generationType === "image") {
+      // Clear canvas preview - real AI image will be generated on button click
+      setPreviewContent(null)
     }
   }, [
-    currentThoughtPattern,
+    currentCardiacPattern,
     connected,
     generationType,
     complexity,
     creativity,
-    enhanceOutput,
     selectedStyle,
-    emotionalIntensity,
-    visualDetail,
-    colorHarmony,
-    interpretationMode,
   ])
 
   const generateAdvancedImagePreview = () => {
@@ -188,7 +184,7 @@ export default function ContentGenerator() {
 
     // Generate color palette based on thought pattern and emotional intensity
     const generateColorPalette = () => {
-      const baseHue = currentThoughtPattern ? (currentThoughtPattern.emotionalValence * 3.6) % 360 : 180
+      const baseHue = currentCardiacPattern ? (currentCardiacPattern.emotionalValence * 3.6) % 360 : 180
       const saturation = Math.min(100, emotionalIntensity + 20)
       const lightness = 30 + visualDetail / 2
 
@@ -535,7 +531,7 @@ export default function ContentGenerator() {
   }
 
   const handleGenerateContent = async () => {
-    if (!connected || !currentThoughtPattern) {
+    if (!connected || !currentCardiacPattern) {
       setError("Debes capturar un pensamiento antes de generar contenido")
       return
     }
@@ -720,7 +716,7 @@ export default function ContentGenerator() {
                           <div className="text-center space-y-2">
                             <FileText className="h-10 w-10 mx-auto text-muted-foreground" />
                             <p className="text-muted-foreground">
-                              {currentThoughtPattern
+                              {currentCardiacPattern
                                 ? "Ajusta los parámetros y presiona el botón para generar texto"
                                 : "Captura un pensamiento primero para poder generar texto"}
                             </p>
@@ -933,7 +929,7 @@ export default function ContentGenerator() {
                           <div className="text-center space-y-2">
                             <ImageIcon className="h-10 w-10 mx-auto text-muted-foreground" />
                             <p className="text-muted-foreground">
-                              {currentThoughtPattern
+                              {currentCardiacPattern
                                 ? "Ajusta los parámetros y presiona el botón para generar una imagen"
                                 : "Captura un pensamiento primero para poder generar una imagen"}
                             </p>
@@ -1093,7 +1089,7 @@ export default function ContentGenerator() {
         <CardFooter className="flex flex-col space-y-2">
           <Button
             onClick={handleGenerateContent}
-            disabled={!connected || generatingContent || processingThought || !currentThoughtPattern}
+            disabled={!connected || generatingContent || processingCardiac || !currentCardiacPattern}
             className="w-full bg-emerald-600 hover:bg-emerald-700 flex items-center gap-2"
           >
             {generatingContent ? (
@@ -1120,7 +1116,7 @@ export default function ContentGenerator() {
           <p className="text-xs text-center text-muted-foreground">
             {!connected
               ? "Conecta el BCI para generar contenido"
-              : !currentThoughtPattern
+              : !currentCardiacPattern
                 ? "Captura un pensamiento primero"
                 : `Modo ${interpretationMode} - El contenido generado se guardará en tu biblioteca`}
           </p>
