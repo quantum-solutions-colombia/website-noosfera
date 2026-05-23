@@ -376,6 +376,101 @@ export function NoosferaProvider({ children }: { children: ReactNode }) {
     })
   }
 
+  // Temas epicos para Pollinations.AI - sin costo, sin API key
+  const NOOSFERA_THEMES = [
+    "a majestic dragon soaring through storm clouds with lightning",
+    "an epic medieval battle with knights and sorcerers on horseback",
+    "a futuristic spaceship emerging from a glowing nebula in deep space",
+    "an enchanted ancient forest with glowing magical creatures and fireflies",
+    "a massive sailing ship on stormy seas at sunset with dramatic waves",
+    "a pack of wolves running through a snow-covered pine forest at dusk",
+    "a phoenix rising from golden flames in a mystical landscape",
+    "an underwater ancient city with bioluminescent sea creatures",
+    "a warrior mage casting brilliant spells in an ancient stone temple",
+    "a pride of lions in an African savanna at golden hour",
+    "a crystal cave with mythical creatures and glowing gems",
+    "a fierce battle between fire dragons and ice griffins in the sky",
+    "a mystical forest with fairies and ancient tree spirits at night",
+    "a family of elephants in a lush green jungle landscape",
+    "space explorers discovering an alien world with towering crystal formations",
+    "a giant sea serpent emerging from stormy ocean depths near a lighthouse",
+    "an armada of pirate ships in an epic naval battle at night",
+    "a fierce tiger stalking through dense tropical jungle foliage",
+    "a medieval castle on a cliff surrounded by a magical aurora",
+    "a cyberpunk city at night with neon lights and flying vehicles",
+    "a herd of wild horses galloping across an open plain at sunrise",
+    "an ancient temple guarded by stone golems in a jungle",
+    "a polar bear and her cubs on an ice floe under northern lights",
+    "a vast fantasy battlefield with armies of elves and dark knights",
+    "a deep space station orbiting a ringed gas giant planet",
+  ]
+
+  const STYLE_DESCRIPTORS: Record<string, string> = {
+    abstract: "vibrant abstract digital art with bold colors and geometric shapes,",
+    realistic: "ultra-photorealistic, cinematic photography style,",
+    hyperrealistic: "hyper-detailed photorealistic with dramatic studio lighting,",
+    surreal: "surrealist dream-like painting style with impossible landscapes,",
+    minimalist: "minimalist clean artistic illustration,",
+    organic: "organic flowing natural shapes, botanical art style,",
+    geometric: "geometric low-poly polygon art style,",
+    fractal: "fractal recursive mandelbrot art style, infinitely detailed,",
+  }
+
+  // Genera descripciones algoritmicas en espanol basadas en datos cardiacos
+  const generateAlgorithmicDescription = (pattern: CardiacPattern): string => {
+    const avg = pattern.patternData.reduce((a, b) => a + b, 0) / pattern.patternData.length
+    const range = Math.max(...pattern.patternData) - Math.min(...pattern.patternData)
+
+    const intensityPhrases = avg > 70 
+      ? ["una elevada tension interna", "una energia vibrante y pulsante", "una fuerza vital intensa"]
+      : avg > 50 
+      ? ["una energia vital moderada", "un flujo energetico equilibrado", "una presencia contenida"]
+      : ["una calma profunda y meditativa", "una serenidad contemplativa", "un reposo consciente"]
+
+    const variabilityPhrases = range > 40
+      ? ["que oscila entre extremos emocionales", "con contradicciones internas que enriquecen la profundidad de la obra", "revelando tensiones dinamicas"]
+      : range > 20
+      ? ["que fluye en patrones armoniosos y controlados", "con ritmos que sugieren equilibrio interior", "articulando transiciones suaves"]
+      : ["que permanece estable y centrada", "con una coherencia notable", "manifestando una solidez emocional"]
+
+    const contextPhrases = [
+      "explorando el lenguaje visual como extension del estado interno",
+      "donde el color y la forma dialogan con el pulso vital",
+      "transformando datos biometricos en expresion artistica",
+      "capturando la esencia efimera del momento presente",
+      "traduciendo el ritmo cardiaco en narrativa visual",
+    ]
+
+    const intensity = intensityPhrases[Math.floor(Math.random() * intensityPhrases.length)]
+    const variability = variabilityPhrases[Math.floor(Math.random() * variabilityPhrases.length)]
+    const context = contextPhrases[Math.floor(Math.random() * contextPhrases.length)]
+
+    return `${intensity} ${variability}, ${context}`
+  }
+
+  // Genera imagen usando Pollinations.AI (gratuito, sin API key)
+  const generatePollinationsImage = async (pattern: CardiacPattern, style: string): Promise<string> => {
+    const seed = Math.floor(((pattern.stressLevel || 50) + (pattern.heartHealthScore || 75)) * 0.37 + Date.now() % 100)
+    const theme = NOOSFERA_THEMES[seed % NOOSFERA_THEMES.length]
+    
+    const artisticStyle = STYLE_DESCRIPTORS[style] || "vibrant digital art,"
+    const moodMap: Record<string, string> = {
+      calm: "peaceful and serene atmosphere, soft lighting",
+      normal: "epic and dramatic atmosphere, dynamic lighting",
+      stressed: "intense and energetic atmosphere, bold contrast",
+      alert: "powerful and awe-inspiring atmosphere, high energy",
+    }
+    const mood = moodMap[pattern.emotionalState] || "epic and dramatic atmosphere, dynamic lighting"
+
+    const prompt = `${artisticStyle} ${theme}, ${mood}, highly detailed, professional digital art, 8k resolution, masterpiece quality, vivid saturated colors`
+    
+    // Pollinations.AI - servicio publico gratuito
+    const encodedPrompt = encodeURIComponent(prompt)
+    const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1024&seed=${seed}&nologo=true`
+    
+    return imageUrl
+  }
+
   const generateContent = async (type: ContentType = "text", options?: { style?: string; imageUrl?: string }) => {
     if (!currentCardiacPattern && !isDemoMode) return
 
@@ -402,18 +497,8 @@ export function NoosferaProvider({ children }: { children: ReactNode }) {
         contentValue = options.imageUrl
       } else {
         try {
-          const res = await fetch("/api/noosfera/generate-image", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              style: options?.style || "abstract",
-              emotionalState: pattern.emotionalState,
-              stressLevel: pattern.stressLevel,
-              heartHealthScore: pattern.heartHealthScore,
-            }),
-          })
-          const data = await res.json()
-          contentValue = data.imageUrl || generateImageUrlFromPattern(pattern)
+          // Usar Pollinations.AI directamente (gratuito, sin API key)
+          contentValue = await generatePollinationsImage(pattern, options?.style || "abstract")
         } catch {
           contentValue = generateImageUrlFromPattern(pattern)
         }
@@ -450,16 +535,9 @@ export function NoosferaProvider({ children }: { children: ReactNode }) {
   }
 
   const generateTextFromPattern = (pattern: CardiacPattern) => {
-    const texts = [
-      "Tu ritmo cardíaco refleja un estado de equilibrio y estabilidad emocional. La variabilidad cardíaca indica un sistema nervioso bien regulado.",
-      "Los patrones cardíacos capturados muestran una actividad cardiovascular óptima con excelente capacidad de recuperación.",
-      "Tu corazón mantiene un ritmo consistente que sugiere una buena adaptación al estrés y un estado de salud cardiovascular favorable.",
-      "La actividad cardíaca monitoreada indica un estado de calma mental con excelente variabilidad de frecuencia cardíaca.",
-      "Los datos cardíacos revelan patrones de ritmo saludable con signos de coherencia cardíaca y bienestar emocional.",
-    ]
-
-    const index = Math.floor(pattern.heartHealthScore / 20)
-    return texts[Math.min(index, texts.length - 1)]
+    // Usar descripciones algoritmicas basadas en datos cardiacos
+    const algorithmicDescription = generateAlgorithmicDescription(pattern)
+    return `La imagen generada representa ${algorithmicDescription}.`
   }
 
   const generateImageUrlFromPattern = (pattern: CardiacPattern) => {
